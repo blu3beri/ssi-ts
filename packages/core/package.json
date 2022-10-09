@@ -1,0 +1,9 @@
+{
+  "name": "didcomm-core",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "bs58": "5.0.0",
+    "buffer": "6.0.3"
+  }
+}
