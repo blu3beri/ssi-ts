@@ -6,7 +6,7 @@ export type Signature = {
 
 export type ProtectedHeader = {
   typ: string
-  algorithm: Algorithm
+  alg: JWSAlgorithm
 }
 
 export type Header = {
@@ -15,16 +15,13 @@ export type Header = {
 
 export type CompactHeader = {
   typ: string
-  algorithm: JWSAlgorithm
+  alg: JWSAlgorithm
   kid: string
 }
 
-// TODO: Askar_crypto::sign::SignatureType
-export type SignatureType = 'EdDSA' | 'ES256' | 'ES256K' | string
-
-export type JWSAlgorithm = 'EdDSA' | 'ES256' | 'ES256K'
-
-export class JWS {
-  signatures: Array<Signature>
-  payload: string
+export enum JWSAlgorithm {
+  EdDSA = 'EdDSA',
+  'Es256' = 'ES256',
+  'Es256K' = 'ES256K',
 }
+

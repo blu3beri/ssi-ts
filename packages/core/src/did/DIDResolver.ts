@@ -1,6 +1,5 @@
-import { DIDDoc } from './DIDDoc'
+import { DIDDocument } from './DIDDocument'
 
-// TODO: Result<Option<DIDDoc>>
 export interface DIDResolver {
-  resolve(did: string): Promise<DIDDoc | undefined>
+  resolve(did: string): Promise<DIDDocument>
 }

@@ -27,7 +27,8 @@ export class b64UrlSafe {
     return buf.toString('base64url')
   }
 
-  static decode(s: string): Uint8Array {
-    return Buffer.from(s, 'base64url')
+  static decode(s: string | Uint8Array): Uint8Array {
+    const y = s instanceof Uint8Array ? s.toString() : s
+    return Buffer.from(y, 'base64url')
   }
 }

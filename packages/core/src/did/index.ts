@@ -1,2 +1,2 @@
-export * from './DidDoc'
+export * from './DidDocument'
 export * from './DIDResolver'
