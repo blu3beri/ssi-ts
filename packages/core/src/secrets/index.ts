@@ -2,14 +2,12 @@ import base58 from 'bs58'
 import { DIDCommError } from '../error'
 import {
   KnownKeyAlgorithm,
-  AsKnownKeyPair,
   Ed25519KeyPair,
   K256KeyPair,
   KnownKeyPair,
   P256KeyPair,
   X25519KeyPair,
   b58,
-  b64,
   b64UrlSafe,
   Codec,
 } from '../utils/'

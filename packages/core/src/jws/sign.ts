@@ -6,7 +6,7 @@ import {
 } from './envelope'
 import { b64UrlSafe, SignatureType } from '../utils'
 import { Buffer } from 'buffer'
-import { JWS } from './parse'
+import { JWS } from './JWS'
 
 // TODO askar
 export class KeySign {
@@ -27,7 +27,7 @@ export const sign = ({
   payload: Uint8Array
   signer: { kid: string; key: KeySign }
   alg: JWSAlgorithm
-}) => {
+}): string => {
   const { key, kid } = signer
   // TODO: proper conversion
   const sigType = alg as unknown as SignatureType
@@ -60,6 +60,8 @@ export const sign = ({
     payload: encodedPayload,
     signatures: [signature],
   })
+
+  return JSON.stringify(jws)
 }
 
 export const signCompact = ({

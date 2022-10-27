@@ -11,9 +11,9 @@ export type Attachment = {
 
 // TODO: this is an enum
 export type AttachmentData = {
-  Base64: { value: Base64AttachmentData }
-  Json: { value: JsonAttachmentData }
-  Links: { value: LinksAttachmentData }
+  Base64?: { value: Base64AttachmentData }
+  Json?: { value: JsonAttachmentData }
+  Links?: { value: LinksAttachmentData }
 }
 
 export type Base64AttachmentData = {

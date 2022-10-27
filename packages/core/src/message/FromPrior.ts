@@ -1,8 +1,8 @@
-import { didOrUrl, isDid } from '../../utils'
-import { DIDCommError } from '../../error'
-import { DIDResolver } from '../../did'
-import { SecretsResolver } from '../../secrets'
-import { Jws, JWSAlgorithm, KeySign } from '../../jws'
+import { DIDResolver } from '../did'
+import { DIDCommError } from '../error'
+import { JWSAlgorithm, KeySign, ParsedCompactJWS, signCompact } from '../jws'
+import { SecretsResolver } from '../secrets'
+import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 import { Buffer } from 'buffer'
 
 export class FromPrior {
@@ -40,6 +40,11 @@ export class FromPrior {
     this.jti = jti
   }
 
+  public static fromString(s: string): FromPrior {
+    const parsed = JSON.parse(s)
+    return new FromPrior(parsed)
+  }
+
   public async pack({
     didResolver,
     secretsResolver,
@@ -49,7 +54,6 @@ export class FromPrior {
     secretsResolver: SecretsResolver
     issuerKid?: string
   }): Promise<{ fromPriorJwt: string; kid: string }> {
-    // TODO: does this automatically bubble-up?
     this.validatePack(issuerKid)
 
     const fromPriorString = JSON.stringify(this)
@@ -60,6 +64,10 @@ export class FromPrior {
 
     const authenticationKids: Array<string> = []
 
+    if (!didDoc.authentication) {
+      throw new DIDCommError('Authentication field not found in did doc')
+    }
+
     if (issuerKid) {
       const { did, didUrl: kid } = didOrUrl(issuerKid)
 
@@ -69,14 +77,14 @@ export class FromPrior {
         throw new DIDCommError('issuerKid does not belong to `iss`')
       }
 
-      const authKid = didDoc.authentications.find((a) => a === kid)
+      const authKid = didDoc.authentication.find((a) => a === kid)
       if (!authKid) {
         throw new DIDCommError('provided issuerKid is not found in DIDDoc')
       }
 
       authenticationKids.push(authKid)
     } else {
-      didDoc.authentications.forEach((a) => authenticationKids.push(a))
+      didDoc.authentication.forEach((a) => authenticationKids.push(a))
     }
 
     const kid = await secretsResolver.findSecrets(authenticationKids)[0]
@@ -87,13 +95,13 @@ export class FromPrior {
 
     const signKeyPair = secret.asKeyPair()
 
-    const fromPriorJwt = Jws.signCompact({
+    const fromPriorJwt = signCompact({
       payload: Buffer.from(fromPriorString),
       // TODO: handle keysign
       signer: { kid, key: new KeySign() },
       typ: 'JWT',
       // TODO: also map es256k and es256
-      algorithm: 'EdDSA',
+      alg: JWSAlgorithm.EdDSA,
     })
 
     return { fromPriorJwt, kid: JSON.stringify(kid) }
@@ -124,36 +132,71 @@ export class FromPrior {
 
     return true
   }
-}
 
-export class FromPriorBuilder {
-  private fromPrior: FromPrior
+  public static async unpack({
+    didResolver,
+    fromPriorJwt,
+  }: {
+    fromPriorJwt: string
+    didResolver: DIDResolver
+  }): Promise<{ fromPrior: FromPrior; kid: string }> {
+    const parsed = ParsedCompactJWS.parseCompact(fromPriorJwt)
+    const typ = parsed.parsedHeader.typ
+    const alg = parsed.parsedHeader.alg
+    const kid = parsed.parsedHeader.kid
 
-  public constructor(fromPrior: { iss: string; sub: string }) {
-    this.fromPrior = new FromPrior(fromPrior)
-  }
+    if (typ !== 'JWT') {
+      throw new DIDCommError('fromPrior is malformed: typ is not JWT')
+    }
 
-  public finalize() {
-    return this.fromPrior
-  }
+    const { did, didUrl } = didOrUrl(kid)
+    if (!did) throw new DIDCommError('DID not fround from kid')
+    if (!didUrl) throw new DIDCommError('fromPrior kid is not DID URL')
 
-  public set aud(aud: string) {
-    this.fromPrior.aud = aud
-  }
+    const didDoc = await didResolver.resolve(did)
+    if (!didDoc) throw new DIDCommError('fromPrior issuer DIDDoc not found')
 
-  public set exp(exp: number) {
-    this.fromPrior.exp = exp
-  }
+    if (!didDoc.authentication) {
+      throw new DIDCommError('authentication field not found in did doc')
+    }
 
-  public set nbf(nbf: number) {
-    this.fromPrior.nbf = nbf
-  }
+    const kidFromDidDoc = didDoc.authentication.find((a) => a === kid)
+    if (!kidFromDidDoc) {
+      throw new DIDCommError('fromPrior issuer kid not found in DIDDoc')
+    }
 
-  public set iat(iat: number) {
-    this.fromPrior.iat = iat
-  }
+    if (!didDoc.verificationMethod) {
+      throw new DIDCommError('authentication field not found in did doc')
+    }
 
-  public set jti(jti: string) {
-    this.fromPrior.jti = jti
+    const key = didDoc.verificationMethod.find((v) => v.id === kid)
+    if (!key) {
+      throw new DIDCommError(
+        'fromPrior issuer verification method not found in DIDDoc'
+      )
+    }
+
+    const valid = false
+    switch (alg) {
+      case JWSAlgorithm.EdDSA:
+        // TODO
+        break
+      case JWSAlgorithm.Es256:
+        // TODO
+        break
+      case JWSAlgorithm.Es256K:
+        // TODO
+        break
+      default:
+        throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
+    }
+
+    if (!valid) throw new DIDCommError('wrong fromPrior signature')
+
+    const payload = b64UrlSafe.decode(parsed.payload)
+    const deserializedPayload = Buffer.from(payload).toString()
+    const fromPrior = FromPrior.fromString(deserializedPayload)
+
+    return { fromPrior, kid }
   }
 }

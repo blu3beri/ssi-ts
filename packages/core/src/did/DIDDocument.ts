@@ -48,13 +48,14 @@ export type PublicKeyJwk = {
 
 type Service = {
   id: string
-  type: string | Array<string>
-  serviceEndpoint: string | Array<string> | Array<ServiceEndpoint>
+  kind: { value: ServiceEndpoint } | Omit<Record<string, unknown>, 'value'>
+  // type: string | Array<string>
+  // serviceEndpoint: string | Array<string> | Array<ServiceEndpoint>
 }
 
-type ServiceEndpoint = {
+export type ServiceEndpoint = {
+  serviceEndpoint: string
   uri: string
   accept?: Array<string>
   routingKeys?: Array<string>
 }
-
