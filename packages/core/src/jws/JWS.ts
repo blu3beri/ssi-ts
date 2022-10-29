@@ -21,7 +21,7 @@ export class JWS {
   }
 
   public parse(): ParsedJWS {
-    const protectedHeaders = []
+    const protectedHeaders: Array<ProtectedHeader> = []
     this.signatures.forEach((s) => {
       const decoded = b64UrlSafe.decode(s.protected)
       const p: ProtectedHeader = JSON.parse(Buffer.from(decoded).toString())

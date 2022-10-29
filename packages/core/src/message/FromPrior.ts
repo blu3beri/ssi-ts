@@ -55,7 +55,7 @@ export class FromPrior {
     issuerKid?: string
   }): Promise<{ fromPriorJwt: string; kid: string }> {
     assertDidProvider(['resolve'])
-    assertSecretProvider(['getSecrets', 'getSecret'])
+    assertSecretProvider(['findSecrets', 'getSecret'])
 
     this.validatePack(issuerKid)
 
@@ -90,7 +90,7 @@ export class FromPrior {
       didDoc.authentication.forEach((a) => authenticationKids.push(a))
     }
 
-    const kid = await secretsProvider.getSecrets!(authenticationKids)[0]
+    const kid = (await secretsProvider.findSecrets!(authenticationKids))[0]
     if (!kid) throw new DIDCommError('No issuer secrets found')
 
     const secret = await secretsProvider.getSecret!(kid)

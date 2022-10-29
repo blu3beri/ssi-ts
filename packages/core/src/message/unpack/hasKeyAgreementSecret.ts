@@ -12,7 +12,7 @@ export const hasKeyAgreementSecret = async ({
 }: {
   didOrKid: string
 }): Promise<boolean> => {
-  assertSecretProvider(['getSecrets'])
+  assertSecretProvider(['findSecrets'])
   const { didUrl: kid, did } = didOrUrl(didOrKid)
   if (!did) throw new DIDCommError('did not found')
 
@@ -27,7 +27,7 @@ export const hasKeyAgreementSecret = async ({
     kids.push(...didDoc.keyAgreement.map((k) => k.id))
   }
 
-  const secretIds = await secretsProvider.getSecrets!(kids)
+  const secretIds = await secretsProvider.findSecrets!(kids)
 
   return secretIds.length > 0
 }

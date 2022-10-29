@@ -1,5 +1,5 @@
 export abstract class KeyPair {
-  public type: string
+  public abstract type: string
 
   private publicKey: Uint8Array
   private privateKey?: Uint8Array

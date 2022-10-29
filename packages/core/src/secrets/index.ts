@@ -53,28 +53,28 @@ export class Secret {
 
     if (
       this.type === SecretType.X25519KeyAgreementKey2019 &&
-      this.secretMaterial.type === 'Base58'
+      this.secretMaterial.type === SecretMaterialType.Base58
     ) {
       return KnownKeyAlgorithm.X25519
     }
 
     if (
       this.type === SecretType.Ed25519VerificationKey2018 &&
-      this.secretMaterial.type === 'Multibase'
+      this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       return KnownKeyAlgorithm.Ed25519
     }
 
     if (
       this.type === SecretType.X25519KeyAgreementKey2020 &&
-      this.secretMaterial.type === 'Multibase'
+      this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       return KnownKeyAlgorithm.X25519
     }
 
     if (
       this.type === SecretType.Ed25519VerificationKey2020 &&
-      this.secretMaterial.type === 'Multibase'
+      this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       return KnownKeyAlgorithm.Ed25519
     }
@@ -86,7 +86,7 @@ export class Secret {
     const value = this.secretMaterial.value as Record<string, unknown>
     if (
       this.type === SecretType.JsonWebKey2020 &&
-      this.secretMaterial.type === 'JWK'
+      this.secretMaterial.type === SecretMaterialType.Jwk
     ) {
       const kty = value.kty
       const crv = value.crv
@@ -126,7 +126,7 @@ export class Secret {
 
     if (
       this.type === SecretType.X25519KeyAgreementKey2019 &&
-      this.secretMaterial.type === 'Base58'
+      this.secretMaterial.type === SecretMaterialType.Base58
     ) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
 
@@ -144,7 +144,7 @@ export class Secret {
 
     if (
       this.type === SecretType.Ed25519VerificationKey2018 &&
-      this.secretMaterial.type === 'Base58'
+      this.secretMaterial.type === SecretMaterialType.Base58
     ) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
       const curve25519PointSize = 32
@@ -161,8 +161,8 @@ export class Secret {
     }
 
     if (
-      (this.type === SecretType.X25519KeyAgreementKey2020,
-      this.secretMaterial.type === 'Multibase')
+      this.type === SecretType.X25519KeyAgreementKey2020 &&
+      this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
@@ -199,7 +199,7 @@ export class Secret {
     if (
       this.type === SecretType.Ed25519VerificationKey2020 &&
       // TODO: why this this incorrect?
-      this.secretMaterial.type === 'Multibase'
+      this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
@@ -246,15 +246,15 @@ export enum SecretType {
   EcdsaSecp256k1verificationKey2019,
 }
 
-export type SecretMaterial<
-  V = Record<string, unknown>,
-  T extends 'JWK' | 'Multibase' | 'Base58' | 'Hex' | 'Other' =
-    | 'JWK'
-    | 'Multibase'
-    | 'Base58'
-    | 'Hex'
-    | 'Other'
-> = {
-  type: T
+export enum SecretMaterialType {
+  Jwk = 'JWK',
+  Multibase = 'Multibase',
+  Base58 = 'base58',
+  Hex = 'Hex',
+  Other = 'Other',
+}
+
+export type SecretMaterial<V = Record<string, unknown>> = {
+  type: SecretMaterialType
   value: V
 }

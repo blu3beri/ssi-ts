@@ -114,7 +114,7 @@ export class Message {
     signBy: string
   ): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
     assertDidProvider(['resolve'])
-    assertSecretProvider(['getSecrets', 'getSecret'])
+    assertSecretProvider(['findSecrets', 'getSecret'])
     this.validatePackSigned(signBy)
 
     const { did, didUrl } = didOrUrl(signBy)
@@ -144,7 +144,7 @@ export class Message {
       authentications.push(...didDoc.authentication)
     }
 
-    const keyId = await secretsProvider.getSecrets!(authentications)[0]
+    const keyId = (await secretsProvider.findSecrets!(authentications))[0]
     if (!keyId) {
       throw new DIDCommError(`Could not resolve secrets for ${authentications}`)
     }
