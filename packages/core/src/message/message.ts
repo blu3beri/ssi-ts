@@ -1,9 +1,7 @@
 import type { PackSignedMetadata } from './PackSignedMetadata'
 import { Attachment } from './attachment'
-import { DIDResolver } from '../did'
 import { FromPrior } from './fromPrior'
 import { DIDCommError } from '../error'
-import { SecretsResolver } from '../secrets'
 import { didOrUrl, isDid } from '../utils'
 import { JWSAlgorithm, KeySign, sign } from '../jws'
 import { Buffer } from 'buffer'
@@ -17,6 +15,12 @@ import {
   UnpackOptions,
 } from './unpack'
 import { tryParseForward } from '../protocols/routing'
+import {
+  assertDidProvider,
+  assertSecretProvider,
+  didProvider,
+  secretsProvider,
+} from '../providers'
 
 export type TMessage = {
   id: string
@@ -75,13 +79,12 @@ export class Message {
     return new Message(JSON.parse(s))
   }
 
-  public async packPlaintext(didResolver: DIDResolver): Promise<string> {
+  public async packPlaintext(): Promise<string> {
     let kid: string | undefined
     let fromPrior: FromPrior | undefined
     if (this.fromPrior) {
       const res = await FromPrior.unpack({
         fromPriorJwt: this.fromPrior,
-        didResolver,
       })
       kid = res.kid
       fromPrior = res.fromPrior
@@ -108,17 +111,17 @@ export class Message {
   }
 
   public async packSigned(
-    signBy: string,
-    didResolver: DIDResolver,
-    secretsResolver: SecretsResolver
+    signBy: string
   ): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
+    assertDidProvider(['resolve'])
+    assertSecretProvider(['getSecrets', 'getSecret'])
     this.validatePackSigned(signBy)
 
     const { did, didUrl } = didOrUrl(signBy)
 
     if (!did) throw new DIDCommError('Could not get did from `signBy` field')
 
-    const didDoc = await didResolver.resolve(did)
+    const didDoc = await didProvider.resolve!(did)
 
     if (!didDoc) {
       throw new DIDCommError('Unable to resolve signer DID')
@@ -141,19 +144,19 @@ export class Message {
       authentications.push(...didDoc.authentication)
     }
 
-    const keyId = await secretsResolver.findSecrets(authentications)[0]
+    const keyId = await secretsProvider.getSecrets!(authentications)[0]
     if (!keyId) {
       throw new DIDCommError(`Could not resolve secrets for ${authentications}`)
     }
 
-    const secret = await secretsResolver.getSecret(keyId)
+    const secret = await secretsProvider.getSecret!(keyId)
     if (!secret) {
       throw new DIDCommError(`Could not find signer secret for ${keyId}`)
     }
 
     const signKey = secret.asKeyPair()
 
-    const payload = await this.packPlaintext(didResolver)
+    const payload = await this.packPlaintext()
 
     const algorithm =
       signKey.type === 'Ed25519'
@@ -188,12 +191,8 @@ export class Message {
 
   private async tryUnwrapForwardedMessage({
     message,
-    secretsResolver,
-    didResolver,
   }: {
     message: string
-    didResolver: DIDResolver
-    secretsResolver: SecretsResolver
   }): Promise<undefined | string> {
     let plaintext: Message | undefined
     try {
@@ -208,8 +207,6 @@ export class Message {
     if (
       await hasKeyAgreementSecret({
         didOrKid: parsedForward.next,
-        secretsResolver,
-        didResolver,
       })
     ) {
       return JSON.stringify(parsedForward.forwardedMessage)
@@ -218,13 +215,9 @@ export class Message {
 
   public async unpack({
     message,
-    didResolver,
     options,
-    secretsResolver,
   }: {
     message: string
-    didResolver: DIDResolver
-    secretsResolver: SecretsResolver
     options: UnpackOptions
   }): Promise<{ message: Message; metadata: UnpackMetadata }> {
     const metadata: UnpackMetadata = {
@@ -242,7 +235,6 @@ export class Message {
     while (true) {
       anoncrypted = await tryUnpackAnoncrypt({
         message: msg,
-        secretsResolver,
         options,
         metadata,
       })
@@ -250,8 +242,6 @@ export class Message {
       if (options.unwrapReWrappingForward && anoncrypted) {
         const forwardMessageOptions = await this.tryUnwrapForwardedMessage({
           message: anoncrypted,
-          didResolver,
-          secretsResolver,
         })
         if (forwardMessageOptions) {
           forwardedMessage = forwardMessageOptions
@@ -266,19 +256,16 @@ export class Message {
 
     const authcrypted = await tryUnpackAuthcrypt({
       message: msg,
-      didResolver,
-      secretsResolver,
       metadata,
       options,
     })
     msg = authcrypted ?? msg
 
-    const signed = await tryUnpackSign({ message: msg, metadata, didResolver })
+    const signed = await tryUnpackSign({ message: msg, metadata })
     msg = signed ?? msg
 
     const plaintext = await tryUnpackPlaintext({
       message: msg,
-      didResolver,
       metadata,
     })
     if (!plaintext) {

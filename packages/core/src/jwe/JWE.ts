@@ -30,6 +30,7 @@ export class JWE {
   }
 
   public parse(buf: Uint8Array): ParsedJWE {
+    // TODO
     const parsed = b64UrlSafe.decode(buf)
     const protectedHeader: ProtectedHeader = JSON.parse(
       Buffer.from(buf).toString()

@@ -2,6 +2,7 @@ import { DIDCommError } from '../error'
 import { ProtectedHeader } from './envelope'
 import { JWE } from './JWE'
 import { Buffer } from 'buffer'
+import { assertCryptoProvider, cryptoProvider } from '../providers'
 
 export class ParsedJWE {
   public jwe: JWE
@@ -21,14 +22,15 @@ export class ParsedJWE {
     this.apu = options.apu
   }
 
-  public verifyDidComm(): boolean {
+  public async verifyDidComm(): Promise<boolean> {
+    assertCryptoProvider(["sha256"])
+
     // TODO: verify the sorting
     const kids = this.jwe.recipients.map((r) => r.header.kid).sort()
 
-    const sKids = kids.join('.')
-
-    // Create a sha256 digest of sKids
-    const didCommApv = new Uint8Array([1, 2, 3])
+    const didCommApv = await cryptoProvider.sha256!.hash(
+      Uint8Array.from(Buffer.from(kids.join('.')))
+    )
 
     if (this.apv !== didCommApv) throw new DIDCommError('APV Mismatch')
 

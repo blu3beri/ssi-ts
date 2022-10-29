@@ -12,11 +12,6 @@ import {
   Codec,
 } from '../utils/'
 
-export type SecretsResolver = {
-  getSecret(secretId: string): Promise<Secret | undefined>
-  findSecrets(secretIds: Array<string>): Promise<Array<Secret>>
-}
-
 export class Secret {
   id: string
   type: SecretType

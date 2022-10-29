@@ -1,4 +1,4 @@
-import { DIDResolver, ServiceEndpoint } from '../did'
+import { ServiceEndpoint } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
 import { v4 } from 'uuid'
@@ -10,6 +10,7 @@ import {
   PackEncryptedOptions,
 } from '../message/PackEncryptedOptions'
 import { Buffer } from 'buffer'
+import { assertDidProvider, didProvider } from '../providers'
 
 const DIDCOMM_V2_PROFILE = 'didcomm/v2'
 const FORWARD_MESSAGE_TYPE = 'https://didcomm.org/routing/2.0/forward'
@@ -19,13 +20,13 @@ export const generateMessageId = v4
 export const findDidcommService = async ({
   did,
   serviceId,
-  didResolver,
 }: {
   did: string
   serviceId?: string
-  didResolver: DIDResolver
 }): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
-  const didDoc = await didResolver.resolve(did)
+  assertDidProvider(['resolve'])
+
+  const didDoc = await didProvider.resolve!(did)
   if (!didDoc) throw new DIDCommError('DID not found')
   if (!didDoc.service) {
     throw new DIDCommError('Service field not found on DIDDoc')
@@ -79,14 +80,12 @@ export const findDidcommService = async ({
   }
 }
 
-export const resolceDidCommServicesChain = async ({
-  didResolver,
+export const resolveDidCommServicesChain = async ({
   to,
   serviceId,
 }: {
   to: string
   serviceId?: string
-  didResolver: DIDResolver
 }): Promise<Array<{ serviceId: string; service: ServiceEndpoint }>> => {
   const { did } = didOrUrl(to)
   if (!did) throw new DIDCommError('Could not get did from to value')
@@ -94,7 +93,6 @@ export const resolceDidCommServicesChain = async ({
   const maybeService = await findDidcommService({
     did,
     serviceId,
-    didResolver,
   })
 
   if (!maybeService) return []
@@ -111,7 +109,7 @@ export const resolceDidCommServicesChain = async ({
       )
     }
 
-    const s = await findDidcommService({ did: serviceEndpoint, didResolver })
+    const s = await findDidcommService({ did: serviceEndpoint })
     if (!s) {
       throw new DIDCommError(
         'Referenced mediator does not provide any correct services'
@@ -180,7 +178,6 @@ export const wrapInForward = async ({
   headers,
   to,
   encAlgAnon,
-  didResolver,
   routingKeys,
 }: {
   message: string
@@ -188,7 +185,6 @@ export const wrapInForward = async ({
   to: string
   routingKeys: Array<string>
   encAlgAnon: AnonCryptAlgorithm
-  didResolver: DIDResolver
 }): Promise<string> => {
   let tos = routingKeys
   let nexts = tos
@@ -208,7 +204,6 @@ export const wrapInForward = async ({
       to,
       encAlgAnon,
       message: Uint8Array.from(Buffer.from(m)),
-      didResolver,
     })
     if (!res) {
       throw new DIDCommError('Could not use anoncrypt')
@@ -222,21 +217,18 @@ export const wrapInForwardIfNeeded = async ({
   to,
   message,
   options,
-  didResolver,
 }: {
   message: string
   to: string
-  didResolver: DIDResolver
   options: PackEncryptedOptions
 }): Promise<
   undefined | { metadata: MessagingServiceMetadata; forwardMessage: string }
 > => {
   if (!options.forward) return undefined
 
-  const serviceChain = await resolceDidCommServicesChain({
+  const serviceChain = await resolveDidCommServicesChain({
     to,
     serviceId: options.messagingService,
-    didResolver,
   })
 
   if (serviceChain.length === 0) return undefined
@@ -257,7 +249,6 @@ export const wrapInForwardIfNeeded = async ({
     headers: options.forwardHeaders,
     encAlgAnon: options.encAlgAnon,
     routingKeys,
-    didResolver,
   })
 
   const metadata: MessagingServiceMetadata = {

@@ -1,9 +1,13 @@
-import { DIDResolver } from '../did'
 import { DIDCommError } from '../error'
 import { JWSAlgorithm, KeySign, ParsedCompactJWS, signCompact } from '../jws'
-import { SecretsResolver } from '../secrets'
 import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 import { Buffer } from 'buffer'
+import {
+  assertDidProvider,
+  assertSecretProvider,
+  didProvider,
+  secretsProvider,
+} from '../providers'
 
 export class FromPrior {
   public iss: string
@@ -46,19 +50,18 @@ export class FromPrior {
   }
 
   public async pack({
-    didResolver,
-    secretsResolver,
     issuerKid,
   }: {
-    didResolver: DIDResolver
-    secretsResolver: SecretsResolver
     issuerKid?: string
   }): Promise<{ fromPriorJwt: string; kid: string }> {
+    assertDidProvider(['resolve'])
+    assertSecretProvider(['getSecrets', 'getSecret'])
+
     this.validatePack(issuerKid)
 
     const fromPriorString = JSON.stringify(this)
 
-    const didDoc = await didResolver.resolve(this.iss)
+    const didDoc = await didProvider.resolve!(this.iss)
 
     if (!didDoc) throw new DIDCommError('Unable to resolve issuer DID')
 
@@ -87,10 +90,10 @@ export class FromPrior {
       didDoc.authentication.forEach((a) => authenticationKids.push(a))
     }
 
-    const kid = await secretsResolver.findSecrets(authenticationKids)[0]
+    const kid = await secretsProvider.getSecrets!(authenticationKids)[0]
     if (!kid) throw new DIDCommError('No issuer secrets found')
 
-    const secret = await secretsResolver.getSecret(kid)
+    const secret = await secretsProvider.getSecret!(kid)
     if (!secret) throw new DIDCommError('Unable to find secret for issuer')
 
     const signKeyPair = secret.asKeyPair()
@@ -134,12 +137,12 @@ export class FromPrior {
   }
 
   public static async unpack({
-    didResolver,
     fromPriorJwt,
   }: {
     fromPriorJwt: string
-    didResolver: DIDResolver
   }): Promise<{ fromPrior: FromPrior; kid: string }> {
+    assertDidProvider(['resolve'])
+
     const parsed = ParsedCompactJWS.parseCompact(fromPriorJwt)
     const typ = parsed.parsedHeader.typ
     const alg = parsed.parsedHeader.alg
@@ -153,7 +156,7 @@ export class FromPrior {
     if (!did) throw new DIDCommError('DID not fround from kid')
     if (!didUrl) throw new DIDCommError('fromPrior kid is not DID URL')
 
-    const didDoc = await didResolver.resolve(did)
+    const didDoc = await didProvider.resolve!(did)
     if (!didDoc) throw new DIDCommError('fromPrior issuer DIDDoc not found')
 
     if (!didDoc.authentication) {

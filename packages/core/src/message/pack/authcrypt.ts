@@ -1,13 +1,9 @@
-import { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../algorithms'
-import { DIDResolver } from '../did'
-import { SecretsResolver } from '../secrets'
+import { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../../algorithms'
 
 // TODO: implementation
 export const authcrypt = async ({
   to,
   from,
-  didResolver,
-  secrectsResolver,
   message,
   encAlgAnon,
   encAlgAuth,
@@ -15,8 +11,6 @@ export const authcrypt = async ({
 }: {
   to: string
   from: string
-  didResolver: DIDResolver
-  secrectsResolver: SecretsResolver
   message: Uint8Array
   encAlgAuth: AuthCryptAlgorithm
   encAlgAnon: AnonCryptAlgorithm

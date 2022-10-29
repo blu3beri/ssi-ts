@@ -1,11 +1,12 @@
-import { DIDResolver } from '../../did'
+import { assertDidProvider } from '../../providers'
 import { Message } from '../Message'
 import { UnpackMetadata } from './UnpackMetadata'
 
 export const tryUnpackPlaintext = async ({}: {
   message: string
-  didResolver: DIDResolver
   metadata: UnpackMetadata
 }): Promise<Message | undefined> => {
+  assertDidProvider(['resolve'])
+
   return undefined
 }

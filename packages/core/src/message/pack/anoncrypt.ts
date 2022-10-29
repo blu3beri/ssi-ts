@@ -1,23 +1,22 @@
 import { AnonCryptAlgorithm } from '../../algorithms'
-import { DIDResolver } from '../../did'
 import { DIDCommError } from '../../error'
+import { assertDidProvider, didProvider } from '../../providers'
 import { didOrUrl, KnownKeyAlgorithm } from '../../utils'
 
 export const anoncrypt = async ({
   to,
   message,
   encAlgAnon,
-  didResolver,
 }: {
   to: string
   message: Uint8Array
   encAlgAnon: AnonCryptAlgorithm
-  didResolver: DIDResolver
 }): Promise<undefined | { message: string; toKids: Array<string> }> => {
+  assertDidProvider(['resolve'])
   const { did: toDid, didUrl: toKid } = didOrUrl(to)
   if (!toDid) throw new DIDCommError('no did in `to` found')
 
-  const toDidDoc = await didResolver.resolve(toDid)
+  const toDidDoc = await didProvider.resolve!(toDid)
   if (!toDidDoc) throw new DIDCommError(`No DID Document found for ${toDid}`)
   if (!toDidDoc.keyAgreement) {
     throw new DIDCommError(`No keyAgreement found in ${toDidDoc}`)

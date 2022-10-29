@@ -1,17 +1,18 @@
-import { DIDResolver } from '../../did'
 import { DIDCommError } from '../../error'
-import { SecretsResolver } from '../../secrets'
+import {
+  assertDidProvider,
+  assertSecretProvider,
+  didProvider,
+  secretsProvider,
+} from '../../providers'
 import { didOrUrl } from '../../utils'
 
 export const hasKeyAgreementSecret = async ({
   didOrKid,
-  didResolver,
-  secretsResolver,
 }: {
   didOrKid: string
-  didResolver: DIDResolver
-  secretsResolver: SecretsResolver
 }): Promise<boolean> => {
+  assertSecretProvider(['getSecrets'])
   const { didUrl: kid, did } = didOrUrl(didOrKid)
   if (!did) throw new DIDCommError('did not found')
 
@@ -19,13 +20,14 @@ export const hasKeyAgreementSecret = async ({
   if (kid) {
     kids.push(kid)
   } else {
-    const didDoc = await didResolver.resolve(did)
+    assertDidProvider(['resolve'])
+    const didDoc = await didProvider.resolve!(did)
     if (!didDoc) throw new DIDCommError('Next did doc not found')
     if (!didDoc.keyAgreement) throw new DIDCommError('No key agreements found')
     kids.push(...didDoc.keyAgreement.map((k) => k.id))
   }
 
-  const secretIds = await secretsResolver.findSecrets(kids)
+  const secretIds = await secretsProvider.getSecrets!(kids)
 
   return secretIds.length > 0
 }
