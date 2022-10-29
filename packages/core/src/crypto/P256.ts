@@ -9,4 +9,8 @@ export class P256 extends KeyPair {
 
     return await cryptoProvider.p256!.sign(message)
   }
+
+  public static fromJwkJson(_: Record<string, unknown>): P256 {
+    return new P256({ publicKey: new Uint8Array([0]) })
+  }
 }

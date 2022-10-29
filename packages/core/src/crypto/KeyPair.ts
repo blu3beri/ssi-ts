@@ -1,3 +1,5 @@
+import { DIDCommError } from '../error'
+
 export abstract class KeyPair {
   public abstract type: string
 
@@ -16,4 +18,8 @@ export abstract class KeyPair {
   }
 
   public abstract sign(message: Uint8Array): Promise<Uint8Array>
+
+  public static fromJwkJson(_: Record<string, unknown>): unknown {
+    throw new DIDCommError(`fromJwkJson not implemented`)
+  }
 }

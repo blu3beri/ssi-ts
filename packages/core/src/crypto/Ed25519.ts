@@ -9,4 +9,8 @@ export class Ed25519 extends KeyPair {
 
     return await cryptoProvider.ed25519!.sign(message)
   }
+
+  public static fromJwkJson(_: Record<string, unknown>): Ed25519 {
+    return new Ed25519({ publicKey: new Uint8Array([0]) })
+  }
 }
