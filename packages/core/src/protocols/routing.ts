@@ -2,10 +2,14 @@ import { DIDResolver, ServiceEndpoint } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
 import { v4 } from 'uuid'
-import { Attachment, Message } from '../message'
+import { anoncrypt, Attachment, Message } from '../message'
 import { ParsedForward } from './ParsedForward'
 import { AnonCryptAlgorithm } from '../algorithms'
-import { PackEncryptedOptions } from '../message/PackEncryptedOptions'
+import {
+  MessagingServiceMetadata,
+  PackEncryptedOptions,
+} from '../message/PackEncryptedOptions'
+import { Buffer } from 'buffer'
 
 const DIDCOMM_V2_PROFILE = 'didcomm/v2'
 const FORWARD_MESSAGE_TYPE = 'https://didcomm.org/routing/2.0/forward'
@@ -196,16 +200,70 @@ export const wrapInForward = async ({
 
   let m = message
 
-  for (let i = 0; i >= tos.length; i++) {
+  for (let i = 0; i > tos.length; i++) {
     const to = tos[i]
     const next = nexts[i]
     m = buildForwardMessage({ forwardMessage: m, next, headers })
-    // TODO:
-    // m = await anoncrypt(to, didResolver, msg, encAlgAnon)
+    const res = await anoncrypt({
+      to,
+      encAlgAnon,
+      message: Uint8Array.from(Buffer.from(m)),
+      didResolver,
+    })
+    if (!res) {
+      throw new DIDCommError('Could not use anoncrypt')
+    }
+    m = res.message
   }
   return m
 }
 
-// TODO: implement this function
-export const wrapInForwardIfNeeded = ({}: {message:string, to:string, didResolver: DIDResolver,options: PackEncryptedOptions}) => {
+export const wrapInForwardIfNeeded = async ({
+  to,
+  message,
+  options,
+  didResolver,
+}: {
+  message: string
+  to: string
+  didResolver: DIDResolver
+  options: PackEncryptedOptions
+}): Promise<
+  undefined | { metadata: MessagingServiceMetadata; forwardMessage: string }
+> => {
+  if (!options.forward) return undefined
+
+  const serviceChain = await resolceDidCommServicesChain({
+    to,
+    serviceId: options.messagingService,
+    didResolver,
+  })
+
+  if (serviceChain.length === 0) return undefined
+
+  const routingKeys = serviceChain
+    .slice(1)
+    .map((s) => s.service.serviceEndpoint)
+
+  serviceChain[serviceChain.length - 1].service.routingKeys?.forEach((k) =>
+    routingKeys.push(k)
+  )
+
+  if (routingKeys.length === 0) return undefined
+
+  const forwardMessage = await wrapInForward({
+    message,
+    to,
+    headers: options.forwardHeaders,
+    encAlgAnon: options.encAlgAnon,
+    routingKeys,
+    didResolver,
+  })
+
+  const metadata: MessagingServiceMetadata = {
+    id: serviceChain[serviceChain.length - 1].serviceId,
+    serviceEndpoint: serviceChain[0].service.serviceEndpoint,
+  }
+
+  return { forwardMessage, metadata }
 }

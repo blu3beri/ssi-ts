@@ -8,3 +8,8 @@ export type PackEncryptedOptions = {
   encAlgAuth: AuthCryptAlgorithm
   encAlgAnon: AnonCryptAlgorithm
 }
+
+export type MessagingServiceMetadata = {
+  id: string
+  serviceEndpoint: string
+}

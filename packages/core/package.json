@@ -4,6 +4,10 @@
   "main": "src/index.ts",
   "dependencies": {
     "bs58": "5.0.0",
-    "buffer": "6.0.3"
+    "buffer": "6.0.3",
+    "uuid": "9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "8.3.4"
   }
 }

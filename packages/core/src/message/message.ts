@@ -7,6 +7,16 @@ import { SecretsResolver } from '../secrets'
 import { didOrUrl, isDid } from '../utils'
 import { JWSAlgorithm, KeySign, sign } from '../jws'
 import { Buffer } from 'buffer'
+import {
+  hasKeyAgreementSecret,
+  tryUnpackAnoncrypt,
+  tryUnpackAuthcrypt,
+  tryUnpackPlaintext,
+  tryUnpackSign,
+  UnpackMetadata,
+  UnpackOptions,
+} from './unpack'
+import { tryParseForward } from '../protocols/routing'
 
 export type TMessage = {
   id: string
@@ -174,5 +184,106 @@ export class Message {
     if (!isDid(signBy)) {
       throw new DIDCommError('`sign_from` value is not a valid DID or DID URL')
     }
+  }
+
+  private async tryUnwrapForwardedMessage({
+    message,
+    secretsResolver,
+    didResolver,
+  }: {
+    message: string
+    didResolver: DIDResolver
+    secretsResolver: SecretsResolver
+  }): Promise<undefined | string> {
+    let plaintext: Message | undefined
+    try {
+      plaintext = this.fromString(message)
+    } catch {
+      return undefined
+    }
+
+    const parsedForward = tryParseForward(plaintext)
+    if (!parsedForward) return undefined
+
+    if (
+      await hasKeyAgreementSecret({
+        didOrKid: parsedForward.next,
+        secretsResolver,
+        didResolver,
+      })
+    ) {
+      return JSON.stringify(parsedForward.forwardedMessage)
+    }
+  }
+
+  public async unpack({
+    message,
+    didResolver,
+    options,
+    secretsResolver,
+  }: {
+    message: string
+    didResolver: DIDResolver
+    secretsResolver: SecretsResolver
+    options: UnpackOptions
+  }): Promise<{ message: Message; metadata: UnpackMetadata }> {
+    const metadata: UnpackMetadata = {
+      encrypted: false,
+      authenticated: false,
+      nonRepudiation: false,
+      anonymousSender: false,
+      reWrappedInForward: false,
+    }
+
+    let msg: string = message
+    let anoncrypted: string | undefined
+    let forwardedMessage: string
+
+    while (true) {
+      anoncrypted = await tryUnpackAnoncrypt({
+        message: msg,
+        secretsResolver,
+        options,
+        metadata,
+      })
+
+      if (options.unwrapReWrappingForward && anoncrypted) {
+        const forwardMessageOptions = await this.tryUnwrapForwardedMessage({
+          message: anoncrypted,
+          didResolver,
+          secretsResolver,
+        })
+        if (forwardMessageOptions) {
+          forwardedMessage = forwardMessageOptions
+          msg = forwardedMessage
+          metadata.reWrappedInForward = true
+          continue
+        }
+      }
+      break
+    }
+    msg = anoncrypted ?? msg
+
+    const authcrypted = await tryUnpackAuthcrypt({
+      message: msg,
+      didResolver,
+      secretsResolver,
+      metadata,
+      options,
+    })
+    msg = authcrypted ?? msg
+
+    const signed = await tryUnpackSign({ message: msg, metadata, didResolver })
+    msg = signed ?? msg
+
+    const plaintext = await tryUnpackPlaintext({
+      message: msg,
+      didResolver,
+      metadata,
+    })
+    if (!plaintext) {
+      throw new DIDCommError('Message is not a valid JWE, JWS or JWM')
+    }
+    return { message: plaintext, metadata }
   }
 }

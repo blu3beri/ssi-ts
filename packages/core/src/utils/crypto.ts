@@ -1,5 +1,6 @@
 import { DIDCommError } from '../error'
 
+// TODO: these need to map to a string
 export enum KnownKeyAlgorithm {
   Ed25519,
   X25519,
