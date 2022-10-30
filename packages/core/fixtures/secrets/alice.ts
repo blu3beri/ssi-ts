@@ -90,7 +90,7 @@ const ALICE_SECRET_KEY_AGREEMENT_KEY_P521 = new Secret({
   },
 })
 
-export const aliceSecrets: Array<Secret> = [
+export const ALICE_SECRETS: Array<Secret> = [
   ALICE_SECRET_AUTH_KEY_ED25519,
   ALICE_SECRET_AUTH_KEY_P256,
   ALICE_SECRET_AUTH_KEY_SECP256K1,

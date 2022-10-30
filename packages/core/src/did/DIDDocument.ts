@@ -2,12 +2,12 @@ export type DIDDocument = {
   id: string
   alsoKnownAs?: Array<string>
   controller?: string | Array<string>
-  authentication?: Array<string>
-  verificationMethod?: Array<VerificationMethod>
-  assertionMethod?: Array<VerificationMethod>
-  capibilityInvocation?: Array<VerificationMethod>
-  capibilityDelegation?: Array<VerificationMethod>
-  keyAgreement?: Array<VerificationMethod>
+  authentication?: Array<VerificationMethod | string>
+  verificationMethod?: Array<VerificationMethod | string>
+  assertionMethod?: Array<VerificationMethod | string>
+  capibilityInvocation?: Array<VerificationMethod | string>
+  capibilityDelegation?: Array<VerificationMethod | string>
+  keyAgreement?: Array<VerificationMethod | string>
   service?: Array<Service>
 }
 
@@ -27,7 +27,7 @@ export type VerificationMethod = {
 
 export type PublicKeyJwk = {
   kty?: 'EC' | 'RSA' | 'oct' | 'OKP'
-  crv?: 'P-256' | 'P-384' | 'P-521' | 'X25519'
+  crv?: 'P-256' | 'P-384' | 'P-521' | 'X25519' | 'Ed25519' | 'secp256k1'
   d?: string
   x?: string
   y?: string
