@@ -1,6 +1,6 @@
 import { Secret, SecretMaterialType, SecretType } from '../../src/secrets'
 
-const ALICE_SECRET_AUTH_KEY_ED25519 = new Secret({
+export const ALICE_SECRET_AUTH_KEY_ED25519 = new Secret({
   id: 'did:example:alice#key-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -14,7 +14,7 @@ const ALICE_SECRET_AUTH_KEY_ED25519 = new Secret({
   },
 })
 
-const ALICE_SECRET_AUTH_KEY_P256 = new Secret({
+export const ALICE_SECRET_AUTH_KEY_P256 = new Secret({
   id: 'did:example:alice#key-2',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -29,7 +29,7 @@ const ALICE_SECRET_AUTH_KEY_P256 = new Secret({
   },
 })
 
-const ALICE_SECRET_AUTH_KEY_SECP256K1 = new Secret({
+export const ALICE_SECRET_AUTH_KEY_SECP256K1 = new Secret({
   id: 'did:example:alice#key-3',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -44,7 +44,7 @@ const ALICE_SECRET_AUTH_KEY_SECP256K1 = new Secret({
   },
 })
 
-const ALICE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
+export const ALICE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
   id: 'did:example:alice#key-x25519-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -60,7 +60,7 @@ const ALICE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
   },
 })
 
-const ALICE_SECRET_KEY_AGREEMENT_KEY_P256 = new Secret({
+export const ALICE_SECRET_KEY_AGREEMENT_KEY_P256 = new Secret({
   id: 'did:example:alice#key-p256-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -75,7 +75,7 @@ const ALICE_SECRET_KEY_AGREEMENT_KEY_P256 = new Secret({
   },
 })
 
-const ALICE_SECRET_KEY_AGREEMENT_KEY_P521 = new Secret({
+export const ALICE_SECRET_KEY_AGREEMENT_KEY_P521 = new Secret({
   id: 'did:example:alice#key-p521-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {

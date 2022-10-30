@@ -4,7 +4,7 @@ import {
   SecretType,
 } from 'packages/core/src/secrets'
 
-const CHARLIE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
+export const CHARLIE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
   id: 'did:example:charlie#key-x25519-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -18,7 +18,7 @@ const CHARLIE_SECRET_KEY_AGREEMENT_KEY_X25519 = new Secret({
   },
 })
 
-const CHARLIE_SECRET_AUTH_KEY_ED25519 = new Secret({
+export const CHARLIE_SECRET_AUTH_KEY_ED25519 = new Secret({
   id: 'did:example:charlie#key-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {

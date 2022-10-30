@@ -1,6 +1,6 @@
 import { Secret, SecretMaterialType, SecretType } from '../../src/secrets'
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
   id: 'did:example:bob#key-x25519-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -14,7 +14,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_2 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_2 = new Secret({
   id: 'did:example:bob#key-x25519-2',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -28,7 +28,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_2 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_3 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_3 = new Secret({
   id: 'did:example:bob#key-x25519-3',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -42,7 +42,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_X25519_3 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
   id: 'did:example:bob#key-p256-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -57,7 +57,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P256_2 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P256_2 = new Secret({
   id: 'did:example:bob#key-p256-2',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -72,7 +72,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_P256_2 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
   id: 'did:example:bob#key-p384-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -87,7 +87,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P384_2 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P384_2 = new Secret({
   id: 'did:example:bob#key-p384-2',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -102,7 +102,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_P384_2 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
   id: 'did:example:bob#key-p521-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
@@ -117,7 +117,7 @@ const BOB_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
   },
 })
 
-const BOB_SECRET_KEY_AGREEMENT_KEY_P521_2 = new Secret({
+export const BOB_SECRET_KEY_AGREEMENT_KEY_P521_2 = new Secret({
   id: 'did:example:bob#key-p521-2',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
