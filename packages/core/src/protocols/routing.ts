@@ -1,4 +1,4 @@
-import { ServiceEndpoint } from '../did'
+import { DIDCommMessagingService } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
 import { v4 } from 'uuid'
@@ -23,7 +23,7 @@ export const findDidcommService = async ({
 }: {
   did: string
   serviceId?: string
-}): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
+}): Promise<{ serviceId: string; service: DIDCommMessagingService } | undefined> => {
   assertDidProvider(['resolve'])
 
   const didDoc = await didProvider.resolve!(did)
@@ -39,7 +39,7 @@ export const findDidcommService = async ({
     }
 
     if (service.kind.value) {
-      const value = service.kind.value as ServiceEndpoint
+      const value = service.kind.value as DIDCommMessagingService
       if (value.accept) {
         if (
           value.accept?.length === 0 ||
@@ -62,7 +62,7 @@ export const findDidcommService = async ({
   } else {
     didDoc.service.find((service) => {
       if (service.kind.value) {
-        const value = service.kind.value as ServiceEndpoint
+        const value = service.kind.value as DIDCommMessagingService
         if (value.accept) {
           if (
             value.accept.length === 0 ||
@@ -86,7 +86,7 @@ export const resolveDidCommServicesChain = async ({
 }: {
   to: string
   serviceId?: string
-}): Promise<Array<{ serviceId: string; service: ServiceEndpoint }>> => {
+}): Promise<Array<{ serviceId: string; service: DIDCommMessagingService }>> => {
   const { did } = didOrUrl(to)
   if (!did) throw new DIDCommError('Could not get did from to value')
 

@@ -46,16 +46,16 @@ export type PublicKeyJwk = {
   kid?: string
 }
 
-type Service = {
+// TODO: fix the "kind" here
+export type Service = {
   id: string
-  kind: { value: ServiceEndpoint } | Omit<Record<string, unknown>, 'value'>
-  // type: string | Array<string>
-  // serviceEndpoint: string | Array<string> | Array<ServiceEndpoint>
+  kind:
+    | { value: DIDCommMessagingService }
+    | Omit<Record<string, unknown>, 'value'>
 }
 
-export type ServiceEndpoint = {
+export type DIDCommMessagingService = {
   serviceEndpoint: string
-  uri: string
   accept?: Array<string>
   routingKeys?: Array<string>
 }
