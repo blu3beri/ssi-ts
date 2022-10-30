@@ -162,13 +162,13 @@ const BOB_VERIFICATION_METHOD_KEY_AGREEM_P521_NOT_IN_SECRETS_1: VerificationMeth
     },
   }
 
-export const BOB_DID_COMM_MESSAGING_SERVICE: DIDCommMessagingService = {
+const BOB_DID_COMM_MESSAGING_SERVICE: DIDCommMessagingService = {
   serviceEndpoint: 'http://example.com/path',
   accept: ['didcomm/v2', 'didcomm/api2;env=rfc587'],
   routingKeys: ['did:example:mediator1#key-x25519-1'],
 }
 
-export const BOB_SERVICE: Service = {
+const BOB_SERVICE: Service = {
   id: 'did:exaqmple:bob#didcomm-1',
   kind: {
     value: BOB_DID_COMM_MESSAGING_SERVICE,
