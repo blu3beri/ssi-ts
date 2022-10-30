@@ -2,12 +2,16 @@
   "name": "didcomm-core",
   "version": "1.0.0",
   "main": "src/index.ts",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "bs58": "5.0.0",
     "buffer": "6.0.3",
     "uuid": "9.0.0"
   },
   "devDependencies": {
+    "@types/jest": "29.2.0",
     "@types/uuid": "8.3.4"
   }
 }
