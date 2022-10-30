@@ -4,7 +4,7 @@ import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 import { Buffer } from 'buffer'
 import {
   assertDidProvider,
-  assertSecretProvider,
+  assertSecretsProvider,
   didProvider,
   secretsProvider,
 } from '../providers'
@@ -55,7 +55,7 @@ export class FromPrior {
     issuerKid?: string
   }): Promise<{ fromPriorJwt: string; kid: string }> {
     assertDidProvider(['resolve'])
-    assertSecretProvider(['findSecrets', 'getSecret'])
+    assertSecretsProvider(['findSecrets', 'getSecret'])
 
     this.validatePack(issuerKid)
 

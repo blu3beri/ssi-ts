@@ -1,7 +1,7 @@
 import { DIDCommError } from '../../error'
 import {
   assertDidProvider,
-  assertSecretProvider,
+  assertSecretsProvider,
   didProvider,
   secretsProvider,
 } from '../../providers'
@@ -12,7 +12,7 @@ export const hasKeyAgreementSecret = async ({
 }: {
   didOrKid: string
 }): Promise<boolean> => {
-  assertSecretProvider(['findSecrets'])
+  assertSecretsProvider(['findSecrets'])
   const { didUrl: kid, did } = didOrUrl(didOrKid)
   if (!did) throw new DIDCommError('did not found')
 

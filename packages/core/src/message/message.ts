@@ -17,7 +17,7 @@ import {
 import { tryParseForward } from '../protocols/routing'
 import {
   assertDidProvider,
-  assertSecretProvider,
+  assertSecretsProvider,
   didProvider,
   secretsProvider,
 } from '../providers'
@@ -114,7 +114,7 @@ export class Message {
     signBy: string
   ): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
     assertDidProvider(['resolve'])
-    assertSecretProvider(['findSecrets', 'getSecret'])
+    assertSecretsProvider(['findSecrets', 'getSecret'])
     this.validatePackSigned(signBy)
 
     const { did, didUrl } = didOrUrl(signBy)
