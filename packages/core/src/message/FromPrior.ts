@@ -85,9 +85,13 @@ export class FromPrior {
         throw new DIDCommError('provided issuerKid is not found in DIDDoc')
       }
 
-      authenticationKids.push(authKid)
+      authenticationKids.push(
+        typeof authKid === 'string' ? authKid : authKid.id
+      )
     } else {
-      didDoc.authentication.forEach((a) => authenticationKids.push(a))
+      didDoc.authentication.forEach((a) =>
+        authenticationKids.push(typeof a === 'string' ? a : a.id)
+      )
     }
 
     const kid = (await secretsProvider.findSecrets!(authenticationKids))[0]

@@ -24,7 +24,9 @@ export const hasKeyAgreementSecret = async ({
     const didDoc = await didProvider.resolve!(did)
     if (!didDoc) throw new DIDCommError('Next did doc not found')
     if (!didDoc.keyAgreement) throw new DIDCommError('No key agreements found')
-    kids.push(...didDoc.keyAgreement.map((k) => k.id))
+    kids.push(
+      ...didDoc.keyAgreement.map((k) => (typeof k === 'string' ? k : k.id))
+    )
   }
 
   const secretIds = await secretsProvider.findSecrets!(kids)

@@ -141,7 +141,9 @@ export class Message {
       }
       authentications.push(didUrl)
     } else {
-      authentications.push(...didDoc.authentication)
+      didDoc.authentication.forEach((a) =>
+        authentications.push(typeof a === 'string' ? a : a.id)
+      )
     }
 
     const keyId = (await secretsProvider.findSecrets!(authentications))[0]

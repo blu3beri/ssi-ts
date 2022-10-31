@@ -3,7 +3,7 @@ export type DIDDocument = {
   alsoKnownAs?: Array<string>
   controller?: string | Array<string>
   authentication?: Array<VerificationMethod | string>
-  verificationMethod?: Array<VerificationMethod | string>
+  verificationMethod?: Array<VerificationMethod>
   assertionMethod?: Array<VerificationMethod | string>
   capibilityInvocation?: Array<VerificationMethod | string>
   capibilityDelegation?: Array<VerificationMethod | string>

@@ -23,7 +23,7 @@ export class ParsedJWE {
   }
 
   public async verifyDidComm(): Promise<boolean> {
-    assertCryptoProvider(["sha256"])
+    assertCryptoProvider(['sha256'])
 
     // TODO: verify the sorting
     const kids = this.jwe.recipients.map((r) => r.header.kid).sort()
@@ -35,7 +35,7 @@ export class ParsedJWE {
     if (this.apv !== didCommApv) throw new DIDCommError('APV Mismatch')
 
     const didCommApu = this.apu
-      ? Buffer.from(this.apu).toString('UTF-8')
+      ? Buffer.from(this.apu).toString('utf-8')
       : undefined
 
     if (this.protected.skid && didCommApu && didCommApu.length > 0) {

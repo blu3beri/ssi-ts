@@ -23,7 +23,7 @@ export const anoncrypt = async ({
   }
 
   const toKids = toDidDoc.keyAgreement.filter((k) =>
-    toKid ? k.id === toKid : true
+    toKid ? (typeof k === 'string' ? k : k.id) === toKid : true
   )
 
   if (toKids.length === 0) {
@@ -31,7 +31,9 @@ export const anoncrypt = async ({
   }
 
   const toKeys = toKids.map((kid) => {
-    const method = toDidDoc.verificationMethod?.find((v) => v.id === kid.id)
+    const method = toDidDoc.verificationMethod?.find(
+      (v) => v.id === (typeof kid === 'string' ? kid : kid.id)
+    )
     if (!method) {
       throw new DIDCommError('External keys are not supported in this version')
     }
