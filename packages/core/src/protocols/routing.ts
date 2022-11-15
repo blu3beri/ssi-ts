@@ -1,4 +1,4 @@
-import { DIDCommMessagingService } from '../did'
+import { ServiceEndpoint } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
 import { v4 } from 'uuid'
@@ -23,7 +23,7 @@ export const findDidcommService = async ({
 }: {
   did: string
   serviceId?: string
-}): Promise<{ serviceId: string; service: DIDCommMessagingService } | undefined> => {
+}): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
   assertDidProvider(['resolve'])
 
   const didDoc = await didProvider.resolve!(did)
@@ -38,21 +38,21 @@ export const findDidcommService = async ({
       throw new DIDCommError(`Service with specified ID ${serviceId} not found`)
     }
 
-    if (service.kind.value) {
-      const value = service.kind.value as DIDCommMessagingService
-      if (value.accept) {
+    if (service.serviceEndpoint) {
+      const serviceEndpoint = service.serviceEndpoint
+      if (serviceEndpoint.accept) {
         if (
-          value.accept?.length === 0 ||
-          value.accept?.includes(DIDCOMM_V2_PROFILE)
+          serviceEndpoint.accept?.length === 0 ||
+          serviceEndpoint.accept?.includes(DIDCOMM_V2_PROFILE)
         ) {
-          return { serviceId, service: value }
+          return { serviceId, service: serviceEndpoint }
         } else {
           throw new DIDCommError(
             'Service with specified ID does not accept didcomm/v2 profile'
           )
         }
       } else {
-        return { serviceId, service: value }
+        return { serviceId, service: serviceEndpoint }
       }
     } else {
       throw new DIDCommError(
@@ -61,14 +61,14 @@ export const findDidcommService = async ({
     }
   } else {
     didDoc.service.find((service) => {
-      if (service.kind.value) {
-        const value = service.kind.value as DIDCommMessagingService
-        if (value.accept) {
+      if (service.serviceEndpoint) {
+        const serviceEndpoint = service.serviceEndpoint
+        if (serviceEndpoint.accept) {
           if (
-            value.accept.length === 0 ||
-            value.accept.includes(DIDCOMM_V2_PROFILE)
+            serviceEndpoint.accept.length === 0 ||
+            serviceEndpoint.accept.includes(DIDCOMM_V2_PROFILE)
           ) {
-            return { sevice: value, serviceId: service.id }
+            return { sevice: serviceEndpoint, serviceId: service.id }
           }
         } else {
           return undefined
@@ -86,7 +86,7 @@ export const resolveDidCommServicesChain = async ({
 }: {
   to: string
   serviceId?: string
-}): Promise<Array<{ serviceId: string; service: DIDCommMessagingService }>> => {
+}): Promise<Array<{ serviceId: string; service: ServiceEndpoint }>> => {
   const { did } = didOrUrl(to)
   if (!did) throw new DIDCommError('Could not get did from to value')
 
@@ -100,7 +100,7 @@ export const resolveDidCommServicesChain = async ({
   const { service } = maybeService
 
   const services = [maybeService]
-  let serviceEndpoint = service.serviceEndpoint
+  let serviceEndpoint = service.uri
 
   while (isDid(serviceEndpoint)) {
     if (services.length > 1) {
@@ -117,7 +117,7 @@ export const resolveDidCommServicesChain = async ({
     }
 
     services.unshift(s)
-    serviceEndpoint = s.service.serviceEndpoint
+    serviceEndpoint = s.service.uri
   }
 
   return services
@@ -233,9 +233,7 @@ export const wrapInForwardIfNeeded = async ({
 
   if (serviceChain.length === 0) return undefined
 
-  const routingKeys = serviceChain
-    .slice(1)
-    .map((s) => s.service.serviceEndpoint)
+  const routingKeys = serviceChain.slice(1).map((s) => s.service.uri)
 
   serviceChain[serviceChain.length - 1].service.routingKeys?.forEach((k) =>
     routingKeys.push(k)
@@ -253,7 +251,7 @@ export const wrapInForwardIfNeeded = async ({
 
   const metadata: MessagingServiceMetadata = {
     id: serviceChain[serviceChain.length - 1].serviceId,
-    serviceEndpoint: serviceChain[0].service.serviceEndpoint,
+    serviceEndpoint: serviceChain[0].service.uri,
   }
 
   return { forwardMessage, metadata }

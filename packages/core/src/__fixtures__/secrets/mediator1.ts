@@ -1,7 +1,7 @@
-import { Secret, SecretMaterialType, SecretType } from '../../src/secrets'
+import { Secret, SecretMaterialType, SecretType } from '../../secrets'
 
-export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
-  id: 'did:example:mediator3#key-x25519-1',
+export const MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
+  id: 'did:example:mediator1#key-x25519-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
     type: SecretMaterialType.Jwk,
@@ -14,8 +14,8 @@ export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
   },
 })
 
-export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
-  id: 'did:example:mediator3#key-p256-1',
+export const MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
+  id: 'did:example:mediator1#key-p256-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
     type: SecretMaterialType.Jwk,
@@ -29,8 +29,8 @@ export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P256_1 = new Secret({
   },
 })
 
-export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
-  id: 'did:example:mediator3#key-p384-1',
+export const MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
+  id: 'did:example:mediator1#key-p384-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
     type: SecretMaterialType.Jwk,
@@ -44,8 +44,8 @@ export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P384_1 = new Secret({
   },
 })
 
-export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
-  id: 'did:example:mediator3#key-p521-1',
+export const MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
+  id: 'did:example:mediator1#key-p521-1',
   type: SecretType.JsonWebKey2020,
   secretMaterial: {
     type: SecretMaterialType.Jwk,
@@ -59,9 +59,9 @@ export const MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P521_1 = new Secret({
   },
 })
 
-export const MEDIATOR3_SECRETS: Array<Secret> = [
-  MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_X25519_1,
-  MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P256_1,
-  MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P384_1,
-  MEDIATOR3_SECRET_KEY_AGREEMENT_KEY_P521_1,
+export const MEDIATOR1_SECRETS: Array<Secret> = [
+  MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_X25519_1,
+  MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P256_1,
+  MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P384_1,
+  MEDIATOR1_SECRET_KEY_AGREEMENT_KEY_P521_1,
 ]

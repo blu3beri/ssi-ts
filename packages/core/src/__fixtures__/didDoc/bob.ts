@@ -1,9 +1,9 @@
 import {
-  DIDCommMessagingService,
+  ServiceEndpoint,
   DIDDocument,
   Service,
   VerificationMethod,
-} from 'packages/core/src/did'
+} from '../../did'
 
 const BOB_VERIFICATION_METHOD_KEY_AGREEM_X25519_1: VerificationMethod = {
   id: 'did:example:bob#key-x25519-1',
@@ -162,17 +162,16 @@ const BOB_VERIFICATION_METHOD_KEY_AGREEM_P521_NOT_IN_SECRETS_1: VerificationMeth
     },
   }
 
-const BOB_DID_COMM_MESSAGING_SERVICE: DIDCommMessagingService = {
-  serviceEndpoint: 'http://example.com/path',
+const BOB_DID_COMM_MESSAGING_SERVICE: ServiceEndpoint = {
+  uri: 'http://example.com/path',
   accept: ['didcomm/v2', 'didcomm/api2;env=rfc587'],
   routingKeys: ['did:example:mediator1#key-x25519-1'],
 }
 
 const BOB_SERVICE: Service = {
   id: 'did:exaqmple:bob#didcomm-1',
-  kind: {
-    value: BOB_DID_COMM_MESSAGING_SERVICE,
-  },
+  type: 'DIDCommMessaging',
+  serviceEndpoint: BOB_DID_COMM_MESSAGING_SERVICE,
 }
 
 export const BOB_DID_DOC: DIDDocument = {

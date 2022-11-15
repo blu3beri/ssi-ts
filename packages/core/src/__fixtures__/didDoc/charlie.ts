@@ -1,9 +1,9 @@
 import {
-  DIDCommMessagingService,
+  ServiceEndpoint,
   DIDDocument,
   Service,
   VerificationMethod,
-} from '../../src/did'
+} from '../../did'
 
 const CHARLIE_VERIFICATION_METHOD_KEY_AGREEM_X25519: VerificationMethod = {
   id: 'did:example:charlie#key-x25519-1',
@@ -27,8 +27,8 @@ const CHARLIE_AUTH_METHOD_25519: VerificationMethod = {
   },
 }
 
-const CHARLIE_DID_COMM_MESSAGING_SERVICE: DIDCommMessagingService = {
-  serviceEndpoint: 'did:example:mediator3',
+const CHARLIE_DID_COMM_MESSAGING_SERVICE: ServiceEndpoint = {
+  uri: 'did:example:mediator3',
   accept: ['didcomm/v2', 'didcomm/aip2;env=rfc587'],
   routingKeys: [
     'did:example:mediator2#key-x25519-1',
@@ -38,7 +38,8 @@ const CHARLIE_DID_COMM_MESSAGING_SERVICE: DIDCommMessagingService = {
 
 const CHARLIE_SERVICE: Service = {
   id: 'did:example:charlie#didcomm-1',
-  kind: { value: CHARLIE_DID_COMM_MESSAGING_SERVICE },
+  type: 'DIDCommMessaging',
+  serviceEndpoint: CHARLIE_DID_COMM_MESSAGING_SERVICE,
 }
 
 export const CHARLIE_DID_DOC: DIDDocument = {

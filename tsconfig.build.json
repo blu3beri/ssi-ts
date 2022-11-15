@@ -26,6 +26,7 @@
     "build",
     "**/*.test.ts",
     "**/__tests__/*.ts",
+    "**/__fixtures__/",
     "**/__mocks__/*.ts",
     "**/build/**",
     "scripts"

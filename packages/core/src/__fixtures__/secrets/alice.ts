@@ -1,4 +1,4 @@
-import { Secret, SecretMaterialType, SecretType } from '../../src/secrets'
+import { Secret, SecretMaterialType, SecretType } from '../../secrets'
 
 export const ALICE_SECRET_AUTH_KEY_ED25519 = new Secret({
   id: 'did:example:alice#key-1',

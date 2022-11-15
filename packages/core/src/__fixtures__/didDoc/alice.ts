@@ -1,4 +1,4 @@
-import { VerificationMethod, DIDDocument } from '../../src/did'
+import { VerificationMethod, DIDDocument } from '../../did'
 
 const ALICE_VERIFICATION_METHOD_KEY_AGREEM_X25519_NOT_IN_SECRET: VerificationMethod =
   {

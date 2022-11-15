@@ -20,6 +20,6 @@ export abstract class KeyPair {
   public abstract sign(message: Uint8Array): Promise<Uint8Array>
 
   public static fromJwkJson(_: Record<string, unknown>): unknown {
-    throw new DIDCommError(`fromJwkJson not implemented`)
+    throw new DIDCommError(`fromJwkJson not implemented on base class`)
   }
 }

@@ -1,0 +1,19 @@
+{
+  "id": "did:example:123",
+  "authentication": [
+    {
+      "id": "did:example:123#z6MkecaLyHuYWkayBDLw5ihndj3T1m6zKTGqau3A51G7RBf3",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123",
+      "publicKeyMultibase": "zAKJP3f7BD6W4iWEQ9jwndVTCBq8ua2Utt8EEjJ6Vxsf"
+    }
+  ],
+  "assertionMethod": [
+    {
+      "id": "did:example:123#z6MkiukuAuQAE8ozxvmahnQGzApvtW7KT5XXKfojjwbdEomY",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123",
+      "publicKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+    }
+  ]
+}
