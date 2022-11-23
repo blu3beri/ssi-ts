@@ -2,7 +2,13 @@ import type { PackSignedMetadata } from './PackSignedMetadata'
 import { Attachment } from './attachment'
 import { FromPrior } from './fromPrior'
 import { DIDCommError } from '../error'
-import { didOrUrl, isDid } from '../utils'
+import {
+  didOrUrl,
+  Ed25519KeyPair,
+  isDid,
+  K256KeyPair,
+  P256KeyPair,
+} from '../utils'
 import { JWSAlgorithm, KeySign, sign } from '../jws'
 import { Buffer } from 'buffer'
 import {
@@ -161,22 +167,22 @@ export class Message {
     const payload = await this.packPlaintext()
 
     const algorithm =
-      signKey.type === 'Ed25519'
+      signKey instanceof Ed25519KeyPair
         ? JWSAlgorithm.EdDSA
-        : signKey.type === 'P256'
+        : signKey instanceof P256KeyPair
         ? JWSAlgorithm.Es256
-        : signKey.type === 'K256'
+        : signKey instanceof K256KeyPair
         ? JWSAlgorithm.Es256K
         : undefined
 
     if (!algorithm)
-      throw new DIDCommError(`Unsupported signature algorithm ${signKey.type}`)
+      throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
 
     const message = sign({
       payload: Buffer.from(payload),
       alg: algorithm,
       // TODO: all the keypairs should implement keySign
-      signer: { kid: keyId, key: signKey.keyPair as unknown as KeySign },
+      signer: { kid: keyId, key: signKey as unknown as KeySign },
     })
 
     return {

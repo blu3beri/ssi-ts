@@ -9,11 +9,12 @@ export enum KnownKeyAlgorithm {
   Unsupported,
 }
 
+// TODO: replace these keypair with the provider type
 // TODO: askar_crypto::alg::k256keypair...
 // generation, etc. must be supplied by the user
 export class P256KeyPair {
-  private publicKey: string
-  private secretKey: string
+  public publicKey: string
+  public secretKey: string
 
   public constructor({
     publicKey,
@@ -32,8 +33,8 @@ export class P256KeyPair {
 }
 
 export class K256KeyPair {
-  private publicKey: string
-  private secretKey: string
+  public publicKey: string
+  public secretKey: string
 
   public constructor({
     publicKey,
@@ -52,8 +53,8 @@ export class K256KeyPair {
 }
 
 export class Ed25519KeyPair {
-  private publicKey: string
-  private secretKey: string
+  public publicKey: string
+  public secretKey: string
 
   public constructor({
     publicKey,
@@ -79,8 +80,8 @@ export class Ed25519KeyPair {
 }
 
 export class X25519KeyPair {
-  private publicKey: Uint8Array
-  private secretKey?: Uint8Array
+  public publicKey: Uint8Array
+  public secretKey?: Uint8Array
 
   public constructor({
     publicKey,
