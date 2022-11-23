@@ -82,7 +82,7 @@ export class Secret {
     return KnownKeyAlgorithm.Unsupported
   }
 
-  public asKeyPair(): KnownKeyPair {
+  public asKeyPair() {
     const value = this.secretMaterial.value as Record<string, unknown>
     if (
       this.type === SecretType.JsonWebKey2020 &&
@@ -92,33 +92,13 @@ export class Secret {
       const crv = value.crv
 
       if (kty === 'EC') {
-        if (crv === 'P-256') {
-          return {
-            type: 'P256',
-            keyPair: P256KeyPair.fromJwkJson(value),
-          }
-        }
-        if (crv === 'secp256k1') {
-          return {
-            type: 'K256',
-            keyPair: K256KeyPair.fromJwkJson(value),
-          }
-        }
+        if (crv === 'P-256') return P256KeyPair.fromJwkJson(value)
+        if (crv === 'secp256k1') return K256KeyPair.fromJwkJson(value)
       }
 
       if (kty === 'OKP') {
-        if (crv === 'Ed25519') {
-          return {
-            type: 'Ed25519',
-            keyPair: Ed25519KeyPair.fromJwkJson(value),
-          }
-        }
-        if (crv === 'X25519') {
-          return {
-            type: 'X25519',
-            keyPair: X25519KeyPair.fromJwkJson(value),
-          }
-        }
+        if (crv === 'Ed25519') return Ed25519KeyPair.fromJwkJson(value)
+        if (crv === 'X25519') return X25519KeyPair.fromJwkJson(value)
       }
 
       throw new DIDCommError(`Unsupported key type or curve.`)
@@ -139,7 +119,7 @@ export class Secret {
         d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
       }
 
-      return { type: 'X25519', keyPair: X25519KeyPair.fromJwkJson(jwk) }
+      return X25519KeyPair.fromJwkJson(jwk)
     }
 
     if (
@@ -157,7 +137,7 @@ export class Secret {
         d: b64UrlSafe.encode(dValue),
       }
 
-      return { type: 'Ed25519', keyPair: Ed25519KeyPair.fromJwkJson(jwk) }
+      return Ed25519KeyPair.fromJwkJson(jwk)
     }
 
     if (
@@ -193,7 +173,7 @@ export class Secret {
         d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
       }
 
-      return { type: 'X25519', keyPair: X25519KeyPair.fromJwkJson(jwk) }
+      return X25519KeyPair.fromJwkJson(jwk)
     }
 
     if (
@@ -230,7 +210,7 @@ export class Secret {
         d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
       }
 
-      return { type: 'Ed25519', keyPair: Ed25519KeyPair.fromJwkJson(jwk) }
+      return Ed25519KeyPair.fromJwkJson(jwk)
     }
 
     throw new DIDCommError('Unsupported secret method and material combination')

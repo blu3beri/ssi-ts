@@ -29,11 +29,10 @@ export class JWE {
     return new JWE(parsed)
   }
 
-  public parse(buf: Uint8Array): ParsedJWE {
-    // TODO
-    const parsed = b64UrlSafe.decode(buf)
+  public parse(): ParsedJWE {
+    const parsed = b64UrlSafe.decode(this.protected)
     const protectedHeader: ProtectedHeader = JSON.parse(
-      Buffer.from(buf).toString()
+      Buffer.from(parsed).toString()
     )
     const apv = b64UrlSafe.decode(protectedHeader.apv)
     const apu = protectedHeader.apu

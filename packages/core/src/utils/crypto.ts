@@ -79,8 +79,8 @@ export class Ed25519KeyPair {
 }
 
 export class X25519KeyPair {
-  public publicKey: Uint8Array
-  public secretKey?: Uint8Array
+  private publicKey: Uint8Array
+  private secretKey?: Uint8Array
 
   public constructor({
     publicKey,
@@ -93,14 +93,14 @@ export class X25519KeyPair {
     this.secretKey = secretKey
   }
 
-  static fromJwkJson(json: Record<string, unknown>) {
+  public static fromJwkJson(json: Record<string, unknown>) {
     return new X25519KeyPair({
       publicKey: new Uint8Array([]),
       secretKey: new Uint8Array([]),
     })
   }
 
-  static fromSecretBytes(bytes: Uint8Array) {
+  public static fromSecretBytes(bytes: Uint8Array) {
     return new X25519KeyPair({
       publicKey: new Uint8Array([]),
       secretKey: bytes,
@@ -108,14 +108,11 @@ export class X25519KeyPair {
   }
 }
 
-// TODO: calculate K based on T
-export type KnownKeyPair<
-  T = 'Ed25519' | 'X25519' | 'P256' | 'K256',
-  K = Ed25519KeyPair | X25519KeyPair | P256KeyPair | K256KeyPair
-> = {
-  type: T
-  keyPair: K
-}
+export type KnownKeyPair =
+  | Ed25519KeyPair
+  | X25519KeyPair
+  | P256KeyPair
+  | K256KeyPair
 
 export abstract class AsKnownKeyPair {
   abstract keyAlg(): KnownKeyAlgorithm
@@ -129,10 +126,8 @@ export abstract class AsKnownKeyPair {
     }
 
     const keyPair = this.asKeyPair()
-    if (keyPair.type === 'Ed25519') return keyPair.keyPair as Ed25519KeyPair
-    throw new DIDCommError(
-      `Unexpected key pair type! Expected Ed25519, got ${this.asKeyPair().type}`
-    )
+    if (keyPair instanceof Ed25519KeyPair) return keyPair
+    throw new DIDCommError(`Unexpected key pair type! Expected Ed25519`)
   }
 
   asX25519(): X25519KeyPair {
@@ -143,10 +138,8 @@ export abstract class AsKnownKeyPair {
     }
 
     const keyPair = this.asKeyPair()
-    if (keyPair.type === 'X25519') return keyPair.keyPair as X25519KeyPair
-    throw new DIDCommError(
-      `Unexpected key pair type! Expected X25519, got ${this.asKeyPair().type}`
-    )
+    if (keyPair instanceof X25519KeyPair) return keyPair
+    throw new DIDCommError(`Unexpected key pair type! Expected X25519`)
   }
 
   asP256(): P256KeyPair {
@@ -157,10 +150,8 @@ export abstract class AsKnownKeyPair {
     }
 
     const keyPair = this.asKeyPair()
-    if (keyPair.type === 'P256') return keyPair.keyPair as P256KeyPair
-    throw new DIDCommError(
-      `Unexpected key pair type! Expected P256, got ${this.asKeyPair().type}`
-    )
+    if (keyPair instanceof P256KeyPair) return keyPair
+    throw new DIDCommError(`Unexpected key pair type! Expected P256`)
   }
 
   asK256(): K256KeyPair {
@@ -171,9 +162,7 @@ export abstract class AsKnownKeyPair {
     }
 
     const keyPair = this.asKeyPair()
-    if (keyPair.type === 'K256') return keyPair.keyPair as K256KeyPair
-    throw new DIDCommError(
-      `Unexpected key pair type! Expected K256, got ${this.asKeyPair().type}`
-    )
+    if (keyPair instanceof K256KeyPair) return keyPair
+    throw new DIDCommError(`Unexpected key pair type! Expected K256`)
   }
 }
