@@ -1,10 +1,10 @@
 import { DIDCommError } from '../error'
-import { JWEAlgorithm, ProtectedHeader } from './envelope'
+import { ProtectedHeader } from './envelope'
 import { JWE } from './JWE'
 import { Buffer } from 'buffer'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
-import { b64UrlSafe, P256KeyPair, X25519KeyPair } from '../utils'
-import { Kdf } from '../crypto'
+import { b64UrlSafe } from '../utils'
+import { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
 
 export class ParsedJWE {
   public jwe: JWE
@@ -53,7 +53,7 @@ export class ParsedJWE {
     return true
   }
 
-  public decrypt<
+  public async decrypt<
     CE extends {
       decrypt: (options: {
         buf: Uint8Array
@@ -75,7 +75,7 @@ export class ParsedJWE {
     ke: KES
     sender?: { id: string; keyExchange: KE }
     recipient: { id: string; keyExchange: KE }
-  }): Uint8Array {
+  }): Promise<Uint8Array> {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
 
@@ -94,7 +94,7 @@ export class ParsedJWE {
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
     // TODO: KE::from_jwk_value(....) but KE is a generic and this does not work in typescript
-    const epk = ke.fromJwkJson(this.protected.epk) as KE
+    const epk = (await ke.fromJwkJson(this.protected.epk)) as KE
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 

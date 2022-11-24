@@ -1,16 +1,13 @@
 import base58 from 'bs58'
-import { DIDCommError } from '../error'
 import {
-  KnownKeyAlgorithm,
   Ed25519KeyPair,
   K256KeyPair,
-  KnownKeyPair,
+  KnownKeyAlgorithm,
   P256KeyPair,
   X25519KeyPair,
-  b58,
-  b64UrlSafe,
-  Codec,
-} from '../utils/'
+} from '../crypto'
+import { DIDCommError } from '../error'
+import { b58, b64UrlSafe, Codec } from '../utils/'
 
 export class Secret {
   id: string
@@ -82,7 +79,7 @@ export class Secret {
     return KnownKeyAlgorithm.Unsupported
   }
 
-  public asKeyPair() {
+  public async asKeyPair() {
     const value = this.secretMaterial.value as Record<string, unknown>
     if (
       this.type === SecretType.JsonWebKey2020 &&
@@ -110,13 +107,15 @@ export class Secret {
     ) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
 
-      const keyPair = X25519KeyPair.fromSecretBytes(decodedValue)
+      const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
         kty: 'OKP',
         crv: 'X25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
-        d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
+        d: keyPair.privateKey
+          ? b64UrlSafe.encode(keyPair.privateKey)
+          : undefined,
       }
 
       return X25519KeyPair.fromJwkJson(jwk)
@@ -164,13 +163,15 @@ export class Secret {
         )
       }
 
-      const keyPair = X25519KeyPair.fromSecretBytes(decodedValue)
+      const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
         kty: 'OKP',
         crv: 'X25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
-        d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
+        d: keyPair.privateKey
+          ? b64UrlSafe.encode(keyPair.privateKey)
+          : undefined,
       }
 
       return X25519KeyPair.fromJwkJson(jwk)
@@ -201,13 +202,15 @@ export class Secret {
         )
       }
 
-      const keyPair = Ed25519KeyPair.fromSecretBytes(decodedValue)
+      const keyPair = await Ed25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
         kty: 'OKP',
         crv: 'Ed25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
-        d: keyPair.secretKey ? b64UrlSafe.encode(keyPair.secretKey) : undefined,
+        d: keyPair.privateKey
+          ? b64UrlSafe.encode(keyPair.privateKey)
+          : undefined,
       }
 
       return Ed25519KeyPair.fromJwkJson(jwk)

@@ -1,17 +1,15 @@
 import { DIDCommError } from '../../error'
 import { JWE, JWEAlgorithm } from '../../jwe'
-import { assertSecretsProvider, secretsProvider } from '../../providers'
 import {
-  didOrUrl,
-  Ed25519KeyPair,
-  K256KeyPair,
-  P256KeyPair,
-  X25519KeyPair,
-} from '../../utils'
+  assertCryptoProvider,
+  assertSecretsProvider,
+  secretsProvider,
+} from '../../providers'
+import { didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
 import { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
-import { Kdf } from '../../crypto'
+import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -23,6 +21,7 @@ export const tryUnpackAnoncrypt = async ({
   metadata: UnpackMetadata
 }): Promise<undefined | string> => {
   assertSecretsProvider(['getSecret', 'findSecrets'])
+  assertCryptoProvider(['p256', 'x25519'])
 
   const jwe = JWE.fromString(message)
 
@@ -85,7 +84,7 @@ export const tryUnpackAnoncrypt = async ({
 
     // TODO: finish this implementation for all the algorithms and keypair types
     if (toKey instanceof X25519KeyPair) {
-      payload = parsedJwe.decrypt({
+      payload = await parsedJwe.decrypt({
         recipient: { id: toKid, keyExchange: toKey },
         ke: X25519KeyPair,
         kdf: Kdf,

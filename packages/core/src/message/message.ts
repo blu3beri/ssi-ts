@@ -2,13 +2,7 @@ import type { PackSignedMetadata } from './PackSignedMetadata'
 import { Attachment } from './attachment'
 import { FromPrior } from './fromPrior'
 import { DIDCommError } from '../error'
-import {
-  didOrUrl,
-  Ed25519KeyPair,
-  isDid,
-  K256KeyPair,
-  P256KeyPair,
-} from '../utils'
+import { didOrUrl, isDid } from '../utils'
 import { JWSAlgorithm, KeySign, sign } from '../jws'
 import { Buffer } from 'buffer'
 import {
@@ -27,6 +21,7 @@ import {
   didProvider,
   secretsProvider,
 } from '../providers'
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
 
 export type TMessage = {
   id: string

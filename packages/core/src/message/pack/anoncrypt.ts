@@ -1,7 +1,7 @@
 import { AnonCryptAlgorithm } from '../../algorithms'
 import { DIDCommError } from '../../error'
 import { assertDidProvider, didProvider } from '../../providers'
-import { didOrUrl, KnownKeyAlgorithm } from '../../utils'
+import { didOrUrl } from '../../utils'
 
 export const anoncrypt = async ({
   to,
@@ -42,7 +42,15 @@ export const anoncrypt = async ({
 
   // TODO: incorrect filter here
   const keyAlg = toKeys
-    .filter((k) => k.type !== KnownKeyAlgorithm.Unsupported.toString())
+    .filter(
+      (k) =>
+        k.type === 'JsonWebKey2020' ||
+        k.type === 'X25519KeyAgreement2019' ||
+        k.type === 'X25519KeyAgreementKey2020' ||
+        k.type === 'Ed25519VerificationKey2018' ||
+        k.type === 'Ed25519VerificationKey2020' ||
+        k.type === 'EcdsaSecp256k1VerificationKey2019'
+    )
     .map((k) => k.type)[0]
 
   if (!keyAlg) throw new DIDCommError('No key agreements found for recipient')

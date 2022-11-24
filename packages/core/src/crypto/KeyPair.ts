@@ -1,10 +1,8 @@
 import { DIDCommError } from '../error'
 
 export abstract class KeyPair {
-  public abstract type: string
-
-  private publicKey: Uint8Array
-  private privateKey?: Uint8Array
+  public publicKey: Uint8Array
+  public privateKey?: Uint8Array
 
   public constructor({
     publicKey,
@@ -21,5 +19,9 @@ export abstract class KeyPair {
 
   public static fromJwkJson(_: Record<string, unknown>): unknown {
     throw new DIDCommError(`fromJwkJson not implemented on base class`)
+  }
+
+  public static fromSecretBytes(_: Uint8Array): unknown {
+    throw new DIDCommError(`fromSecretBytes not implemented on base class`)
   }
 }
