@@ -1,6 +1,6 @@
 <p align="center">
-  <h1>h1DIDComm TypeScript</h1>
-  <b>Work In Progress</b>
+  <h1 align="center">DIDComm TypeScript</h1>
+  <b align="center">Work In Progress</b>
 </p>
 
 Please refer to one of these libraries for a working implementation:
