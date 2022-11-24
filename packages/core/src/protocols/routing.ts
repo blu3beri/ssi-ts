@@ -1,4 +1,4 @@
-import { ServiceEndpoint } from '../did'
+import { DidResolver, ServiceEndpoint } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
 import { v4 } from 'uuid'
@@ -10,7 +10,7 @@ import {
   PackEncryptedOptions,
 } from '../message/PackEncryptedOptions'
 import { Buffer } from 'buffer'
-import { assertDidProvider, didProvider } from '../providers'
+import { assertDidProvider } from '../providers'
 
 const DIDCOMM_V2_PROFILE = 'didcomm/v2'
 const FORWARD_MESSAGE_TYPE = 'https://didcomm.org/routing/2.0/forward'
@@ -26,7 +26,7 @@ export const findDidcommService = async ({
 }): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
   assertDidProvider(['resolve'])
 
-  const didDoc = await didProvider.resolve!(did)
+  const didDoc = await DidResolver.resolve!(did)
   if (!didDoc) throw new DIDCommError('DID not found')
   if (!didDoc.service) {
     throw new DIDCommError('Service field not found on DIDDoc')

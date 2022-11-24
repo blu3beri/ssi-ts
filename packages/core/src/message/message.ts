@@ -15,13 +15,10 @@ import {
   UnpackOptions,
 } from './unpack'
 import { tryParseForward } from '../protocols/routing'
-import {
-  assertDidProvider,
-  assertSecretsProvider,
-  didProvider,
-  secretsProvider,
-} from '../providers'
+import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
+import { Secrets } from '../secrets'
+import { DidResolver } from '../did'
 
 export type TMessage = {
   id: string
@@ -116,13 +113,13 @@ export class Message {
   ): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
     assertDidProvider(['resolve'])
     assertSecretsProvider(['findSecrets', 'getSecret'])
-    this.validatePackSigned(signBy)
+    this.assertPackSigned(signBy)
 
     const { did, didUrl } = didOrUrl(signBy)
 
     if (!did) throw new DIDCommError('Could not get did from `signBy` field')
 
-    const didDoc = await didProvider.resolve!(did)
+    const didDoc = await DidResolver.resolve!(did)
 
     if (!didDoc) {
       throw new DIDCommError('Unable to resolve signer DID')
@@ -147,12 +144,12 @@ export class Message {
       )
     }
 
-    const keyId = (await secretsProvider.findSecrets!(authentications))[0]
+    const keyId = (await Secrets.findSecrets!(authentications))[0]
     if (!keyId) {
       throw new DIDCommError(`Could not resolve secrets for ${authentications}`)
     }
 
-    const secret = await secretsProvider.getSecret!(keyId)
+    const secret = await Secrets.getSecret!(keyId)
     if (!secret) {
       throw new DIDCommError(`Could not find signer secret for ${keyId}`)
     }
@@ -186,7 +183,7 @@ export class Message {
     }
   }
 
-  private validatePackSigned(signBy: string) {
+  private assertPackSigned(signBy: string) {
     if (!isDid(signBy)) {
       throw new DIDCommError('`sign_from` value is not a valid DID or DID URL')
     }

@@ -4,7 +4,7 @@ import { JWE } from './JWE'
 import { Buffer } from 'buffer'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
 import { b64UrlSafe } from '../utils'
-import { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
+import { Kdf, P256KeyPair, Sha256, X25519KeyPair } from '../crypto'
 
 export class ParsedJWE {
   public jwe: JWE
@@ -30,7 +30,7 @@ export class ParsedJWE {
     // TODO: verify the sorting
     const kids = this.jwe.recipients.map((r) => r.header.kid).sort()
 
-    const didCommApv = await cryptoProvider.sha256!.hash(
+    const didCommApv = await Sha256.hash(
       Uint8Array.from(Buffer.from(kids.join('.')))
     )
 

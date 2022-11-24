@@ -1,15 +1,12 @@
 import { DIDCommError } from '../../error'
 import { JWE, JWEAlgorithm } from '../../jwe'
-import {
-  assertCryptoProvider,
-  assertSecretsProvider,
-  secretsProvider,
-} from '../../providers'
+import { assertSecretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
 import { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { Secrets } from '../../secrets'
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -21,7 +18,6 @@ export const tryUnpackAnoncrypt = async ({
   metadata: UnpackMetadata
 }): Promise<undefined | string> => {
   assertSecretsProvider(['getSecret', 'findSecrets'])
-  assertCryptoProvider(['p256', 'x25519'])
 
   const jwe = JWE.fromString(message)
 
@@ -65,7 +61,7 @@ export const tryUnpackAnoncrypt = async ({
   metadata.encrypted = true
   metadata.anonymousSender = true
 
-  const toKidsFound = await secretsProvider.findSecrets!(toKids)
+  const toKidsFound = await Secrets.findSecrets!(toKids)
 
   if (toKidsFound.length === 0) {
     throw new DIDCommError('No recipient secrets found')
@@ -74,7 +70,7 @@ export const tryUnpackAnoncrypt = async ({
   let payload: undefined | Uint8Array
 
   for (const toKid of toKidsFound) {
-    const toKey = (await secretsProvider.getSecret!(toKid))?.asKeyPair()
+    const toKey = (await Secrets.getSecret(toKid))?.asKeyPair()
 
     if (!toKey) {
       throw new DIDCommError(

@@ -1,10 +1,6 @@
+import { DidResolver } from '../../did'
 import { DIDCommError } from '../../error'
-import {
-  assertDidProvider,
-  assertSecretsProvider,
-  didProvider,
-  secretsProvider,
-} from '../../providers'
+import { assertSecretsProvider, secretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
 
 export const hasKeyAgreementSecret = async ({
@@ -20,8 +16,7 @@ export const hasKeyAgreementSecret = async ({
   if (kid) {
     kids.push(kid)
   } else {
-    assertDidProvider(['resolve'])
-    const didDoc = await didProvider.resolve!(did)
+    const didDoc = await DidResolver.resolve!(did)
     if (!didDoc) throw new DIDCommError('Next did doc not found')
     if (!didDoc.keyAgreement) throw new DIDCommError('No key agreements found')
     kids.push(

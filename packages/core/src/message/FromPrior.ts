@@ -5,9 +5,9 @@ import { Buffer } from 'buffer'
 import {
   assertDidProvider,
   assertSecretsProvider,
-  didProvider,
-  secretsProvider,
 } from '../providers'
+import { Secrets } from '../secrets'
+import { DidResolver } from '../did'
 
 export class FromPrior {
   public iss: string
@@ -61,7 +61,7 @@ export class FromPrior {
 
     const fromPriorString = JSON.stringify(this)
 
-    const didDoc = await didProvider.resolve!(this.iss)
+    const didDoc = await DidResolver.resolve!(this.iss)
 
     if (!didDoc) throw new DIDCommError('Unable to resolve issuer DID')
 
@@ -94,10 +94,10 @@ export class FromPrior {
       )
     }
 
-    const kid = (await secretsProvider.findSecrets!(authenticationKids))[0]
+    const kid = (await Secrets.findSecrets!(authenticationKids))[0]
     if (!kid) throw new DIDCommError('No issuer secrets found')
 
-    const secret = await secretsProvider.getSecret!(kid)
+    const secret = await Secrets.getSecret!(kid)
     if (!secret) throw new DIDCommError('Unable to find secret for issuer')
 
     const signKeyPair = secret.asKeyPair()
@@ -160,7 +160,7 @@ export class FromPrior {
     if (!did) throw new DIDCommError('DID not fround from kid')
     if (!didUrl) throw new DIDCommError('fromPrior kid is not DID URL')
 
-    const didDoc = await didProvider.resolve!(did)
+    const didDoc = await DidResolver.resolve!(did)
     if (!didDoc) throw new DIDCommError('fromPrior issuer DIDDoc not found')
 
     if (!didDoc.authentication) {

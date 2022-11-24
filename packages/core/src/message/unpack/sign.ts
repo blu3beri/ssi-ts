@@ -1,7 +1,7 @@
-import { VerificationMethod } from '../../did'
+import { DidResolver, VerificationMethod } from '../../did'
 import { DIDCommError } from '../../error'
 import { JWS } from '../../jws'
-import { assertDidProvider, didProvider } from '../../providers'
+import { assertDidProvider } from '../../providers'
 import { b64UrlSafe, didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
 
@@ -35,7 +35,7 @@ export const tryUnpackSign = async ({
     throw new DIDCommError('Signer key can not be resolved to key agreement')
   }
 
-  const signerDidDocument = await didProvider.resolve!(signerDid)
+  const signerDidDocument = await DidResolver.resolve!(signerDid)
   if (!signerDidDocument) {
     throw new DIDCommError('Signer did not found')
   }
