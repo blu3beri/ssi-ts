@@ -5,9 +5,9 @@
 
 Please refer to one of these libraries for a working implementation:
 
-- (SICPA: DIDComm (Rust))[https://github.com/sicpa-dlab/didcomm-rust]
+- [SICPA: DIDComm (Rust))[https://github.com/sicpa-dlab/didcomm-rust]
   - Can be compiled for WASM to be used in the browser and in Node.js
-- (SICPA: DIDComm (RN))[https://github.com/sicpa-dlab/didcomm-react-native]
+- [SICPA: DIDComm (RN)](https://github.com/sicpa-dlab/didcomm-react-native)
 
 These libraries have been the main inspiration behind this library with a few core differences.
 
