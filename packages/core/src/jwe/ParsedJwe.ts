@@ -1,5 +1,5 @@
 import type { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
-import type { Jwe } from './JWE'
+import type { Jwe } from './Jwe'
 import type { ProtectedHeader } from './envelope'
 
 import { Buffer } from 'buffer'
