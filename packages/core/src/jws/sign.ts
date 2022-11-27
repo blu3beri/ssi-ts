@@ -1,9 +1,12 @@
-import { Buffer } from 'buffer'
 import type { SignatureType } from '../utils'
-import { b64UrlSafe } from '../utils'
 import type { CompactHeader, JwsAlgorithm, ProtectedHeader, Signature } from './envelope'
-import { JWSAlgorithmToSignatureType } from './envelope'
+
+import { Buffer } from 'buffer'
+
+import { b64UrlSafe } from '../utils'
+
 import { JWS } from './JWS'
+import { JWSAlgorithmToSignatureType } from './envelope'
 
 export type Signer = {
   sign(input: Uint8Array, signatureType?: SignatureType): Promise<Uint8Array>

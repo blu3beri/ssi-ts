@@ -1,7 +1,8 @@
-import { Secret } from '../../../secrets'
-import { DIDCommError } from '../../../error'
-import { secretsProvider, setSecretsProvider, assertSecretsProvider } from '../provider'
 import type { SecretsProvider } from '../SecretsProvider'
+
+import { DIDCommError } from '../../../error'
+import { Secret } from '../../../secrets'
+import { secretsProvider, setSecretsProvider, assertSecretsProvider } from '../provider'
 
 describe('secretsProvider tests', () => {
   beforeEach(() => {

@@ -1,6 +1,8 @@
 import type { Attachment } from '../../message'
+
 import { Message } from '../../message'
 import { generateMessageId } from '../../utils'
+
 import { FORWARD_MESSAGE_TYPE } from './constants'
 
 export const buildForwardMessage = ({

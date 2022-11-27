@@ -1,4 +1,5 @@
 import { assertCryptoProvider, cryptoProvider } from '../providers'
+
 import { KeyPair } from './KeyPair'
 
 export class X25519KeyPair extends KeyPair {

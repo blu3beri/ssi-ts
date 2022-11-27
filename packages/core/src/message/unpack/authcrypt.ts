@@ -1,12 +1,14 @@
-import { Buffer } from 'buffer'
-import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
-import { DIDCommError } from '../../error'
-import { didOrUrl } from '../../utils'
-import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
-import { AuthCryptAlgorithm } from '../../algorithms'
-import type { UnpackOptions } from './UnpackOptions'
 import type { UnpackMetadata } from './UnpackMetadata'
+import type { UnpackOptions } from './UnpackOptions'
+
+import { Buffer } from 'buffer'
+
+import { AuthCryptAlgorithm } from '../../algorithms'
+import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { DIDCommError } from '../../error'
+import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
+import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
+import { didOrUrl } from '../../utils'
 
 export const tryUnpackAuthcrypt = async ({
   message,
@@ -25,7 +27,7 @@ export const tryUnpackAuthcrypt = async ({
   const parsedJwe = jwe.parse()
 
   if (parsedJwe.protected.alg !== JweAlgorithm.Ecdh1puA256Kw) return undefined
-  if (!parsedJwe.verifyDidComm()) return undefined
+  if (!(await parsedJwe.verifyDidComm())) return undefined
   if (!parsedJwe.apu) throw new DIDCommError('No apu present for authcrypt')
 
   const fromKid = Buffer.from(parsedJwe.apu).toString('utf-8')

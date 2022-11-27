@@ -1,7 +1,9 @@
 import type { ServiceEndpoint } from '../../did'
+
 import { DidResolver } from '../../did'
 import { DIDCommError } from '../../error'
 import { assertDidProvider } from '../../providers'
+
 import { DIDCOMM_V2_PROFILE } from './constants'
 
 export const findDidcommService = async ({

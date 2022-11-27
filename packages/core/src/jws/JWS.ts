@@ -1,6 +1,9 @@
-import { Buffer } from 'buffer'
-import { b64UrlSafe } from '../utils'
 import type { ProtectedHeader, Signature } from './envelope'
+
+import { Buffer } from 'buffer'
+
+import { b64UrlSafe } from '../utils'
+
 import { ParsedJWS } from './ParsedJWS'
 
 export class JWS {

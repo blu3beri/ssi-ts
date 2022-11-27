@@ -1,5 +1,6 @@
-import { assertProvider } from '../utils'
 import type { SecretsProvider } from './SecretsProvider'
+
+import { assertProvider } from '../utils'
 
 export let secretsProvider: SecretsProvider
 

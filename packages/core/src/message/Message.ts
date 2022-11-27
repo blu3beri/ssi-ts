@@ -1,13 +1,19 @@
+import type { PackSignedMetadata } from './PackSignedMetadata'
+import type { Attachment } from './attachment'
+import type { UnpackMetadata, UnpackOptions } from './unpack'
+
 import { Buffer } from 'buffer'
-import { JwsAlgorithm, sign } from '../jws'
-import { didOrUrl, isDid } from '../utils'
+
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
+import { DidResolver } from '../did'
 import { DIDCommError } from '../error'
+import { JwsAlgorithm, sign } from '../jws'
 import { tryParseForward } from '../protocols/routing/tryParseForward'
 import { assertDidProvider, assertSecretsProvider } from '../providers'
-import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
 import { Secrets } from '../secrets'
-import { DidResolver } from '../did'
-import type { UnpackMetadata, UnpackOptions } from './unpack'
+import { didOrUrl, isDid } from '../utils'
+
+import { FromPrior } from './FromPrior'
 import {
   hasKeyAgreementSecret,
   tryUnpackAnoncrypt,
@@ -15,9 +21,6 @@ import {
   tryUnpackPlaintext,
   tryUnpackSign,
 } from './unpack'
-import { FromPrior } from './FromPrior'
-import type { Attachment } from './attachment'
-import type { PackSignedMetadata } from './PackSignedMetadata'
 
 export type TMessage = {
   id: string

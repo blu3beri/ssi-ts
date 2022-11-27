@@ -1,6 +1,8 @@
 import type { ServiceEndpoint } from '../../did'
+
 import { DIDCommError } from '../../error'
 import { didOrUrl, isDid } from '../../utils'
+
 import { findDidcommService } from './findDidcommService'
 
 export const resolveDidCommServicesChain = async ({

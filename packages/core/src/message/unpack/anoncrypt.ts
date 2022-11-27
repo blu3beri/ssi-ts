@@ -1,12 +1,14 @@
+import type { UnpackMetadata } from './UnpackMetadata'
+import type { UnpackOptions } from './UnpackOptions'
+
 import { Buffer } from 'buffer'
+
+import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { DIDCommError } from '../../error'
 import { Jwe, JweAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
-import { didOrUrl } from '../../utils'
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { Secrets } from '../../secrets'
-import type { UnpackMetadata } from './UnpackMetadata'
-import type { UnpackOptions } from './UnpackOptions'
+import { didOrUrl } from '../../utils'
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -29,7 +31,7 @@ export const tryUnpackAnoncrypt = async ({
     return undefined
   }
 
-  if (!parsedJwe.verifyDidComm()) {
+  if (!(await parsedJwe.verifyDidComm())) {
     throw new DIDCommError('Unable to verify parsed JWE')
   }
 

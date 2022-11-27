@@ -1,6 +1,6 @@
-import { ALICE_DID_DOC, ALICE_SECRETS } from '../../__fixtures__'
 import { createDidProvider } from '../../../samples/exampleDidProvider'
 import { createExampleSecretsProvider } from '../../../samples/exampleSecretsProvider'
+import { ALICE_DID_DOC, ALICE_SECRETS } from '../../__fixtures__'
 import { setDidProvider, setSecretsProvider } from '../../providers'
 
 describe('Message: packSigned', () => {

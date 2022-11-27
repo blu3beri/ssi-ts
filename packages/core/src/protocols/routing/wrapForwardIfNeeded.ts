@@ -1,4 +1,5 @@
 import type { MessagingServiceMetadata, PackEncryptedOptions } from '../../message/PackEncryptedOptions'
+
 import { resolveDidCommServicesChain } from './resolveDidcommServicesChain'
 import { wrapInForward } from './wrapInForward'
 

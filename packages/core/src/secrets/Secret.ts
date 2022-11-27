@@ -1,4 +1,5 @@
 import base58 from 'bs58'
+
 import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair } from '../crypto'
 import { DIDCommError } from '../error'
 import { b58, b64UrlSafe, Codec } from '../utils/'

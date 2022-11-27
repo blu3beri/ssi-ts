@@ -1,7 +1,10 @@
-import { Buffer } from 'buffer'
 import type { AnonCryptAlgorithm } from '../../algorithms'
+
+import { Buffer } from 'buffer'
+
 import { DIDCommError } from '../../error'
 import { anoncrypt } from '../../message'
+
 import { buildForwardMessage } from './buildForwardMessage'
 
 export const wrapInForward = async ({

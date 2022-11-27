@@ -1,5 +1,6 @@
 import type { Message } from '../../message'
 import type { ParsedForward } from '../ParsedForward'
+
 import { FORWARD_MESSAGE_TYPE } from './constants'
 
 export const tryParseForward = (message: Message): ParsedForward | undefined => {

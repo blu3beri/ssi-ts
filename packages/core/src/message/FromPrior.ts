@@ -1,10 +1,11 @@
 import { Buffer } from 'buffer'
+
+import { DidResolver } from '../did'
 import { DIDCommError } from '../error'
 import { JwsAlgorithm, ParsedCompactJWS, signCompact } from '../jws'
-import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Secrets } from '../secrets'
-import { DidResolver } from '../did'
+import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 
 export class FromPrior {
   public iss: string

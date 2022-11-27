@@ -1,6 +1,7 @@
-import { assertDidProvider } from '../../providers'
 import type { Message } from '../Message'
 import type { UnpackMetadata } from './UnpackMetadata'
+
+import { assertDidProvider } from '../../providers'
 
 export const tryUnpackPlaintext = async ({
   message,

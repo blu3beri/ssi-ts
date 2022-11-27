@@ -1,11 +1,13 @@
+import type { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
+import type { Jwe } from './JWE'
+import type { ProtectedHeader } from './envelope'
+
 import { Buffer } from 'buffer'
+
+import { Sha256 } from '../crypto'
 import { DIDCommError } from '../error'
 import { assertCryptoProvider } from '../providers'
 import { b64UrlSafe } from '../utils'
-import type { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
-import { Sha256 } from '../crypto'
-import type { Jwe } from './JWE'
-import type { ProtectedHeader } from './envelope'
 
 export class ParsedJWE {
   public jwe: Jwe

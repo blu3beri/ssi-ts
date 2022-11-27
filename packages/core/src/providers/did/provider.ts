@@ -1,5 +1,6 @@
-import { assertProvider } from '../utils'
 import type { DidProvider } from './DidProvider'
+
+import { assertProvider } from '../utils'
 
 export let didProvider: DidProvider
 

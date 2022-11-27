@@ -1,5 +1,5 @@
-import { Buffer } from 'buffer'
 import base58 from 'bs58'
+import { Buffer } from 'buffer'
 
 export class b58 {
   public static encode(b: Uint8Array): string {
