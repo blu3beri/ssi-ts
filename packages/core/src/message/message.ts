@@ -3,7 +3,7 @@ import { Attachment } from './attachment'
 import { FromPrior } from './fromPrior'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
-import { JwsAlgorithm, Signer, sign } from '../jws'
+import { JwsAlgorithm, sign } from '../jws'
 import { Buffer } from 'buffer'
 import {
   hasKeyAgreementSecret,
