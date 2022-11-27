@@ -2,11 +2,13 @@
   "name": "didcomm-ts",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "check-types": "tsc -p ./tsconfig.json --noEmit",
+    "check-format": "yarn prettier --list-different",
+    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
+    "format": "yarn prettier --write",
+    "validate": "yarn check-types && yarn check-format",
     "test": "jest"
   },
   "devDependencies": {
