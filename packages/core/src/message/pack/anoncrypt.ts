@@ -1,4 +1,4 @@
-import { AnonCryptAlgorithm } from '../../algorithms'
+import type { AnonCryptAlgorithm } from '../../algorithms'
 import { DidResolver } from '../../did'
 import { DIDCommError } from '../../error'
 import { assertDidProvider } from '../../providers'

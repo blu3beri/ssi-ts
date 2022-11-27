@@ -1,4 +1,4 @@
-import { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../../algorithms'
+import type { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../../algorithms'
 
 // TODO: implementation
 export const authcrypt = async ({

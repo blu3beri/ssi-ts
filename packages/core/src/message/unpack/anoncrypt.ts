@@ -5,8 +5,8 @@ import { assertSecretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { Secrets } from '../../secrets'
-import { UnpackMetadata } from './UnpackMetadata'
-import { UnpackOptions } from './UnpackOptions'
+import type { UnpackMetadata } from './UnpackMetadata'
+import type { UnpackOptions } from './UnpackOptions'
 
 export const tryUnpackAnoncrypt = async ({
   message,

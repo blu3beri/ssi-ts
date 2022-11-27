@@ -1,0 +1,6 @@
+export * from './buildForwardMessage'
+export * from './findDidcommService'
+export * from './resolveDidcommServicesChain'
+export * from './tryParseForward'
+export * from './wrapForwardIfNeeded'
+export * from './wrapInForward'

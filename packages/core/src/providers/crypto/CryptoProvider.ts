@@ -1,6 +1,6 @@
-import { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair } from '../../crypto'
-import { KeyPair } from '../../crypto/KeyPair'
-import { Args, OrPromise } from '../utils'
+import type { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair } from '../../crypto'
+import type { KeyPair } from '../../crypto/KeyPair'
+import type { Args, OrPromise } from '../utils'
 
 type Sign = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
 type Hash = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>

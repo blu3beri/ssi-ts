@@ -14,6 +14,15 @@ const config = {
     'linebreak-style': ['error', 'unix'],
     '@typescript-eslint/no-non-null-assertion': 0,
     'import/order': ['error'],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-use-before-define': ['error', { functions: false, classes: false, variables: true }],
+    '@typescript-eslint/explicit-member-accessibility': 'error',
+    'no-console': 'error',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/consistent-type-imports': 'error',
+    'import/no-cycle': 'error',
+    'import/newline-after-import': ['error', { count: 1 }],
   },
   overrides: [
     {

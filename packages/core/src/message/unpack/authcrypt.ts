@@ -5,8 +5,8 @@ import { didOrUrl } from '../../utils'
 import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { AuthCryptAlgorithm } from '../../algorithms'
-import { UnpackOptions } from './UnpackOptions'
-import { UnpackMetadata } from './UnpackMetadata'
+import type { UnpackOptions } from './UnpackOptions'
+import type { UnpackMetadata } from './UnpackMetadata'
 
 export const tryUnpackAuthcrypt = async ({
   message,

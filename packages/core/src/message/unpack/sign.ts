@@ -1,10 +1,11 @@
 import { Buffer } from 'buffer'
-import { DidResolver, VerificationMethod } from '../../did'
+import type { VerificationMethod } from '../../did'
+import { DidResolver } from '../../did'
 import { DIDCommError } from '../../error'
 import { JWS } from '../../jws'
 import { assertDidProvider } from '../../providers'
 import { b64UrlSafe, didOrUrl } from '../../utils'
-import { UnpackMetadata } from './UnpackMetadata'
+import type { UnpackMetadata } from './UnpackMetadata'
 
 export const tryUnpackSign = async ({
   message,

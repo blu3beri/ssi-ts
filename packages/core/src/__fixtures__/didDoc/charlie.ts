@@ -1,4 +1,4 @@
-import { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../did'
+import type { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../did'
 
 const CHARLIE_VERIFICATION_METHOD_KEY_AGREEM_X25519: VerificationMethod = {
   id: 'did:example:charlie#key-x25519-1',

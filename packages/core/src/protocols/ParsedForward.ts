@@ -1,4 +1,4 @@
-import { Message } from '../message'
+import type { Message } from '../message'
 
 export type ParsedForward = {
   message: Message

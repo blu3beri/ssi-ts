@@ -1,5 +1,5 @@
 import { assertSecretsProvider, secretsProvider } from '../providers'
-import { Secret } from './Secret'
+import type { Secret } from './Secret'
 
 export class Secrets {
   public static async findSecrets(secretIds: Array<string>): Promise<Array<string>> {

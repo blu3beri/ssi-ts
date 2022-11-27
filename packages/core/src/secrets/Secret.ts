@@ -3,10 +3,32 @@ import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyP
 import { DIDCommError } from '../error'
 import { b58, b64UrlSafe, Codec } from '../utils/'
 
+export enum SecretType {
+  JsonWebKey2020,
+  X25519KeyAgreementKey2019,
+  X25519KeyAgreementKey2020,
+  Ed25519VerificationKey2018,
+  Ed25519VerificationKey2020,
+  EcdsaSecp256k1verificationKey2019,
+}
+
+export enum SecretMaterialType {
+  Jwk = 'JWK',
+  Multibase = 'Multibase',
+  Base58 = 'base58',
+  Hex = 'Hex',
+  Other = 'Other',
+}
+
+export type SecretMaterial<V = Record<string, unknown>> = {
+  type: SecretMaterialType
+  value: V
+}
+
 export class Secret {
-  id: string
-  type: SecretType
-  secretMaterial: SecretMaterial | SecretMaterial<string>
+  public id: string
+  public type: SecretType
+  public secretMaterial: SecretMaterial | SecretMaterial<string>
 
   public constructor({
     id,
@@ -187,26 +209,4 @@ export class Secret {
 
     throw new DIDCommError('Unsupported secret method and material combination')
   }
-}
-
-export enum SecretType {
-  JsonWebKey2020,
-  X25519KeyAgreementKey2019,
-  X25519KeyAgreementKey2020,
-  Ed25519VerificationKey2018,
-  Ed25519VerificationKey2020,
-  EcdsaSecp256k1verificationKey2019,
-}
-
-export enum SecretMaterialType {
-  Jwk = 'JWK',
-  Multibase = 'Multibase',
-  Base58 = 'base58',
-  Hex = 'Hex',
-  Other = 'Other',
-}
-
-export type SecretMaterial<V = Record<string, unknown>> = {
-  type: SecretMaterialType
-  value: V
 }

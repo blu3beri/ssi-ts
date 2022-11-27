@@ -1,7 +1,7 @@
-import { JweAlgorithm } from '../jwe'
+import type { JweAlgorithm } from '../jwe'
 
 export class Kdf {
-  static deriveKey<KE, KW>(options: {
+  public static deriveKey<KE, KW>(options: {
     ephemeralKey: KE
     senderKey?: KE
     recipientKey: KE

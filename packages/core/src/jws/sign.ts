@@ -1,6 +1,8 @@
 import { Buffer } from 'buffer'
-import { b64UrlSafe, SignatureType } from '../utils'
-import { CompactHeader, JwsAlgorithm, JWSAlgorithmToSignatureType, ProtectedHeader, Signature } from './envelope'
+import type { SignatureType } from '../utils'
+import { b64UrlSafe } from '../utils'
+import type { CompactHeader, JwsAlgorithm, ProtectedHeader, Signature } from './envelope'
+import { JWSAlgorithmToSignatureType } from './envelope'
 import { JWS } from './JWS'
 
 export type Signer = {
