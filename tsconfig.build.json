@@ -22,9 +22,9 @@
     "node_modules",
     "build",
     "**/*.test.ts",
-    "**/__tests__/*.ts",
+    "**/__tests__/",
     "**/__fixtures__/",
-    "**/__mocks__/*.ts",
+    "**/__mocks__/",
     "**/build/"
   ]
 }
