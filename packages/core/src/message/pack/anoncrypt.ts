@@ -18,10 +18,10 @@ export const anoncrypt = async ({
   const { did: toDid, didUrl: toKid } = didOrUrl(to)
   if (!toDid) throw new DIDCommError('no did in `to` found')
 
-  const toDidDoc = await DidResolver.resolve!(toDid)
+  const toDidDoc = await DidResolver.resolve(toDid)
   if (!toDidDoc) throw new DIDCommError(`No DID Document found for ${toDid}`)
   if (!toDidDoc.keyAgreement) {
-    throw new DIDCommError(`No keyAgreement found in ${toDidDoc}`)
+    throw new DIDCommError(`No keyAgreement found in ${toDidDoc.toString()}`)
   }
 
   const toKids = toDidDoc.keyAgreement.filter((k) => (toKid ? (typeof k === 'string' ? k : k.id) === toKid : true))

@@ -15,7 +15,7 @@ export const findDidcommService = async ({
 }): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
   assertDidProvider(['resolve'])
 
-  const didDoc = await DidResolver.resolve!(did)
+  const didDoc = await DidResolver.resolve(did)
   if (!didDoc) throw new DIDCommError('DID not found')
   if (!didDoc.service) {
     throw new DIDCommError('Service field not found on DIDDoc')

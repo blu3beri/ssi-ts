@@ -32,7 +32,7 @@ export class ParsedJWE {
 
     if (this.apv !== didCommApv) throw new DIDCommError('APV Mismatch')
 
-    const didCommApu = this.apu ? Buffer.from(this.apu).toString('utf-8') : undefined
+    const didCommApu = this.apu ? Buffer.from(this.apu).toString('utf8') : undefined
 
     if (this.protected.skid && didCommApu && didCommApu.length > 0) {
       if (didCommApu !== this.protected.skid) {

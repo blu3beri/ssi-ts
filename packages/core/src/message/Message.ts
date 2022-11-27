@@ -22,7 +22,7 @@ import {
   tryUnpackSign,
 } from './unpack'
 
-export type TMessage = {
+type MessageProps = {
   id: string
   typ?: 'application/didcomm-plain+json'
   type: string
@@ -53,7 +53,7 @@ export class Message {
   public fromPrior?: string
   public attachments?: Array<Attachment>
 
-  public constructor(options: TMessage) {
+  public constructor(options: MessageProps) {
     this.id = options.id
     this.typ = 'application/didcomm-plain+json'
     this.type = options.type
@@ -70,11 +70,11 @@ export class Message {
   }
 
   public fromString(s: string) {
-    const obj = JSON.parse(s)
+    const obj = JSON.parse(s) as { id?: string; type?: string; body?: Record<string, unknown> }
     if (!obj.id || !obj.type || !obj.body) {
       throw new DIDCommError(`string: ${s} does not contain either: 'id', 'type' or 'body'`)
     }
-    return new Message(JSON.parse(s))
+    return new Message(JSON.parse(s) as MessageProps)
   }
 
   public async packPlaintext(): Promise<string> {
@@ -112,7 +112,7 @@ export class Message {
 
     if (!did) throw new DIDCommError('Could not get did from `signBy` field')
 
-    const didDoc = await DidResolver.resolve!(did)
+    const didDoc = await DidResolver.resolve(did)
 
     if (!didDoc) {
       throw new DIDCommError('Unable to resolve signer DID')
@@ -133,12 +133,12 @@ export class Message {
       didDoc.authentication.forEach((a) => authentications.push(typeof a === 'string' ? a : a.id))
     }
 
-    const keyId = (await Secrets.findSecrets!(authentications))[0]
+    const keyId = (await Secrets.findSecrets(authentications))[0]
     if (!keyId) {
-      throw new DIDCommError(`Could not resolve secrets for ${authentications}`)
+      throw new DIDCommError(`Could not resolve secrets for ${authentications.toString()}`)
     }
 
-    const secret = await Secrets.getSecret!(keyId)
+    const secret = await Secrets.getSecret(keyId)
     if (!secret) {
       throw new DIDCommError(`Could not find signer secret for ${keyId}`)
     }
@@ -156,7 +156,7 @@ export class Message {
         ? JwsAlgorithm.Es256K
         : undefined
 
-    if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
+    if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey.toString()}`)
 
     const message = await sign({
       payload: Buffer.from(payload),

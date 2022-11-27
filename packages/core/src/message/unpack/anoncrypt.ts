@@ -61,7 +61,7 @@ export const tryUnpackAnoncrypt = async ({
   metadata.encrypted = true
   metadata.anonymousSender = true
 
-  const toKidsFound = await Secrets.findSecrets!(toKids)
+  const toKidsFound = await Secrets.findSecrets(toKids)
 
   if (toKidsFound.length === 0) {
     throw new DIDCommError('No recipient secrets found')
@@ -100,7 +100,7 @@ export const tryUnpackAnoncrypt = async ({
 
   if (!payload) throw new DIDCommError('Could not establish payload')
 
-  const serializedPayload = Buffer.from(payload).toString('utf-8')
+  const serializedPayload = Buffer.from(payload).toString('utf8')
 
   return serializedPayload
 }

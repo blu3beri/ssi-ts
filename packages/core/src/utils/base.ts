@@ -23,7 +23,7 @@ export class b64 {
 
 export class b64UrlSafe {
   public static encode(b: Uint8Array | string): string {
-    const buf = typeof b === 'string' ? Buffer.from(b, 'utf-8') : Buffer.from(b)
+    const buf = typeof b === 'string' ? Buffer.from(b, 'utf8') : Buffer.from(b)
     return buf.toString('base64url')
   }
 

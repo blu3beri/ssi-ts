@@ -5,7 +5,7 @@ import { Buffer } from 'buffer'
 
 import { DidResolver } from '../../did'
 import { DIDCommError } from '../../error'
-import { JWS } from '../../jws'
+import { Jws } from '../../jws'
 import { assertDidProvider } from '../../providers'
 import { b64UrlSafe, didOrUrl } from '../../utils'
 
@@ -17,7 +17,7 @@ export const tryUnpackSign = async ({
   metadata: UnpackMetadata
 }): Promise<string> => {
   assertDidProvider(['resolve'])
-  const jws = JWS.fromString(message)
+  const jws = Jws.fromString(message)
   const parsedJws = jws.parse()
   if (parsedJws.protected.length !== 1) {
     throw new DIDCommError('Wrong amount of signatures for jws')
@@ -39,7 +39,7 @@ export const tryUnpackSign = async ({
     throw new DIDCommError('Signer key can not be resolved to key agreement')
   }
 
-  const signerDidDocument = await DidResolver.resolve!(signerDid)
+  const signerDidDocument = await DidResolver.resolve(signerDid)
   if (!signerDidDocument) {
     throw new DIDCommError('Signer did not found')
   }
@@ -67,7 +67,7 @@ export const tryUnpackSign = async ({
   }
 
   const payload = b64UrlSafe.decode(parsedJws.jws.payload)
-  const serializedPayload = Buffer.from(payload).toString('utf-8')
+  const serializedPayload = Buffer.from(payload).toString('utf8')
 
   metadata.authenticated = true
   metadata.nonRepudiation = true

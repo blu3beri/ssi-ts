@@ -1,4 +1,4 @@
-import type { Attachment } from '../../message'
+import type { Attachment, JsonAttachmentData } from '../../message'
 
 import { Message } from '../../message'
 import { generateMessageId } from '../../utils'
@@ -17,7 +17,7 @@ export const buildForwardMessage = ({
   const body = { next }
 
   const attachment: Attachment = {
-    data: { Json: JSON.parse(forwardMessage) },
+    data: { Json: JSON.parse(forwardMessage) as JsonAttachmentData },
   }
 
   const message = new Message({

@@ -16,5 +16,5 @@ export const authcrypt = async ({
   encAlgAnon: AnonCryptAlgorithm
   protectedSender: boolean
 }): Promise<{ message: string; fromKid: string; toKids: Array<string> }> => {
-  return { message: 'TODO', fromKid: 'TODO', toKids: [] }
+  return Promise.resolve({ message: 'TODO', fromKid: 'TODO', toKids: [] })
 }

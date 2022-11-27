@@ -2,10 +2,20 @@ import { Buffer } from 'buffer'
 
 import { DidResolver } from '../did'
 import { DIDCommError } from '../error'
-import { JwsAlgorithm, ParsedCompactJWS, signCompact } from '../jws'
+import { JwsAlgorithm, ParsedCompactJws, signCompact } from '../jws'
 import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Secrets } from '../secrets'
 import { b64UrlSafe, didOrUrl, isDid } from '../utils'
+
+type FromPriorProps = {
+  iss: string
+  sub: string
+  aud?: string
+  exp?: number
+  nbf?: number
+  iat?: number
+  jti?: string
+}
 
 export class FromPrior {
   public iss: string
@@ -16,23 +26,7 @@ export class FromPrior {
   public iat?: number
   public jti?: string
 
-  public constructor({
-    iss,
-    sub,
-    aud,
-    exp,
-    iat,
-    jti,
-    nbf,
-  }: {
-    iss: string
-    sub: string
-    aud?: string
-    exp?: number
-    nbf?: number
-    iat?: number
-    jti?: string
-  }) {
+  public constructor({ iss, sub, aud, exp, iat, jti, nbf }: FromPriorProps) {
     this.iss = iss
     this.sub = sub
     this.aud = aud
@@ -43,7 +37,7 @@ export class FromPrior {
   }
 
   public static fromString(s: string): FromPrior {
-    const parsed = JSON.parse(s)
+    const parsed = JSON.parse(s) as FromPriorProps
     return new FromPrior(parsed)
   }
 
@@ -55,7 +49,7 @@ export class FromPrior {
 
     const fromPriorString = JSON.stringify(this)
 
-    const didDoc = await DidResolver.resolve!(this.iss)
+    const didDoc = await DidResolver.resolve(this.iss)
 
     if (!didDoc) throw new DIDCommError('Unable to resolve issuer DID')
 
@@ -84,10 +78,10 @@ export class FromPrior {
       didDoc.authentication?.forEach((a) => authenticationKids.push(typeof a === 'string' ? a : a.id))
     }
 
-    const kid = (await Secrets.findSecrets!(authenticationKids))[0]
+    const kid = (await Secrets.findSecrets(authenticationKids))[0]
     if (!kid) throw new DIDCommError('No issuer secrets found')
 
-    const secret = await Secrets.getSecret!(kid)
+    const secret = await Secrets.getSecret(kid)
     if (!secret) throw new DIDCommError('Unable to find secret for issuer')
 
     const signKeyPair = await secret.asKeyPair()
@@ -136,7 +130,7 @@ export class FromPrior {
   }): Promise<{ fromPrior: FromPrior; kid: string }> {
     assertDidProvider(['resolve'])
 
-    const parsed = ParsedCompactJWS.parseCompact(fromPriorJwt)
+    const parsed = ParsedCompactJws.parseCompact(fromPriorJwt)
     const typ = parsed.parsedHeader.typ
     const alg = parsed.parsedHeader.alg
     const kid = parsed.parsedHeader.kid
@@ -149,7 +143,7 @@ export class FromPrior {
     if (!did) throw new DIDCommError('DID not fround from kid')
     if (!didUrl) throw new DIDCommError('fromPrior kid is not DID URL')
 
-    const didDoc = await DidResolver.resolve!(did)
+    const didDoc = await DidResolver.resolve(did)
     if (!didDoc) throw new DIDCommError('fromPrior issuer DIDDoc not found')
 
     if (!didDoc.authentication) {
@@ -182,7 +176,7 @@ export class FromPrior {
         // TODO
         break
       default:
-        throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
+        throw new DIDCommError(`Unsuppored signature algorithm.`)
     }
 
     if (!valid) throw new DIDCommError('wrong fromPrior signature')

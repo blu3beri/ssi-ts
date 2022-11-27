@@ -30,7 +30,7 @@ export const tryUnpackAuthcrypt = async ({
   if (!(await parsedJwe.verifyDidComm())) return undefined
   if (!parsedJwe.apu) throw new DIDCommError('No apu present for authcrypt')
 
-  const fromKid = Buffer.from(parsedJwe.apu).toString('utf-8')
+  const fromKid = Buffer.from(parsedJwe.apu).toString('utf8')
   const { did: fromDid, didUrl: fromUrl } = didOrUrl(fromKid)
 
   if (!fromDid) {
@@ -89,7 +89,7 @@ export const tryUnpackAuthcrypt = async ({
 
   let payload: Uint8Array | undefined
 
-  for (const toKid in toKidsFound) {
+  for (const toKid of toKidsFound) {
     const toKey = await (await secretsProvider.getSecret!(toKid))?.asKeyPair()
     if (!toKey) {
       throw new DIDCommError('Recipient secret not found after existence checking')
@@ -125,11 +125,13 @@ export const tryUnpackAuthcrypt = async ({
       })
     } else {
       throw new DIDCommError(
-        `Incompatible sender and recipient key agreement curves, or unsupported key agreement method. Curves: ${{
-          sender: fromKey,
-          recipient: toKey,
-          protectedEnc: parsedJwe.protected.enc,
-        }}`
+        `Incompatible sender and recipient key agreement curves, or unsupported key agreement method. Curves: ${JSON.stringify(
+          {
+            sender: fromKey,
+            recipient: toKey,
+            protectedEnc: parsedJwe.protected.enc,
+          }
+        )}`
       )
     }
 
@@ -142,5 +144,5 @@ export const tryUnpackAuthcrypt = async ({
     throw new DIDCommError('No payload created')
   }
 
-  return Buffer.from(payload).toString('utf-8')
+  return Buffer.from(payload).toString('utf8')
 }

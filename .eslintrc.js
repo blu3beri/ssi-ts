@@ -7,6 +7,7 @@ const config = {
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -57,20 +58,16 @@ const config = {
         message: "Don't declare const enums",
       },
     ],
+
+    'no-restricted-globals': [
+      'error',
+      {
+        name: 'Buffer',
+        message: 'Global buffer is not supported on all platforms. Import {buffer} from `buffer`',
+      },
+    ],
   },
   overrides: [
-    {
-      files: ['packages/**/**'],
-      rules: {
-        'no-restricted-globals': [
-          'error',
-          {
-            name: 'Buffer',
-            message: 'Global buffer is not supported on all platforms. Import {buffer} from `buffer`',
-          },
-        ],
-      },
-    },
     {
       files: ['jest.config.ts', '.eslintrc.js'],
       env: {
@@ -82,6 +79,11 @@ const config = {
       env: {
         jest: true,
         node: false,
+      },
+      rules: {
+        '@typescript-eslint/no-unsafe-call': 0,
+        '@typescript-eslint/no-unsafe-member-access': 0,
+        '@typescript-eslint/no-unsafe-assignment': 0,
       },
     },
   ],

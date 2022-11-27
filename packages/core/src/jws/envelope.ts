@@ -37,6 +37,6 @@ export const JWSAlgorithmToSignatureType = (jwsAlgorithm: JwsAlgorithm): Signatu
     case JwsAlgorithm.Es256K:
       return SignatureType.ES256K
     default:
-      throw new DIDCommError(`Unsupported signature type: ${jwsAlgorithm}`)
+      throw new DIDCommError(`Unsupported signature type.`)
   }
 }

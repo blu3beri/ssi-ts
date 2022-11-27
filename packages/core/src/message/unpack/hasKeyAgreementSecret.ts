@@ -12,7 +12,7 @@ export const hasKeyAgreementSecret = async ({ didOrKid }: { didOrKid: string }):
   if (kid) {
     kids.push(kid)
   } else {
-    const didDoc = await DidResolver.resolve!(did)
+    const didDoc = await DidResolver.resolve(did)
     if (!didDoc) throw new DIDCommError('Next did doc not found')
     if (!didDoc.keyAgreement) throw new DIDCommError('No key agreements found')
     kids.push(...didDoc.keyAgreement.map((k) => (typeof k === 'string' ? k : k.id)))

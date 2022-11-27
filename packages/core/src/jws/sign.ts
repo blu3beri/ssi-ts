@@ -5,7 +5,7 @@ import { Buffer } from 'buffer'
 
 import { b64UrlSafe } from '../utils'
 
-import { JWS } from './JWS'
+import { Jws } from './Jws'
 import { JWSAlgorithmToSignatureType } from './envelope'
 
 export type Signer = {
@@ -45,7 +45,7 @@ export const sign = async ({
     signature: encodedSignature,
   }
 
-  const jws = new JWS({
+  const jws = new Jws({
     payload: encodedPayload,
     signatures: [signature],
   })

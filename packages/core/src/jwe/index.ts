@@ -1,3 +1,3 @@
 export * from './envelope'
-export * from './JWE'
+export * from './Jwe'
 export * from './ParsedJWE'

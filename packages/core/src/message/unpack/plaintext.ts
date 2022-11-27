@@ -12,5 +12,5 @@ export const tryUnpackPlaintext = async ({
 }): Promise<Message | undefined> => {
   assertDidProvider(['resolve'])
 
-  return undefined
+  return Promise.resolve(undefined)
 }
