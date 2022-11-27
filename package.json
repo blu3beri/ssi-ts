@@ -2,6 +2,7 @@
   "name": "didcomm-ts",
   "version": "0.0.0",
   "private": true,
+  "license": "Apache-2.0",
   "workspaces": [
     "packages/*"
   ],
@@ -11,7 +12,8 @@
     "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
     "format": "yarn prettier --write",
     "validate": "yarn check-types && yarn check-format",
-    "test": "jest"
+    "test": "jest",
+    "build": "yarn workspaces run build"
   },
   "devDependencies": {
     "@jest/types": "29.2.1",
@@ -21,7 +23,6 @@
     "prettier": "2.7.1",
     "ts-jest": "29.0.3",
     "ts-node": "10.9.1",
-    "tsconfig-paths": "4.1.0",
     "typescript": "4.8.4"
   }
 }

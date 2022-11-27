@@ -1,8 +1,11 @@
 {
-  "name": "didcomm-core",
-  "version": "1.0.0",
-  "main": "src/index.ts",
+  "name": "@didcomm-ts/core",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "source": "src/index.ts",
+  "main": "build/index",
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "test": "jest"
   },
   "dependencies": {
@@ -11,6 +14,7 @@
     "uuid": "9.0.0"
   },
   "devDependencies": {
+    "typescript": "4.8.4",
     "@types/jest": "29.2.0",
     "@types/uuid": "8.3.4"
   }

@@ -87,7 +87,7 @@ export class ParsedJWE {
       senderKey: sKey,
       recipientKey: key,
       alg: this.protected.alg,
-      apu: this.apu ?? new Uint8Array(),
+      apu: this.apu ?? new Uint8Array(0),
       apv: this.apv,
       ccTag: tag,
       receive: true,

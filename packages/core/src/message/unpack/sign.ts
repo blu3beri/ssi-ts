@@ -4,6 +4,7 @@ import { JWS } from '../../jws'
 import { assertDidProvider } from '../../providers'
 import { b64UrlSafe, didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
+import { Buffer } from 'buffer'
 
 export const tryUnpackSign = async ({
   message,

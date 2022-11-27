@@ -1,8 +1,4 @@
 {
-  "ts-node": {
-    "require": ["tsconfig-paths/register"],
-    "files": true
-  },
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2017",
@@ -10,15 +6,16 @@
     "sourceMap": true,
     "strict": true,
     "noEmitOnError": true,
-    "lib": ["ES2015"],
+    "lib": ["ES2022"],
     "types": [],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
     "paths": {
-      "@animo/*": ["./packages/*/src"]
+      "@didcomm-ts/*": ["./packages/*/src"]
     }
   },
   "exclude": [
