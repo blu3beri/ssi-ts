@@ -4,7 +4,7 @@ import { Buffer } from 'buffer'
 
 import { b64UrlSafe } from '../utils'
 
-import { ParsedJWE } from './ParsedJWE'
+import { ParsedJwe } from './ParsedJwe'
 
 type JweProps = {
   protected: string
@@ -34,12 +34,12 @@ export class Jwe {
     return new Jwe(parsed)
   }
 
-  public parse(): ParsedJWE {
+  public parse(): ParsedJwe {
     const parsed = b64UrlSafe.decode(this.protected)
     const protectedHeader = JSON.parse(Buffer.from(parsed).toString()) as ProtectedHeader
     const apv = b64UrlSafe.decode(protectedHeader.apv)
     const apu = protectedHeader.apu ? b64UrlSafe.decode(protectedHeader.apu) : undefined
 
-    return new ParsedJWE({ jwe: this, apu, protected: protectedHeader, apv })
+    return new ParsedJwe({ jwe: this, apu, protected: protectedHeader, apv })
   }
 }
