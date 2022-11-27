@@ -18,12 +18,9 @@ const config = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
-    indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
-    semi: ['error', 'never'],
     '@typescript-eslint/no-non-null-assertion': 0,
-    'import/order': 2,
+    'import/order': 0,
   },
   overrides: [
     {

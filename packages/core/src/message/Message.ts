@@ -149,10 +149,10 @@ export class Message {
       signKey instanceof Ed25519KeyPair
         ? JwsAlgorithm.EdDSA
         : signKey instanceof P256KeyPair
-          ? JwsAlgorithm.Es256
-          : signKey instanceof K256KeyPair
-            ? JwsAlgorithm.Es256K
-            : undefined
+        ? JwsAlgorithm.Es256
+        : signKey instanceof K256KeyPair
+        ? JwsAlgorithm.Es256K
+        : undefined
 
     if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
 
