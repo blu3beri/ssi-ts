@@ -1,1 +1,0 @@
-{"version":3,"file":"DidResolver.js","sourceRoot":"","sources":["../../src/did/DidResolver.ts"],"names":[],"mappings":";;;AAAA,4CAA6D;AAG7D,MAAa,WAAW;IACf,MAAM,CAAC,KAAK,CAAC,OAAO,CAAC,GAAW;QACrC,IAAA,6BAAiB,EAAC,CAAC,SAAS,CAAC,CAAC,CAAA;QAC9B,OAAO,uBAAW,CAAC,OAAQ,CAAC,GAAG,CAAC,CAAA;IAClC,CAAC;CACF;AALD,kCAKC"}

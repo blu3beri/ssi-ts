@@ -1,1 +1,0 @@
-{"version":3,"file":"authcrypt.js","sourceRoot":"","sources":["../../../src/message/pack/authcrypt.ts"],"names":[],"mappings":";;;AAEA,uBAAuB;AAChB,MAAM,SAAS,GAAG,KAAK,EAAE,EAC9B,EAAE,EACF,IAAI,EACJ,OAAO,EACP,UAAU,EACV,UAAU,EACV,eAAe,GAQhB,EAAwE,EAAE;IACzE,OAAO,EAAE,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,EAAE,MAAM,EAAE,EAAE,EAAE,CAAA;AACzD,CAAC,CAAA;AAhBY,QAAA,SAAS,aAgBrB"}

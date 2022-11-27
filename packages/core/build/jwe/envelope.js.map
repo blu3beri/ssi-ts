@@ -1,1 +1,0 @@
-{"version":3,"file":"envelope.js","sourceRoot":"","sources":["../../src/jwe/envelope.ts"],"names":[],"mappings":";;;AAmBA,IAAY,YAGX;AAHD,WAAY,YAAY;IACtB,iDAAiC,CAAA;IACjC,+CAA+B,CAAA;AACjC,CAAC,EAHW,YAAY,GAAZ,oBAAY,KAAZ,oBAAY,QAGvB;AAED,IAAY,YAIX;AAJD,WAAY,YAAY;IACtB,8CAA8B,CAAA;IAC9B,+BAAe,CAAA;IACf,mCAAmB,CAAA;AACrB,CAAC,EAJW,YAAY,GAAZ,oBAAY,KAAZ,oBAAY,QAIvB"}
