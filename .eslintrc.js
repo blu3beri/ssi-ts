@@ -45,12 +45,7 @@ const config = {
         devDependencies: false,
       },
     ],
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: ['packages/*'],
-      },
-    ],
+    'no-restricted-imports': ['error'],
     'no-restricted-syntax': [
       'error',
       {
@@ -63,7 +58,7 @@ const config = {
       'error',
       {
         name: 'Buffer',
-        message: 'Global buffer is not supported on all platforms. Import {buffer} from `buffer`',
+        message: 'Global buffer is not supported on all platforms. import {buffer} from `buffer`',
       },
     ],
   },
