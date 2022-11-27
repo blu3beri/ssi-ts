@@ -39,4 +39,4 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: validating
-        run: yarn valiedate
+        run: yarn validate
