@@ -1,7 +1,7 @@
-import { CompactHeader, JwsAlgorithm, JWSAlgorithmToSignatureType, ProtectedHeader, Signature } from "./envelope"
-import { b64UrlSafe, SignatureType } from "../utils"
-import { Buffer } from "buffer"
-import { JWS } from "./JWS"
+import { CompactHeader, JwsAlgorithm, JWSAlgorithmToSignatureType, ProtectedHeader, Signature } from './envelope'
+import { b64UrlSafe, SignatureType } from '../utils'
+import { Buffer } from 'buffer'
+import { JWS } from './JWS'
 
 export type Signer = {
   sign(input: Uint8Array, signatureType?: SignatureType): Promise<Uint8Array>
@@ -21,7 +21,7 @@ export const sign = async ({
 
   const protectedHeader: ProtectedHeader = {
     alg,
-    typ: "application/didcomm-signed+json",
+    typ: 'application/didcomm-signed+json',
   }
 
   const serializedProtected = JSON.stringify(protectedHeader)

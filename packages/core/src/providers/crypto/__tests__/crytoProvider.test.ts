@@ -1,14 +1,14 @@
-import { Ed25519KeyPair } from "../../../crypto"
-import { DIDCommError } from "../../../error"
-import { assertCryptoProvider, setCryptoProvider, cryptoProvider } from "../provider"
+import { Ed25519KeyPair } from '../../../crypto'
+import { DIDCommError } from '../../../error'
+import { assertCryptoProvider, setCryptoProvider, cryptoProvider } from '../provider'
 
-describe("cryptoProvider tests", () => {
+describe('cryptoProvider tests', () => {
   beforeEach(() => {
     setCryptoProvider({})
   })
 
-  test("Assert when no provider is set", () => {
-    expect(() => assertCryptoProvider(["k256"])).toThrowError(DIDCommError)
+  test('Assert when no provider is set', () => {
+    expect(() => assertCryptoProvider(['k256'])).toThrowError(DIDCommError)
   })
 
   test("Don't Assert when a provider is set", () => {
@@ -28,10 +28,10 @@ describe("cryptoProvider tests", () => {
       sha256: mockCryptoHasher,
     })
 
-    expect(assertCryptoProvider(["k256", "ed25519", "x25519", "p256", "sha256"])).toBeUndefined()
+    expect(assertCryptoProvider(['k256', 'ed25519', 'x25519', 'p256', 'sha256'])).toBeUndefined()
   })
 
-  test("cryptoProvider is registered and usable", () => {
+  test('cryptoProvider is registered and usable', () => {
     const mockCryptoKeyPair = {
       sign: jest.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
       fromJwkJson: jest.fn().mockResolvedValue(new Ed25519KeyPair({ publicKey: new Uint8Array([0]) })),
@@ -47,7 +47,7 @@ describe("cryptoProvider tests", () => {
 
     expect(cryptoProvider.ed25519!.sign(new Uint8Array([0, 0, 0]))).resolves.toStrictEqual(new Uint8Array([1, 2, 3]))
 
-    expect(cryptoProvider.ed25519!.fromJwkJson({ mock: "jwk" })).resolves.toBeInstanceOf(Ed25519KeyPair)
+    expect(cryptoProvider.ed25519!.fromJwkJson({ mock: 'jwk' })).resolves.toBeInstanceOf(Ed25519KeyPair)
 
     expect(cryptoProvider.ed25519!.fromSecretBytes(new Uint8Array([0]))).resolves.toBeInstanceOf(Ed25519KeyPair)
   })

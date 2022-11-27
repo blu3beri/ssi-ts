@@ -1,7 +1,7 @@
-import { ParsedJWE } from "./ParsedJWE"
-import { ProtectedHeader, Recipient } from "./envelope"
-import { b64UrlSafe } from "../utils"
-import { Buffer } from "buffer"
+import { ParsedJWE } from './ParsedJWE'
+import { ProtectedHeader, Recipient } from './envelope'
+import { b64UrlSafe } from '../utils'
+import { Buffer } from 'buffer'
 
 export class Jwe {
   public protected: string

@@ -1,5 +1,5 @@
-import { SecretsProvider } from "../src/providers"
-import { Secret } from "../src/secrets"
+import { SecretsProvider } from '../src/providers'
+import { Secret } from '../src/secrets'
 
 export const createExampleSecretsProvider = (secrets: Array<Secret>): SecretsProvider => ({
   findSecrets: async (secretIds: Array<string>): Promise<Array<string>> =>

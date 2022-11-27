@@ -1,5 +1,5 @@
-import { SecretsProvider } from "./SecretsProvider"
-import { assertProvider } from "../utils"
+import { SecretsProvider } from './SecretsProvider'
+import { assertProvider } from '../utils'
 
 export let secretsProvider: SecretsProvider
 

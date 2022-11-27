@@ -1,7 +1,7 @@
-import base58 from "bs58"
-import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair } from "../crypto"
-import { DIDCommError } from "../error"
-import { b58, b64UrlSafe, Codec } from "../utils/"
+import base58 from 'bs58'
+import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair } from '../crypto'
+import { DIDCommError } from '../error'
+import { b58, b64UrlSafe, Codec } from '../utils/'
 
 export class Secret {
   id: string
@@ -23,19 +23,19 @@ export class Secret {
   }
 
   public keyAlgorithm(): KnownKeyAlgorithm {
-    if (this.type === SecretType.JsonWebKey2020 && this.secretMaterial.type === "JWK") {
+    if (this.type === SecretType.JsonWebKey2020 && this.secretMaterial.type === 'JWK') {
       const kty = (this.secretMaterial.value as Record<string, unknown>).kty
       const crv = (this.secretMaterial.value as Record<string, unknown>).crv
       if (!kty || !crv) return KnownKeyAlgorithm.Unsupported
 
-      if (kty === "EC") {
-        if (crv === "P-256") return KnownKeyAlgorithm.P256
-        if (crv === "secp256k1") return KnownKeyAlgorithm.P256
+      if (kty === 'EC') {
+        if (crv === 'P-256') return KnownKeyAlgorithm.P256
+        if (crv === 'secp256k1') return KnownKeyAlgorithm.P256
       }
 
-      if (kty === "OKP") {
-        if (crv === "Ed25519") return KnownKeyAlgorithm.Ed25519
-        if (crv === "X25519") return KnownKeyAlgorithm.X25519
+      if (kty === 'OKP') {
+        if (crv === 'Ed25519') return KnownKeyAlgorithm.Ed25519
+        if (crv === 'X25519') return KnownKeyAlgorithm.X25519
       }
     }
 
@@ -73,14 +73,14 @@ export class Secret {
       const kty = value.kty
       const crv = value.crv
 
-      if (kty === "EC") {
-        if (crv === "P-256") return P256KeyPair.fromJwkJson(value)
-        if (crv === "secp256k1") return K256KeyPair.fromJwkJson(value)
+      if (kty === 'EC') {
+        if (crv === 'P-256') return P256KeyPair.fromJwkJson(value)
+        if (crv === 'secp256k1') return K256KeyPair.fromJwkJson(value)
       }
 
-      if (kty === "OKP") {
-        if (crv === "Ed25519") return Ed25519KeyPair.fromJwkJson(value)
-        if (crv === "X25519") return X25519KeyPair.fromJwkJson(value)
+      if (kty === 'OKP') {
+        if (crv === 'Ed25519') return Ed25519KeyPair.fromJwkJson(value)
+        if (crv === 'X25519') return X25519KeyPair.fromJwkJson(value)
       }
 
       throw new DIDCommError(`Unsupported key type or curve.`)
@@ -92,8 +92,8 @@ export class Secret {
       const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
-        kty: "OKP",
-        crv: "X25519",
+        kty: 'OKP',
+        crv: 'X25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
@@ -108,7 +108,7 @@ export class Secret {
       const xValue = decodedValue.slice(curve25519PointSize, 0)
 
       const jwk = {
-        crv: "Ed25519",
+        crv: 'Ed25519',
         x: b64UrlSafe.encode(xValue),
         d: b64UrlSafe.encode(dValue),
       }
@@ -121,7 +121,7 @@ export class Secret {
       this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       const value = this.secretMaterial.value as string
-      if (!value.startsWith("z")) {
+      if (!value.startsWith('z')) {
         throw new DIDCommError("Multibase must start with 'z'")
       }
 
@@ -141,8 +141,8 @@ export class Secret {
       const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
-        kty: "OKP",
-        crv: "X25519",
+        kty: 'OKP',
+        crv: 'X25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
@@ -156,7 +156,7 @@ export class Secret {
       this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       const value = this.secretMaterial.value as string
-      if (!value.startsWith("z")) {
+      if (!value.startsWith('z')) {
         throw new DIDCommError("Multibase must start with 'z'")
       }
 
@@ -176,8 +176,8 @@ export class Secret {
       const keyPair = await Ed25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk = {
-        kty: "OKP",
-        crv: "Ed25519",
+        kty: 'OKP',
+        crv: 'Ed25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
@@ -185,7 +185,7 @@ export class Secret {
       return Ed25519KeyPair.fromJwkJson(jwk)
     }
 
-    throw new DIDCommError("Unsupported secret method and material combination")
+    throw new DIDCommError('Unsupported secret method and material combination')
   }
 }
 
@@ -199,11 +199,11 @@ export enum SecretType {
 }
 
 export enum SecretMaterialType {
-  Jwk = "JWK",
-  Multibase = "Multibase",
-  Base58 = "base58",
-  Hex = "Hex",
-  Other = "Other",
+  Jwk = 'JWK',
+  Multibase = 'Multibase',
+  Base58 = 'base58',
+  Hex = 'Hex',
+  Other = 'Other',
 }
 
 export type SecretMaterial<V = Record<string, unknown>> = {

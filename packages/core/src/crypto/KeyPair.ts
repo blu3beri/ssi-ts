@@ -1,4 +1,4 @@
-import { DIDCommError } from "../error"
+import { DIDCommError } from '../error'
 
 export abstract class KeyPair {
   public publicKey: Uint8Array

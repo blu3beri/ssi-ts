@@ -1,4 +1,4 @@
-import { JweAlgorithm } from "../jwe"
+import { JweAlgorithm } from '../jwe'
 
 export class Kdf {
   static deriveKey<KE, KW>(options: {
@@ -11,6 +11,6 @@ export class Kdf {
     ccTag: Uint8Array
     receive: boolean
   }): KW {
-    return "TODO" as KW
+    return 'TODO' as KW
   }
 }

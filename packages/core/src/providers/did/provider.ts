@@ -1,5 +1,5 @@
-import { DidProvider } from "./DidProvider"
-import { assertProvider } from "../utils"
+import { DidProvider } from './DidProvider'
+import { assertProvider } from '../utils'
 
 export let didProvider: DidProvider
 

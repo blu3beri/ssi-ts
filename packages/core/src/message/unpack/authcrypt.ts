@@ -1,12 +1,12 @@
-import { DIDCommError } from "../../error"
-import { EncAlgorithm, Jwe, JweAlgorithm } from "../../jwe"
-import { UnpackMetadata } from "./UnpackMetadata"
-import { UnpackOptions } from "./UnpackOptions"
-import { Buffer } from "buffer"
-import { didOrUrl } from "../../utils"
-import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from "../../providers"
-import { Kdf, P256KeyPair, X25519KeyPair } from "../../crypto"
-import { AuthCryptAlgorithm } from "../../algorithms"
+import { DIDCommError } from '../../error'
+import { EncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
+import { UnpackMetadata } from './UnpackMetadata'
+import { UnpackOptions } from './UnpackOptions'
+import { Buffer } from 'buffer'
+import { didOrUrl } from '../../utils'
+import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
+import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { AuthCryptAlgorithm } from '../../algorithms'
 
 export const tryUnpackAuthcrypt = async ({
   message,
@@ -17,43 +17,43 @@ export const tryUnpackAuthcrypt = async ({
   options: UnpackOptions
   metadata: UnpackMetadata
 }): Promise<string | undefined> => {
-  assertDidProvider(["resolve"])
-  assertSecretsProvider(["findSecrets", "getSecret"])
+  assertDidProvider(['resolve'])
+  assertSecretsProvider(['findSecrets', 'getSecret'])
   const jwe = Jwe.fromString(message)
-  if (!jwe) throw new DIDCommError("Invalid JWE message")
+  if (!jwe) throw new DIDCommError('Invalid JWE message')
 
   const parsedJwe = jwe.parse()
 
   if (parsedJwe.protected.alg !== JweAlgorithm.Ecdh1puA256Kw) return undefined
   if (!parsedJwe.verifyDidComm()) return undefined
-  if (!parsedJwe.apu) throw new DIDCommError("No apu present for authcrypt")
+  if (!parsedJwe.apu) throw new DIDCommError('No apu present for authcrypt')
 
-  const fromKid = Buffer.from(parsedJwe.apu).toString("utf-8")
+  const fromKid = Buffer.from(parsedJwe.apu).toString('utf-8')
   const { did: fromDid, didUrl: fromUrl } = didOrUrl(fromKid)
 
   if (!fromDid) {
-    throw new DIDCommError("Apu does not contain did")
+    throw new DIDCommError('Apu does not contain did')
   }
 
   if (!fromUrl) {
-    throw new DIDCommError("Sender key can not be resolved to key agreement")
+    throw new DIDCommError('Sender key can not be resolved to key agreement')
   }
 
   const fromDidDoc = await didProvider.resolve!(fromDid)
-  if (!fromDidDoc) throw new DIDCommError("Unable to resolve sender did")
+  if (!fromDidDoc) throw new DIDCommError('Unable to resolve sender did')
 
   const fromKidDidDoc = fromDidDoc.keyAgreement?.find((k) => k === fromKid)
-  if (!fromKidDidDoc) throw new DIDCommError("Sender kid not found in did")
+  if (!fromKidDidDoc) throw new DIDCommError('Sender kid not found in did')
 
   // TODO: implement asKeyPair on VerificationMethod
   const fromKey = fromDidDoc.verificationMethod?.find((v) => v.id === fromKidDidDoc)
   if (!fromKey) {
-    throw new DIDCommError("Sender verification method not found in did")
+    throw new DIDCommError('Sender verification method not found in did')
   }
 
   const toKids = parsedJwe.jwe.recipients.map((r) => r.header.kid)
   const toKid = toKids[0]
-  if (!toKid) throw new DIDCommError("No recipient keys found")
+  if (!toKid) throw new DIDCommError('No recipient keys found')
 
   const { did: toDid } = didOrUrl(toKid)
 
@@ -66,7 +66,7 @@ export const tryUnpackAuthcrypt = async ({
   })
 
   if (unableToResolveAll) {
-    throw new DIDCommError("Recipient keys are outside of one did or can not be resolved to key agreement")
+    throw new DIDCommError('Recipient keys are outside of one did or can not be resolved to key agreement')
   }
 
   if (!metadata.encryptedToKids) {
@@ -82,7 +82,7 @@ export const tryUnpackAuthcrypt = async ({
   const toKidsFound = await secretsProvider.findSecrets!(toKids)
 
   if (toKids.length === 0) {
-    throw new DIDCommError("No recipient secrets found")
+    throw new DIDCommError('No recipient secrets found')
   }
 
   let payload: Uint8Array | undefined
@@ -90,7 +90,7 @@ export const tryUnpackAuthcrypt = async ({
   for (const toKid in toKidsFound) {
     const toKey = await (await secretsProvider.getSecret!(toKid))?.asKeyPair()
     if (!toKey) {
-      throw new DIDCommError("Recipient secret not found after existence checking")
+      throw new DIDCommError('Recipient secret not found after existence checking')
     }
 
     let _payload: Uint8Array | undefined
@@ -137,8 +137,8 @@ export const tryUnpackAuthcrypt = async ({
   }
 
   if (!payload) {
-    throw new DIDCommError("No payload created")
+    throw new DIDCommError('No payload created')
   }
 
-  return Buffer.from(payload).toString("utf-8")
+  return Buffer.from(payload).toString('utf-8')
 }

@@ -15,31 +15,31 @@ export type VerificationMethod = {
   id: string
   controller: string
   type:
-    | "JsonWebKey2020"
-    | "X25519KeyAgreement2019"
-    | "Ed25519VerificationKey2018"
-    | "EcdsaSecp256k1VerificationKey2019"
-    | "X25519KeyAgreementKey2020"
-    | "Ed25519VerificationKey2020"
+    | 'JsonWebKey2020'
+    | 'X25519KeyAgreement2019'
+    | 'Ed25519VerificationKey2018'
+    | 'EcdsaSecp256k1VerificationKey2019'
+    | 'X25519KeyAgreementKey2020'
+    | 'Ed25519VerificationKey2020'
   publicKeyJwk?: PublicKeyJwk
   publicKeyMultibase?: string
 }
 
 export type PublicKeyJwk = {
-  kty?: "EC" | "RSA" | "oct" | "OKP"
-  crv?: "P-256" | "P-384" | "P-521" | "X25519" | "Ed25519" | "secp256k1"
+  kty?: 'EC' | 'RSA' | 'oct' | 'OKP'
+  crv?: 'P-256' | 'P-384' | 'P-521' | 'X25519' | 'Ed25519' | 'secp256k1'
   d?: string
   x?: string
   y?: string
-  use?: "sig" | "enc"
-  key_ops?: Array<"sign" | "verify" | "encrypt" | "decrypt" | "wrapKey" | "unwrapKey" | "deriveKey" | "deriveBits">
-  alg?: "ECDH-ES+A256KW" | "ECDH-1PU+A256KW"
+  use?: 'sig' | 'enc'
+  key_ops?: Array<'sign' | 'verify' | 'encrypt' | 'decrypt' | 'wrapKey' | 'unwrapKey' | 'deriveKey' | 'deriveBits'>
+  alg?: 'ECDH-ES+A256KW' | 'ECDH-1PU+A256KW'
   kid?: string
 }
 
 export type Service = {
   id: string
-  type: "DIDCommMessaging"
+  type: 'DIDCommMessaging'
   serviceEndpoint: ServiceEndpoint
 }
 

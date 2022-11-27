@@ -1,2 +1,2 @@
-export * from "./secrets"
-export * from "./didDoc"
+export * from './secrets'
+export * from './didDoc'

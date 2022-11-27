@@ -1,7 +1,7 @@
-import { DIDCommError } from "../error"
-import { b64UrlSafe } from "../utils"
-import { CompactHeader } from "./envelope"
-import { Buffer } from "buffer"
+import { DIDCommError } from '../error'
+import { b64UrlSafe } from '../utils'
+import { CompactHeader } from './envelope'
+import { Buffer } from 'buffer'
 
 export class ParsedCompactJWS {
   public header: string
@@ -17,9 +17,9 @@ export class ParsedCompactJWS {
   }
 
   public static parseCompact(compactJws: string): ParsedCompactJWS {
-    const segments = compactJws.split(".")
+    const segments = compactJws.split('.')
     if (segments.length !== 3) {
-      throw new DIDCommError("unable to parse compactly serialized JWS")
+      throw new DIDCommError('unable to parse compactly serialized JWS')
     }
 
     const header = segments[0]

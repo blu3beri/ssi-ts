@@ -1,5 +1,5 @@
-import { assertProvider } from "../utils"
-import { CryptoProvider } from "./CryptoProvider"
+import { assertProvider } from '../utils'
+import { CryptoProvider } from './CryptoProvider'
 
 export let cryptoProvider: CryptoProvider
 
