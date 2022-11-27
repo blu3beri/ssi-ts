@@ -1,5 +1,5 @@
 import { DIDCommError } from '../../error'
-import { JWE, JWEAlgorithm } from '../../jwe'
+import { Jwe, JweAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
@@ -19,13 +19,13 @@ export const tryUnpackAnoncrypt = async ({
 }): Promise<undefined | string> => {
   assertSecretsProvider(['getSecret', 'findSecrets'])
 
-  const jwe = JWE.fromString(message)
+  const jwe = Jwe.fromString(message)
 
   if (!jwe) return undefined
 
   const parsedJwe = jwe.parse()
 
-  if (parsedJwe.protected.alg !== JWEAlgorithm.EcdhEsA256Kw) {
+  if (parsedJwe.protected.alg !== JweAlgorithm.EcdhEsA256Kw) {
     return undefined
   }
 

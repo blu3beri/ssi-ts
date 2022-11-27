@@ -1,11 +1,8 @@
 import { DIDCommError } from '../error'
-import { JWSAlgorithm, KeySign, ParsedCompactJWS, signCompact } from '../jws'
+import { JwsAlgorithm, ParsedCompactJWS, signCompact } from '../jws'
 import { b64UrlSafe, didOrUrl, isDid } from '../utils'
 import { Buffer } from 'buffer'
-import {
-  assertDidProvider,
-  assertSecretsProvider,
-} from '../providers'
+import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Secrets } from '../secrets'
 import { DidResolver } from '../did'
 
@@ -100,15 +97,14 @@ export class FromPrior {
     const secret = await Secrets.getSecret!(kid)
     if (!secret) throw new DIDCommError('Unable to find secret for issuer')
 
-    const signKeyPair = secret.asKeyPair()
+    const signKeyPair = await secret.asKeyPair()
 
-    const fromPriorJwt = signCompact({
+    const fromPriorJwt = await signCompact({
       payload: Buffer.from(fromPriorString),
-      // TODO: handle keysign
-      signer: { kid, key: new KeySign() },
+      signer: { kid, signer: signKeyPair },
       typ: 'JWT',
       // TODO: also map es256k and es256
-      alg: JWSAlgorithm.EdDSA,
+      alg: JwsAlgorithm.EdDSA,
     })
 
     return { fromPriorJwt, kid: JSON.stringify(kid) }
@@ -185,13 +181,13 @@ export class FromPrior {
 
     const valid = false
     switch (alg) {
-      case JWSAlgorithm.EdDSA:
+      case JwsAlgorithm.EdDSA:
         // TODO
         break
-      case JWSAlgorithm.Es256:
+      case JwsAlgorithm.Es256:
         // TODO
         break
-      case JWSAlgorithm.Es256K:
+      case JwsAlgorithm.Es256K:
         // TODO
         break
       default:

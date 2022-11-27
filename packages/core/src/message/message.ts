@@ -3,7 +3,7 @@ import { Attachment } from './attachment'
 import { FromPrior } from './fromPrior'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
-import { JWSAlgorithm, KeySign, sign } from '../jws'
+import { JwsAlgorithm, Signer, sign } from '../jws'
 import { Buffer } from 'buffer'
 import {
   hasKeyAgreementSecret,
@@ -154,27 +154,27 @@ export class Message {
       throw new DIDCommError(`Could not find signer secret for ${keyId}`)
     }
 
-    const signKey = secret.asKeyPair()
+    const signKey = await secret.asKeyPair()
 
     const payload = await this.packPlaintext()
 
     const algorithm =
       signKey instanceof Ed25519KeyPair
-        ? JWSAlgorithm.EdDSA
+        ? JwsAlgorithm.EdDSA
         : signKey instanceof P256KeyPair
-        ? JWSAlgorithm.Es256
+        ? JwsAlgorithm.Es256
         : signKey instanceof K256KeyPair
-        ? JWSAlgorithm.Es256K
+        ? JwsAlgorithm.Es256K
         : undefined
 
     if (!algorithm)
       throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
 
-    const message = sign({
+    const message = await sign({
       payload: Buffer.from(payload),
       alg: algorithm,
       // TODO: all the keypairs should implement keySign
-      signer: { kid: keyId, key: signKey as unknown as KeySign },
+      signer: { kid: keyId, signer: signKey },
     })
 
     return {

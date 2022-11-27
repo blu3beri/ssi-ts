@@ -46,7 +46,6 @@ export type PublicKeyJwk = {
   kid?: string
 }
 
-// TODO: fix the "kind" here
 export type Service = {
   id: string
   type: 'DIDCommMessaging'

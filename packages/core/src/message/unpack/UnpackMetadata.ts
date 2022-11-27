@@ -11,7 +11,7 @@ export type UnpackMetadata = {
   nonRepudiation: boolean
   anonymousSender: boolean
   reWrappedInForward: boolean
-  encryptedFromKid?: Array<string>
+  encryptedFromKid?: string
   encryptedToKids?: Array<string>
   signFrom?: string
   fromPriorIssuerKid?: string

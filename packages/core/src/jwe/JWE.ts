@@ -3,7 +3,7 @@ import { ProtectedHeader, Recipient } from './envelope'
 import { b64UrlSafe } from '../utils'
 import { Buffer } from 'buffer'
 
-export class JWE {
+export class Jwe {
   public protected: string
   public recipients: Array<Recipient>
   public iv: string
@@ -24,9 +24,9 @@ export class JWE {
     this.tag = options.tag
   }
 
-  public static fromString(s: string): JWE {
+  public static fromString(s: string): Jwe {
     const parsed = JSON.parse(s)
-    return new JWE(parsed)
+    return new Jwe(parsed)
   }
 
   public parse(): ParsedJWE {

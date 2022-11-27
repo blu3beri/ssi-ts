@@ -1,6 +1,7 @@
 import {
   CompactHeader,
-  JWSAlgorithm,
+  JwsAlgorithm,
+  JWSAlgorithmToSignatureType,
   ProtectedHeader,
   Signature,
 } from './envelope'
@@ -8,29 +9,21 @@ import { b64UrlSafe, SignatureType } from '../utils'
 import { Buffer } from 'buffer'
 import { JWS } from './JWS'
 
-// TODO askar
-export class KeySign {
-  public createSignature(
-    input: Uint8Array,
-    signatureType?: SignatureType
-  ): Uint8Array {
-    // TODO
-    return new Uint8Array([1, 2, 3])
-  }
+export type Signer = {
+  sign(input: Uint8Array, signatureType?: SignatureType): Promise<Uint8Array>
 }
 
-export const sign = ({
+export const sign = async ({
   payload,
   alg,
   signer,
 }: {
   payload: Uint8Array
-  signer: { kid: string; key: KeySign }
-  alg: JWSAlgorithm
-}): string => {
-  const { key, kid } = signer
-  // TODO: proper conversion
-  const sigType = alg as unknown as SignatureType
+  signer: { kid: string; signer: Signer }
+  alg: JwsAlgorithm
+}): Promise<string> => {
+  const { signer: key, kid } = signer
+  const sigType = JWSAlgorithmToSignatureType(alg)
 
   const protectedHeader: ProtectedHeader = {
     alg,
@@ -43,7 +36,7 @@ export const sign = ({
   const encodedPayload = b64UrlSafe.encode(payload)
 
   const signInput = `${encodedProtected}.${encodedPayload}`
-  const signatureBytes = key.createSignature(
+  const signatureBytes = await key.sign(
     Uint8Array.from(Buffer.from(signInput)),
     sigType
   )
@@ -64,20 +57,19 @@ export const sign = ({
   return JSON.stringify(jws)
 }
 
-export const signCompact = ({
+export const signCompact = async ({
   typ,
   signer,
   payload,
   alg,
 }: {
   payload: Uint8Array
-  signer: { kid: string; key: KeySign }
+  signer: { kid: string; signer: Signer }
   typ: string
-  alg: JWSAlgorithm
-}): string => {
-  const { key, kid } = signer
-  // TODO: proper conversion
-  const sigType = alg as unknown as SignatureType
+  alg: JwsAlgorithm
+}): Promise<string> => {
+  const { signer: key, kid } = signer
+  const sigType = JWSAlgorithmToSignatureType(alg)
 
   const compactHeader: CompactHeader = { alg, typ, kid }
   const header = JSON.stringify(compactHeader)
@@ -86,7 +78,7 @@ export const signCompact = ({
   const encodedPayload = b64UrlSafe.encode(payload)
 
   const signInput = `${encodedHeader}.${encodedPayload}`
-  const signature = key.createSignature(
+  const signature = await key.sign(
     Uint8Array.from(Buffer.from(signInput)),
     sigType
   )
