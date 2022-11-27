@@ -7,7 +7,7 @@ describe('assertProvider', () => {
       DIDCommError
     )
   })
-  test('Don\'t Assert when method is found', () => {
+  test("Don't Assert when method is found", () => {
     expect(assertProvider(['method'], { method: jest.fn() })).toBeUndefined()
   })
 })

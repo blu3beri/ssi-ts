@@ -171,17 +171,17 @@ export class FromPrior {
 
     const valid = false
     switch (alg) {
-    case JwsAlgorithm.EdDSA:
-      // TODO
-      break
-    case JwsAlgorithm.Es256:
-      // TODO
-      break
-    case JwsAlgorithm.Es256K:
-      // TODO
-      break
-    default:
-      throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
+      case JwsAlgorithm.EdDSA:
+        // TODO
+        break
+      case JwsAlgorithm.Es256:
+        // TODO
+        break
+      case JwsAlgorithm.Es256K:
+        // TODO
+        break
+      default:
+        throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
     }
 
     if (!valid) throw new DIDCommError('wrong fromPrior signature')

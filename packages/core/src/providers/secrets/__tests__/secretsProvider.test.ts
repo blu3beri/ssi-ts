@@ -12,7 +12,7 @@ describe('secretsProvider tests', () => {
     expect(() => assertSecretsProvider(['getSecret'])).toThrowError(DIDCommError)
   })
 
-  test('Don\'t Assert when a provider is set', () => {
+  test("Don't Assert when a provider is set", () => {
     const mockSecretsProivder = { findSecrets: jest.fn() }
 
     setSecretsProvider(mockSecretsProivder)

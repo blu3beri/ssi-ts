@@ -30,13 +30,13 @@ export enum JwsAlgorithm {
 
 export const JWSAlgorithmToSignatureType = (jwsAlgorithm: JwsAlgorithm): SignatureType => {
   switch (jwsAlgorithm) {
-  case JwsAlgorithm.EdDSA:
-    return SignatureType.EdDSA
-  case JwsAlgorithm.Es256:
-    return SignatureType.ES256
-  case JwsAlgorithm.Es256K:
-    return SignatureType.ES256K
-  default:
-    throw new DIDCommError(`Unsupported signature type: ${jwsAlgorithm}`)
+    case JwsAlgorithm.EdDSA:
+      return SignatureType.EdDSA
+    case JwsAlgorithm.Es256:
+      return SignatureType.ES256
+    case JwsAlgorithm.Es256K:
+      return SignatureType.ES256K
+    default:
+      throw new DIDCommError(`Unsupported signature type: ${jwsAlgorithm}`)
   }
 }

@@ -122,7 +122,7 @@ export class Secret {
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
-        throw new DIDCommError('Multibase must start with \'z\'')
+        throw new DIDCommError("Multibase must start with 'z'")
       }
 
       const decodedMultibaseValue = b58.decode(value.slice(1))
@@ -157,7 +157,7 @@ export class Secret {
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
-        throw new DIDCommError('Multibase must start with \'z\'')
+        throw new DIDCommError("Multibase must start with 'z'")
       }
 
       const decodedMultibaseValue = base58.decode(value.slice(1))

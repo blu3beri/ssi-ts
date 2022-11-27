@@ -11,7 +11,7 @@ describe('cryptoProvider tests', () => {
     expect(() => assertCryptoProvider(['k256'])).toThrowError(DIDCommError)
   })
 
-  test('Don\'t Assert when a provider is set', () => {
+  test("Don't Assert when a provider is set", () => {
     const mockCryptoKeyPair = {
       sign: jest.fn(),
       fromJwkJson: jest.fn(),

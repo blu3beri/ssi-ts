@@ -10,7 +10,7 @@ describe('didProvider tests', () => {
     expect(() => assertDidProvider(['resolve'])).toThrowError(DIDCommError)
   })
 
-  test('Don\'t Assert when a provider is set', () => {
+  test("Don't Assert when a provider is set", () => {
     const mockDidProvider = { resolve: jest.fn() }
 
     setDidProvider(mockDidProvider)
