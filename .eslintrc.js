@@ -2,9 +2,6 @@
  * @type {import("eslint").Linter.Config}
  */
 const config = {
-  env: {
-    es2021: true,
-  },
   extends: [
     'eslint:recommended',
     'plugin:import/recommended',
@@ -12,15 +9,11 @@ const config = {
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
   plugins: ['@typescript-eslint'],
   rules: {
     'linebreak-style': ['error', 'unix'],
     '@typescript-eslint/no-non-null-assertion': 0,
-    'import/order': 0,
+    'import/order': ['error'],
   },
   overrides: [
     {
