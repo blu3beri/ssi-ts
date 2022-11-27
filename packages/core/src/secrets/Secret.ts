@@ -83,7 +83,7 @@ export class Secret {
         if (crv === 'X25519') return X25519KeyPair.fromJwkJson(value)
       }
 
-      throw new DIDCommError(`Unsupported key type or curve.`)
+      throw new DIDCommError('Unsupported key type or curve.')
     }
 
     if (this.type === SecretType.X25519KeyAgreementKey2019 && this.secretMaterial.type === SecretMaterialType.Base58) {
@@ -122,7 +122,7 @@ export class Secret {
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
-        throw new DIDCommError("Multibase must start with 'z'")
+        throw new DIDCommError('Multibase must start with \'z\'')
       }
 
       const decodedMultibaseValue = b58.decode(value.slice(1))
@@ -157,7 +157,7 @@ export class Secret {
     ) {
       const value = this.secretMaterial.value as string
       if (!value.startsWith('z')) {
-        throw new DIDCommError("Multibase must start with 'z'")
+        throw new DIDCommError('Multibase must start with \'z\'')
       }
 
       const decodedMultibaseValue = base58.decode(value.slice(1))

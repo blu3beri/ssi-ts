@@ -1,10 +1,12 @@
-import type { PackSignedMetadata } from './PackSignedMetadata'
-import { Attachment } from './attachment'
-import { FromPrior } from './fromPrior'
-import { DIDCommError } from '../error'
-import { didOrUrl, isDid } from '../utils'
-import { JwsAlgorithm, sign } from '../jws'
 import { Buffer } from 'buffer'
+import { JwsAlgorithm, sign } from '../jws'
+import { didOrUrl, isDid } from '../utils'
+import { DIDCommError } from '../error'
+import { tryParseForward } from '../protocols/routing'
+import { assertDidProvider, assertSecretsProvider } from '../providers'
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
+import { Secrets } from '../secrets'
+import { DidResolver } from '../did'
 import {
   hasKeyAgreementSecret,
   tryUnpackAnoncrypt,
@@ -14,11 +16,9 @@ import {
   UnpackMetadata,
   UnpackOptions,
 } from './unpack'
-import { tryParseForward } from '../protocols/routing'
-import { assertDidProvider, assertSecretsProvider } from '../providers'
-import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
-import { Secrets } from '../secrets'
-import { DidResolver } from '../did'
+import { FromPrior } from './FromPrior'
+import { Attachment } from './attachment'
+import type { PackSignedMetadata } from './PackSignedMetadata'
 
 export type TMessage = {
   id: string
@@ -149,10 +149,10 @@ export class Message {
       signKey instanceof Ed25519KeyPair
         ? JwsAlgorithm.EdDSA
         : signKey instanceof P256KeyPair
-        ? JwsAlgorithm.Es256
-        : signKey instanceof K256KeyPair
-        ? JwsAlgorithm.Es256K
-        : undefined
+          ? JwsAlgorithm.Es256
+          : signKey instanceof K256KeyPair
+            ? JwsAlgorithm.Es256K
+            : undefined
 
     if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
 
@@ -214,7 +214,7 @@ export class Message {
     let anoncrypted: string | undefined
     let forwardedMessage: string
 
-    while (true) {
+    for (;;) {
       anoncrypted = await tryUnpackAnoncrypt({
         message: msg,
         options,

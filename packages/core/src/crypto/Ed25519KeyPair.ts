@@ -1,5 +1,5 @@
-import { KeyPair } from './KeyPair'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
+import { KeyPair } from './KeyPair'
 
 export class Ed25519KeyPair extends KeyPair {
   public async sign(message: Uint8Array): Promise<Uint8Array> {

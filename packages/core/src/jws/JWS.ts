@@ -1,7 +1,7 @@
+import { Buffer } from 'buffer'
 import { b64UrlSafe } from '../utils'
 import { ProtectedHeader, Signature } from './envelope'
 import { ParsedJWS } from './ParsedJWS'
-import { Buffer } from 'buffer'
 
 export class JWS {
   public signatures: Array<Signature>

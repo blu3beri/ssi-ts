@@ -1,10 +1,10 @@
-import { DIDCommError } from '../error'
-import { ProtectedHeader } from './envelope'
-import { Jwe } from './JWE'
 import { Buffer } from 'buffer'
+import { DIDCommError } from '../error'
 import { assertCryptoProvider } from '../providers'
 import { b64UrlSafe } from '../utils'
 import { Kdf, P256KeyPair, Sha256, X25519KeyPair } from '../crypto'
+import { Jwe } from './JWE'
+import { ProtectedHeader } from './envelope'
 
 export class ParsedJWE {
   public jwe: Jwe
@@ -48,7 +48,7 @@ export class ParsedJWE {
     CE extends {
       decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => Uint8Array
     },
-    KW extends { unwrapKey: (param: any) => CE },
+    KW extends { unwrapKey: (key: Uint8Array) => CE },
     KDF extends typeof Kdf,
     KE extends X25519KeyPair | P256KeyPair,
     KES extends typeof X25519KeyPair | typeof P256KeyPair

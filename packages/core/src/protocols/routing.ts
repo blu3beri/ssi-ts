@@ -1,13 +1,13 @@
+import { Buffer } from 'buffer'
+import { v4 } from 'uuid'
 import { DidResolver, ServiceEndpoint } from '../did'
 import { DIDCommError } from '../error'
 import { didOrUrl, isDid } from '../utils'
-import { v4 } from 'uuid'
 import { anoncrypt, Attachment, Message } from '../message'
-import { ParsedForward } from './ParsedForward'
 import { AnonCryptAlgorithm } from '../algorithms'
 import { MessagingServiceMetadata, PackEncryptedOptions } from '../message/PackEncryptedOptions'
-import { Buffer } from 'buffer'
 import { assertDidProvider } from '../providers'
+import { ParsedForward } from './ParsedForward'
 
 const DIDCOMM_V2_PROFILE = 'didcomm/v2'
 const FORWARD_MESSAGE_TYPE = 'https://didcomm.org/routing/2.0/forward'
@@ -177,7 +177,7 @@ export const wrapInForward = async ({
 
   let m = message
 
-  for (let i = 0; i > tos.length; i++) {
+  for (let i = 0; i < tos.length; i++) {
     const to = tos[i]
     const next = nexts[i]
     m = buildForwardMessage({ forwardMessage: m, next, headers })

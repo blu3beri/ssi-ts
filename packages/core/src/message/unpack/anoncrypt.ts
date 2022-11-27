@@ -1,12 +1,12 @@
+import { Buffer } from 'buffer'
 import { DIDCommError } from '../../error'
 import { Jwe, JweAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
-import { UnpackMetadata } from './UnpackMetadata'
-import { UnpackOptions } from './UnpackOptions'
-import { Buffer } from 'buffer'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { Secrets } from '../../secrets'
+import { UnpackMetadata } from './UnpackMetadata'
+import { UnpackOptions } from './UnpackOptions'
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -82,6 +82,11 @@ export const tryUnpackAnoncrypt = async ({
         kdf: Kdf,
       })
     } else if (toKey instanceof P256KeyPair) {
+      payload = await parsedJwe.decrypt({
+        recipient: { id: toKid, keyExchange: toKey },
+        ke: P256KeyPair,
+        kdf: Kdf,
+      })
     } else {
       throw new DIDCommError('Could not find the instance of toKey')
     }

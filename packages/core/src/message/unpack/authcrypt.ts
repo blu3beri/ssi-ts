@@ -1,12 +1,12 @@
-import { DIDCommError } from '../../error'
-import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
-import { UnpackMetadata } from './UnpackMetadata'
-import { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
+import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
+import { DIDCommError } from '../../error'
 import { didOrUrl } from '../../utils'
 import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { AuthCryptAlgorithm } from '../../algorithms'
+import { UnpackOptions } from './UnpackOptions'
+import { UnpackMetadata } from './UnpackMetadata'
 
 export const tryUnpackAuthcrypt = async ({
   message,

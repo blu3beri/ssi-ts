@@ -1,10 +1,10 @@
+import { Buffer } from 'buffer'
 import { DidResolver, VerificationMethod } from '../../did'
 import { DIDCommError } from '../../error'
 import { JWS } from '../../jws'
 import { assertDidProvider } from '../../providers'
 import { b64UrlSafe, didOrUrl } from '../../utils'
 import { UnpackMetadata } from './UnpackMetadata'
-import { Buffer } from 'buffer'
 
 export const tryUnpackSign = async ({
   message,
@@ -20,7 +20,7 @@ export const tryUnpackSign = async ({
     throw new DIDCommError('Wrong amount of signatures for jws')
   }
 
-  let algorithm = parsedJws.protected[0].alg
+  const algorithm = parsedJws.protected[0].alg
   if (!algorithm) {
     throw new DIDCommError('Unexpected absence of first protected header')
   }

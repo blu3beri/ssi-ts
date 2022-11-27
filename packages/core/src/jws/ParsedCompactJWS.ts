@@ -1,7 +1,7 @@
+import { Buffer } from 'buffer'
 import { DIDCommError } from '../error'
 import { b64UrlSafe } from '../utils'
 import { CompactHeader } from './envelope'
-import { Buffer } from 'buffer'
 
 export class ParsedCompactJWS {
   public header: string

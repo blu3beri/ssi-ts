@@ -1,7 +1,7 @@
+import { Buffer } from 'buffer'
 import { DIDCommError } from '../error'
 import { JwsAlgorithm, ParsedCompactJWS, signCompact } from '../jws'
 import { b64UrlSafe, didOrUrl, isDid } from '../utils'
-import { Buffer } from 'buffer'
 import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Secrets } from '../secrets'
 import { DidResolver } from '../did'
@@ -171,17 +171,17 @@ export class FromPrior {
 
     const valid = false
     switch (alg) {
-      case JwsAlgorithm.EdDSA:
-        // TODO
-        break
-      case JwsAlgorithm.Es256:
-        // TODO
-        break
-      case JwsAlgorithm.Es256K:
-        // TODO
-        break
-      default:
-        throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
+    case JwsAlgorithm.EdDSA:
+      // TODO
+      break
+    case JwsAlgorithm.Es256:
+      // TODO
+      break
+    case JwsAlgorithm.Es256K:
+      // TODO
+      break
+    default:
+      throw new DIDCommError(`Unsuppored signature algorithm. ${alg}`)
     }
 
     if (!valid) throw new DIDCommError('wrong fromPrior signature')
