@@ -1,8 +1,9 @@
+import { Config } from '@jest/types'
 import base from '../../jest.config.base'
 
 import packageJson from './package.json'
 
-const config = {
+const config: Config.InitialOptions = {
   ...base,
   displayName: packageJson.name,
 }

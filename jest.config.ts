@@ -1,6 +1,8 @@
+import { Config } from '@jest/types'
+
 import base from './jest.config.base'
 
-const config = {
+const config: Config.InitialOptions = {
   ...base,
   roots: ['<rootDir>'],
   projects: ['<rootDir>/packages/*'],

@@ -3,11 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
-    "check-types": "tsc -p ./tsconfig.json --noEmit",
+    "check-types": "tsc -p ./tsconfig.json --noEmit && tsc -p ./tsconfig.test.json --noEmit",
     "check-format": "yarn prettier --list-different",
     "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
     "format": "yarn prettier --write",
