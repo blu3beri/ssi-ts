@@ -73,7 +73,7 @@ export class FromPrior {
         throw new DIDCommError('issuerKid does not belong to `iss`')
       }
 
-      const authKid = didDoc.authentication?.find((a) => a === kid)
+      const authKid = didDoc.authentication?.find((a) => (typeof a === 'string' ? a : a.id) === kid)
       if (!authKid) {
         throw new DIDCommError('provided issuerKid is not found in DIDDoc')
       }
@@ -155,7 +155,7 @@ export class FromPrior {
       throw new DIDCommError('authentication field not found in did doc')
     }
 
-    const kidFromDidDoc = didDoc.authentication?.find((a) => a === kid)
+    const kidFromDidDoc = didDoc.authentication.find((a) => (typeof a === 'string' ? a : a.id) === kid)
     if (!kidFromDidDoc) {
       throw new DIDCommError('fromPrior issuer kid not found in DIDDoc')
     }
