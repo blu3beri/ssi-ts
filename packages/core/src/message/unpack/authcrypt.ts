@@ -1,5 +1,5 @@
 import { DIDCommError } from '../../error'
-import { EncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
+import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
 import { UnpackMetadata } from './UnpackMetadata'
 import { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
@@ -97,7 +97,7 @@ export const tryUnpackAuthcrypt = async ({
     if (
       fromKey instanceof X25519KeyPair &&
       toKey instanceof X25519KeyPair &&
-      parsedJwe.protected.enc === EncAlgorithm.A256cbcHs512
+      parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
       _payload = await parsedJwe.decrypt({
@@ -110,7 +110,7 @@ export const tryUnpackAuthcrypt = async ({
     } else if (
       fromKey instanceof P256KeyPair &&
       toKey instanceof P256KeyPair &&
-      parsedJwe.protected.enc === EncAlgorithm.A256cbcHs512
+      parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
 

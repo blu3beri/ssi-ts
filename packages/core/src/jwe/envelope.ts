@@ -1,7 +1,7 @@
 export type ProtectedHeader = {
   typ?: string
   alg: JweAlgorithm
-  enc: EncAlgorithm
+  enc: JweEncAlgorithm
   skid?: string
   apu?: string
   apv: string
@@ -9,12 +9,8 @@ export type ProtectedHeader = {
 }
 
 export type Recipient = {
-  header: PerRecipientHeader
+  header: { kid: string }
   encryptedKey: string
-}
-
-type PerRecipientHeader = {
-  kid: string
 }
 
 export enum JweAlgorithm {
@@ -22,7 +18,7 @@ export enum JweAlgorithm {
   EcdhEsA256Kw = 'ECDH-ES+A256KW',
 }
 
-export enum EncAlgorithm {
+export enum JweEncAlgorithm {
   A256cbcHs512 = 'A256CBC-HS512',
   Xc20P = 'XC20P',
   A256Gcm = 'A256GCM',
