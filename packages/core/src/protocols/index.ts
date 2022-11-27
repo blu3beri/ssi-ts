@@ -1,1 +1,1 @@
-export * from './ParsedForward'
+export * from "./ParsedForward"

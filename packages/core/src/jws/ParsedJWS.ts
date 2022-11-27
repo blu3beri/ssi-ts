@@ -1,5 +1,5 @@
-import { ProtectedHeader } from './envelope'
-import { JWS } from './JWS'
+import { ProtectedHeader } from "./envelope"
+import { JWS } from "./JWS"
 
 export class ParsedJWS {
   public jws: JWS

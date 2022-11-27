@@ -1,10 +1,10 @@
-import type { PackSignedMetadata } from './PackSignedMetadata'
-import { Attachment } from './attachment'
-import { FromPrior } from './fromPrior'
-import { DIDCommError } from '../error'
-import { didOrUrl, isDid } from '../utils'
-import { JwsAlgorithm, Signer, sign } from '../jws'
-import { Buffer } from 'buffer'
+import type { PackSignedMetadata } from "./PackSignedMetadata"
+import { Attachment } from "./attachment"
+import { FromPrior } from "./fromPrior"
+import { DIDCommError } from "../error"
+import { didOrUrl, isDid } from "../utils"
+import { JwsAlgorithm, Signer, sign } from "../jws"
+import { Buffer } from "buffer"
 import {
   hasKeyAgreementSecret,
   tryUnpackAnoncrypt,
@@ -13,16 +13,16 @@ import {
   tryUnpackSign,
   UnpackMetadata,
   UnpackOptions,
-} from './unpack'
-import { tryParseForward } from '../protocols/routing'
-import { assertDidProvider, assertSecretsProvider } from '../providers'
-import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
-import { Secrets } from '../secrets'
-import { DidResolver } from '../did'
+} from "./unpack"
+import { tryParseForward } from "../protocols/routing"
+import { assertDidProvider, assertSecretsProvider } from "../providers"
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from "../crypto"
+import { Secrets } from "../secrets"
+import { DidResolver } from "../did"
 
 export type TMessage = {
   id: string
-  typ?: 'application/didcomm-plain+json'
+  typ?: "application/didcomm-plain+json"
   type: string
   body: Record<string, unknown>
   from?: string
@@ -38,7 +38,7 @@ export type TMessage = {
 
 export class Message {
   public id: string
-  public typ: 'application/didcomm-plain+json'
+  public typ: "application/didcomm-plain+json"
   public type: string
   public body: Record<string, unknown>
   public from?: string
@@ -53,7 +53,7 @@ export class Message {
 
   public constructor(options: TMessage) {
     this.id = options.id
-    this.typ = 'application/didcomm-plain+json'
+    this.typ = "application/didcomm-plain+json"
     this.type = options.type
     this.body = options.body
     this.from = options.from
@@ -70,9 +70,7 @@ export class Message {
   public fromString(s: string) {
     const obj = JSON.parse(s)
     if (!obj.id || !obj.type || !obj.body) {
-      throw new DIDCommError(
-        `string: ${s} does not contain either: 'id', 'type' or 'body'`
-      )
+      throw new DIDCommError(`string: ${s} does not contain either: 'id', 'type' or 'body'`)
     }
     return new Message(JSON.parse(s))
   }
@@ -94,54 +92,43 @@ export class Message {
     return JSON.stringify(this)
   }
 
-  private validatePackPlaintext(
-    fromPrior?: FromPrior,
-    fromPriorIssuerKid?: string
-  ) {
+  private validatePackPlaintext(fromPrior?: FromPrior, fromPriorIssuerKid?: string) {
     if (fromPrior) {
       fromPrior.validatePack(fromPriorIssuerKid)
       if (this.from && fromPrior.sub !== this.from) {
-        throw new DIDCommError(
-          'fromPrior `sub` value is not equal to message `from` value'
-        )
+        throw new DIDCommError("fromPrior `sub` value is not equal to message `from` value")
       }
     }
   }
 
-  public async packSigned(
-    signBy: string
-  ): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
-    assertDidProvider(['resolve'])
-    assertSecretsProvider(['findSecrets', 'getSecret'])
+  public async packSigned(signBy: string): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
+    assertDidProvider(["resolve"])
+    assertSecretsProvider(["findSecrets", "getSecret"])
     this.assertPackSigned(signBy)
 
     const { did, didUrl } = didOrUrl(signBy)
 
-    if (!did) throw new DIDCommError('Could not get did from `signBy` field')
+    if (!did) throw new DIDCommError("Could not get did from `signBy` field")
 
     const didDoc = await DidResolver.resolve!(did)
 
     if (!didDoc) {
-      throw new DIDCommError('Unable to resolve signer DID')
+      throw new DIDCommError("Unable to resolve signer DID")
     }
 
     if (!didDoc.authentication) {
-      throw new DIDCommError('Authentication field not found on did document')
+      throw new DIDCommError("Authentication field not found on did document")
     }
 
     const authentications: Array<string> = []
 
     if (didUrl) {
       if (!didDoc.authentication.find((a) => a === didUrl)) {
-        throw new DIDCommError(
-          'Signer key id not found in did doc authentication field'
-        )
+        throw new DIDCommError("Signer key id not found in did doc authentication field")
       }
       authentications.push(didUrl)
     } else {
-      didDoc.authentication.forEach((a) =>
-        authentications.push(typeof a === 'string' ? a : a.id)
-      )
+      didDoc.authentication.forEach((a) => authentications.push(typeof a === "string" ? a : a.id))
     }
 
     const keyId = (await Secrets.findSecrets!(authentications))[0]
@@ -167,8 +154,7 @@ export class Message {
         ? JwsAlgorithm.Es256K
         : undefined
 
-    if (!algorithm)
-      throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
+    if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey}`)
 
     const message = await sign({
       payload: Buffer.from(payload),
@@ -185,15 +171,11 @@ export class Message {
 
   private assertPackSigned(signBy: string) {
     if (!isDid(signBy)) {
-      throw new DIDCommError('`sign_from` value is not a valid DID or DID URL')
+      throw new DIDCommError("`sign_from` value is not a valid DID or DID URL")
     }
   }
 
-  private async tryUnwrapForwardedMessage({
-    message,
-  }: {
-    message: string
-  }): Promise<undefined | string> {
+  private async tryUnwrapForwardedMessage({ message }: { message: string }): Promise<undefined | string> {
     let plaintext: Message | undefined
     try {
       plaintext = this.fromString(message)
@@ -269,7 +251,7 @@ export class Message {
       metadata,
     })
     if (!plaintext) {
-      throw new DIDCommError('Message is not a valid JWE, JWS or JWM')
+      throw new DIDCommError("Message is not a valid JWE, JWS or JWM")
     }
     return { message: plaintext, metadata }
   }

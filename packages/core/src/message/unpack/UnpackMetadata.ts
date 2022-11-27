@@ -1,9 +1,5 @@
-import {
-  AnonCryptAlgorithm,
-  AuthCryptAlgorithm,
-  SigningAlgorithm,
-} from '../../algorithms'
-import { FromPrior } from '../fromPrior'
+import { AnonCryptAlgorithm, AuthCryptAlgorithm, SigningAlgorithm } from "../../algorithms"
+import { FromPrior } from "../fromPrior"
 
 export type UnpackMetadata = {
   encrypted: boolean

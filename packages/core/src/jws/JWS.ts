@@ -1,16 +1,13 @@
-import { b64UrlSafe } from '../utils'
-import { ProtectedHeader, Signature } from './envelope'
-import { ParsedJWS } from './ParsedJWS'
-import { Buffer } from 'buffer'
+import { b64UrlSafe } from "../utils"
+import { ProtectedHeader, Signature } from "./envelope"
+import { ParsedJWS } from "./ParsedJWS"
+import { Buffer } from "buffer"
 
 export class JWS {
   public signatures: Array<Signature>
   public payload: string
 
-  public constructor(options: {
-    signatures: Array<Signature>
-    payload: string
-  }) {
+  public constructor(options: { signatures: Array<Signature>; payload: string }) {
     this.signatures = options.signatures
     this.payload = options.payload
   }

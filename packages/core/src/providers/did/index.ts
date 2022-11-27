@@ -1,2 +1,2 @@
-export * from './DidProvider'
-export * from './provider'
+export * from "./DidProvider"
+export * from "./provider"

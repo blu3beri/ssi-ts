@@ -1,4 +1,4 @@
-import { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../algorithms'
+import { AnonCryptAlgorithm, AuthCryptAlgorithm } from "../algorithms"
 
 export type PackEncryptedOptions = {
   protectSender: boolean

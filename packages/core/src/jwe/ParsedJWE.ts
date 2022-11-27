@@ -1,10 +1,10 @@
-import { DIDCommError } from '../error'
-import { ProtectedHeader } from './envelope'
-import { Jwe } from './JWE'
-import { Buffer } from 'buffer'
-import { assertCryptoProvider } from '../providers'
-import { b64UrlSafe } from '../utils'
-import { Kdf, P256KeyPair, Sha256, X25519KeyPair } from '../crypto'
+import { DIDCommError } from "../error"
+import { ProtectedHeader } from "./envelope"
+import { Jwe } from "./JWE"
+import { Buffer } from "buffer"
+import { assertCryptoProvider } from "../providers"
+import { b64UrlSafe } from "../utils"
+import { Kdf, P256KeyPair, Sha256, X25519KeyPair } from "../crypto"
 
 export class ParsedJWE {
   public jwe: Jwe
@@ -12,12 +12,7 @@ export class ParsedJWE {
   public apv: Uint8Array
   public apu?: Uint8Array
 
-  public constructor(options: {
-    jwe: Jwe
-    protected: ProtectedHeader
-    apv: Uint8Array
-    apu?: Uint8Array
-  }) {
+  public constructor(options: { jwe: Jwe; protected: ProtectedHeader; apv: Uint8Array; apu?: Uint8Array }) {
     this.jwe = options.jwe
     this.protected = options.protected
     this.apv = options.apv
@@ -25,29 +20,25 @@ export class ParsedJWE {
   }
 
   public async verifyDidComm(): Promise<boolean> {
-    assertCryptoProvider(['sha256'])
+    assertCryptoProvider(["sha256"])
 
     // TODO: verify the sorting
     const kids = this.jwe.recipients.map((r) => r.header.kid).sort()
 
-    const didCommApv = await Sha256.hash(
-      Uint8Array.from(Buffer.from(kids.join('.')))
-    )
+    const didCommApv = await Sha256.hash(Uint8Array.from(Buffer.from(kids.join("."))))
 
-    if (this.apv !== didCommApv) throw new DIDCommError('APV Mismatch')
+    if (this.apv !== didCommApv) throw new DIDCommError("APV Mismatch")
 
-    const didCommApu = this.apu
-      ? Buffer.from(this.apu).toString('utf-8')
-      : undefined
+    const didCommApu = this.apu ? Buffer.from(this.apu).toString("utf-8") : undefined
 
     if (this.protected.skid && didCommApu && didCommApu.length > 0) {
       if (didCommApu !== this.protected.skid) {
-        throw new DIDCommError('APU mismatch')
+        throw new DIDCommError("APU mismatch")
       }
     }
 
     if (this.protected.skid && didCommApu) {
-      throw new DIDCommError('SKID present, but no apu')
+      throw new DIDCommError("SKID present, but no apu")
     }
 
     return true
@@ -55,11 +46,7 @@ export class ParsedJWE {
 
   public async decrypt<
     CE extends {
-      decrypt: (options: {
-        buf: Uint8Array
-        nonce: Uint8Array
-        aad: Uint8Array
-      }) => Uint8Array
+      decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => Uint8Array
     },
     KW extends { unwrapKey: (param: any) => CE },
     KDF extends typeof Kdf,
@@ -80,15 +67,13 @@ export class ParsedJWE {
     const { id: kid, keyExchange: key } = recipient
 
     if (sKid ? Buffer.from(sKid) : undefined !== this.apu) {
-      throw new DIDCommError('wrong sender key id used')
+      throw new DIDCommError("wrong sender key id used")
     }
 
-    const encodedEncryptedKey = this.jwe.recipients.find(
-      (r) => r.header.kid === kid
-    )?.encryptedKey
+    const encodedEncryptedKey = this.jwe.recipients.find((r) => r.header.kid === kid)?.encryptedKey
 
     if (!encodedEncryptedKey) {
-      throw new DIDCommError('Recipient not found')
+      throw new DIDCommError("Recipient not found")
     }
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
@@ -109,12 +94,12 @@ export class ParsedJWE {
     })
 
     if (!kw) {
-      throw new DIDCommError('Unable to derive kw')
+      throw new DIDCommError("Unable to derive kw")
     }
 
     const cek: CE = kw.unwrapKey(encryptedKey)
     if (!cek) {
-      throw new DIDCommError('unable to unwrap cek')
+      throw new DIDCommError("unable to unwrap cek")
     }
 
     const cipherText = b64UrlSafe.decode(this.jwe.ciphertext)

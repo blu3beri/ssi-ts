@@ -1,12 +1,12 @@
-import { DIDCommError } from '../../error'
-import { Jwe, JweAlgorithm } from '../../jwe'
-import { assertSecretsProvider } from '../../providers'
-import { didOrUrl } from '../../utils'
-import { UnpackMetadata } from './UnpackMetadata'
-import { UnpackOptions } from './UnpackOptions'
-import { Buffer } from 'buffer'
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
-import { Secrets } from '../../secrets'
+import { DIDCommError } from "../../error"
+import { Jwe, JweAlgorithm } from "../../jwe"
+import { assertSecretsProvider } from "../../providers"
+import { didOrUrl } from "../../utils"
+import { UnpackMetadata } from "./UnpackMetadata"
+import { UnpackOptions } from "./UnpackOptions"
+import { Buffer } from "buffer"
+import { Kdf, P256KeyPair, X25519KeyPair } from "../../crypto"
+import { Secrets } from "../../secrets"
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -17,7 +17,7 @@ export const tryUnpackAnoncrypt = async ({
   options: UnpackOptions
   metadata: UnpackMetadata
 }): Promise<undefined | string> => {
-  assertSecretsProvider(['getSecret', 'findSecrets'])
+  assertSecretsProvider(["getSecret", "findSecrets"])
 
   const jwe = Jwe.fromString(message)
 
@@ -30,20 +30,20 @@ export const tryUnpackAnoncrypt = async ({
   }
 
   if (!parsedJwe.verifyDidComm()) {
-    throw new DIDCommError('Unable to verify parsed JWE')
+    throw new DIDCommError("Unable to verify parsed JWE")
   }
 
   const toKids = parsedJwe.jwe.recipients.map((r) => r.header.kid)
   const toKid = toKids[0]
 
   if (!toKid) {
-    throw new DIDCommError('No recipient keys found')
+    throw new DIDCommError("No recipient keys found")
   }
 
   const { did: toDid } = didOrUrl(toKid)
 
   if (!toDid) {
-    throw new DIDCommError('Unable to convert toKid to did')
+    throw new DIDCommError("Unable to convert toKid to did")
   }
 
   if (
@@ -52,9 +52,7 @@ export const tryUnpackAnoncrypt = async ({
       return did !== toDid || !didUrl
     })
   ) {
-    throw new DIDCommError(
-      'Recipient keys are outside of one did or can not be resolver to key agreement'
-    )
+    throw new DIDCommError("Recipient keys are outside of one did or can not be resolver to key agreement")
   }
 
   metadata.encryptedToKids = toKids
@@ -64,7 +62,7 @@ export const tryUnpackAnoncrypt = async ({
   const toKidsFound = await Secrets.findSecrets!(toKids)
 
   if (toKidsFound.length === 0) {
-    throw new DIDCommError('No recipient secrets found')
+    throw new DIDCommError("No recipient secrets found")
   }
 
   let payload: undefined | Uint8Array
@@ -73,9 +71,7 @@ export const tryUnpackAnoncrypt = async ({
     const toKey = (await Secrets.getSecret(toKid))?.asKeyPair()
 
     if (!toKey) {
-      throw new DIDCommError(
-        'Recipient secret not found after existence checking'
-      )
+      throw new DIDCommError("Recipient secret not found after existence checking")
     }
 
     // TODO: finish this implementation for all the algorithms and keypair types
@@ -87,7 +83,7 @@ export const tryUnpackAnoncrypt = async ({
       })
     } else if (toKey instanceof P256KeyPair) {
     } else {
-      throw new DIDCommError('Could not find the instance of toKey')
+      throw new DIDCommError("Could not find the instance of toKey")
     }
 
     if (options.expectDecryptByAllKeys) {
@@ -95,9 +91,9 @@ export const tryUnpackAnoncrypt = async ({
     }
   }
 
-  if (!payload) throw new DIDCommError('Could not establish payload')
+  if (!payload) throw new DIDCommError("Could not establish payload")
 
-  const serializedPayload = Buffer.from(payload).toString('utf-8')
+  const serializedPayload = Buffer.from(payload).toString("utf-8")
 
   return serializedPayload
 }

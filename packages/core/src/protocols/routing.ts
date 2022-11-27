@@ -1,19 +1,16 @@
-import { DidResolver, ServiceEndpoint } from '../did'
-import { DIDCommError } from '../error'
-import { didOrUrl, isDid } from '../utils'
-import { v4 } from 'uuid'
-import { anoncrypt, Attachment, Message } from '../message'
-import { ParsedForward } from './ParsedForward'
-import { AnonCryptAlgorithm } from '../algorithms'
-import {
-  MessagingServiceMetadata,
-  PackEncryptedOptions,
-} from '../message/PackEncryptedOptions'
-import { Buffer } from 'buffer'
-import { assertDidProvider } from '../providers'
+import { DidResolver, ServiceEndpoint } from "../did"
+import { DIDCommError } from "../error"
+import { didOrUrl, isDid } from "../utils"
+import { v4 } from "uuid"
+import { anoncrypt, Attachment, Message } from "../message"
+import { ParsedForward } from "./ParsedForward"
+import { AnonCryptAlgorithm } from "../algorithms"
+import { MessagingServiceMetadata, PackEncryptedOptions } from "../message/PackEncryptedOptions"
+import { Buffer } from "buffer"
+import { assertDidProvider } from "../providers"
 
-const DIDCOMM_V2_PROFILE = 'didcomm/v2'
-const FORWARD_MESSAGE_TYPE = 'https://didcomm.org/routing/2.0/forward'
+const DIDCOMM_V2_PROFILE = "didcomm/v2"
+const FORWARD_MESSAGE_TYPE = "https://didcomm.org/routing/2.0/forward"
 
 export const generateMessageId = v4
 
@@ -24,12 +21,12 @@ export const findDidcommService = async ({
   did: string
   serviceId?: string
 }): Promise<{ serviceId: string; service: ServiceEndpoint } | undefined> => {
-  assertDidProvider(['resolve'])
+  assertDidProvider(["resolve"])
 
   const didDoc = await DidResolver.resolve!(did)
-  if (!didDoc) throw new DIDCommError('DID not found')
+  if (!didDoc) throw new DIDCommError("DID not found")
   if (!didDoc.service) {
-    throw new DIDCommError('Service field not found on DIDDoc')
+    throw new DIDCommError("Service field not found on DIDDoc")
   }
 
   if (serviceId) {
@@ -41,33 +38,23 @@ export const findDidcommService = async ({
     if (service.serviceEndpoint) {
       const serviceEndpoint = service.serviceEndpoint
       if (serviceEndpoint.accept) {
-        if (
-          serviceEndpoint.accept?.length === 0 ||
-          serviceEndpoint.accept?.includes(DIDCOMM_V2_PROFILE)
-        ) {
+        if (serviceEndpoint.accept?.length === 0 || serviceEndpoint.accept?.includes(DIDCOMM_V2_PROFILE)) {
           return { serviceId, service: serviceEndpoint }
         } else {
-          throw new DIDCommError(
-            'Service with specified ID does not accept didcomm/v2 profile'
-          )
+          throw new DIDCommError("Service with specified ID does not accept didcomm/v2 profile")
         }
       } else {
         return { serviceId, service: serviceEndpoint }
       }
     } else {
-      throw new DIDCommError(
-        'Service with specified ID is not of correct type '
-      )
+      throw new DIDCommError("Service with specified ID is not of correct type ")
     }
   } else {
     didDoc.service.find((service) => {
       if (service.serviceEndpoint) {
         const serviceEndpoint = service.serviceEndpoint
         if (serviceEndpoint.accept) {
-          if (
-            serviceEndpoint.accept.length === 0 ||
-            serviceEndpoint.accept.includes(DIDCOMM_V2_PROFILE)
-          ) {
+          if (serviceEndpoint.accept.length === 0 || serviceEndpoint.accept.includes(DIDCOMM_V2_PROFILE)) {
             return { sevice: serviceEndpoint, serviceId: service.id }
           }
         } else {
@@ -88,7 +75,7 @@ export const resolveDidCommServicesChain = async ({
   serviceId?: string
 }): Promise<Array<{ serviceId: string; service: ServiceEndpoint }>> => {
   const { did } = didOrUrl(to)
-  if (!did) throw new DIDCommError('Could not get did from to value')
+  if (!did) throw new DIDCommError("Could not get did from to value")
 
   const maybeService = await findDidcommService({
     did,
@@ -104,16 +91,12 @@ export const resolveDidCommServicesChain = async ({
 
   while (isDid(serviceEndpoint)) {
     if (services.length > 1) {
-      throw new DIDCommError(
-        'DID doc defines alternative endpoints recursively'
-      )
+      throw new DIDCommError("DID doc defines alternative endpoints recursively")
     }
 
     const s = await findDidcommService({ did: serviceEndpoint })
     if (!s) {
-      throw new DIDCommError(
-        'Referenced mediator does not provide any correct services'
-      )
+      throw new DIDCommError("Referenced mediator does not provide any correct services")
     }
 
     services.unshift(s)
@@ -149,15 +132,13 @@ export const buildForwardMessage = ({
   return JSON.stringify(message)
 }
 
-export const tryParseForward = (
-  message: Message
-): ParsedForward | undefined => {
+export const tryParseForward = (message: Message): ParsedForward | undefined => {
   if (message.type !== FORWARD_MESSAGE_TYPE) {
     return undefined
   }
   const next = message.body.next ? message.body.next : undefined
 
-  if (!next || typeof next !== 'string') {
+  if (!next || typeof next !== "string") {
     return undefined
   }
 
@@ -206,7 +187,7 @@ export const wrapInForward = async ({
       message: Uint8Array.from(Buffer.from(m)),
     })
     if (!res) {
-      throw new DIDCommError('Could not use anoncrypt')
+      throw new DIDCommError("Could not use anoncrypt")
     }
     m = res.message
   }
@@ -221,9 +202,7 @@ export const wrapInForwardIfNeeded = async ({
   message: string
   to: string
   options: PackEncryptedOptions
-}): Promise<
-  undefined | { metadata: MessagingServiceMetadata; forwardMessage: string }
-> => {
+}): Promise<undefined | { metadata: MessagingServiceMetadata; forwardMessage: string }> => {
   if (!options.forward) return undefined
 
   const serviceChain = await resolveDidCommServicesChain({
@@ -235,9 +214,7 @@ export const wrapInForwardIfNeeded = async ({
 
   const routingKeys = serviceChain.slice(1).map((s) => s.service.uri)
 
-  serviceChain[serviceChain.length - 1].service.routingKeys?.forEach((k) =>
-    routingKeys.push(k)
-  )
+  serviceChain[serviceChain.length - 1].service.routingKeys?.forEach((k) => routingKeys.push(k))
 
   if (routingKeys.length === 0) return undefined
 

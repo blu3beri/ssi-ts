@@ -1,22 +1,11 @@
-import {
-  Ed25519KeyPair,
-  K256KeyPair,
-  P256KeyPair,
-  X25519KeyPair,
-} from '../../crypto'
-import { KeyPair } from '../../crypto/KeyPair'
-import { Args, OrPromise } from '../utils'
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair } from "../../crypto"
+import { KeyPair } from "../../crypto/KeyPair"
+import { Args, OrPromise } from "../utils"
 
 type Sign = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
 type Hash = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
-type FromJwkJson<T extends KeyPair> = (
-  jwk: Record<string, unknown>,
-  ...args: Args
-) => OrPromise<T>
-type FromSecretBytes<T extends KeyPair> = (
-  secretBytes: Uint8Array,
-  ...args: Args
-) => OrPromise<T>
+type FromJwkJson<T extends KeyPair> = (jwk: Record<string, unknown>, ...args: Args) => OrPromise<T>
+type FromSecretBytes<T extends KeyPair> = (secretBytes: Uint8Array, ...args: Args) => OrPromise<T>
 
 export type CryptoProvider = {
   sha256?: {

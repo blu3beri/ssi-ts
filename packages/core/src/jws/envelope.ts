@@ -1,5 +1,5 @@
-import { DIDCommError } from '../error'
-import { SignatureType } from '../utils'
+import { DIDCommError } from "../error"
+import { SignatureType } from "../utils"
 
 export type Signature = {
   header: Header
@@ -23,14 +23,12 @@ export type CompactHeader = {
 }
 
 export enum JwsAlgorithm {
-  EdDSA = 'EdDSA',
-  'Es256' = 'ES256',
-  'Es256K' = 'ES256K',
+  EdDSA = "EdDSA",
+  "Es256" = "ES256",
+  "Es256K" = "ES256K",
 }
 
-export const JWSAlgorithmToSignatureType = (
-  jwsAlgorithm: JwsAlgorithm
-): SignatureType => {
+export const JWSAlgorithmToSignatureType = (jwsAlgorithm: JwsAlgorithm): SignatureType => {
   switch (jwsAlgorithm) {
     case JwsAlgorithm.EdDSA:
       return SignatureType.EdDSA

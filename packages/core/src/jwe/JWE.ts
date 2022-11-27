@@ -1,7 +1,7 @@
-import { ParsedJWE } from './ParsedJWE'
-import { ProtectedHeader, Recipient } from './envelope'
-import { b64UrlSafe } from '../utils'
-import { Buffer } from 'buffer'
+import { ParsedJWE } from "./ParsedJWE"
+import { ProtectedHeader, Recipient } from "./envelope"
+import { b64UrlSafe } from "../utils"
+import { Buffer } from "buffer"
 
 export class Jwe {
   public protected: string
@@ -31,13 +31,9 @@ export class Jwe {
 
   public parse(): ParsedJWE {
     const parsed = b64UrlSafe.decode(this.protected)
-    const protectedHeader: ProtectedHeader = JSON.parse(
-      Buffer.from(parsed).toString()
-    )
+    const protectedHeader: ProtectedHeader = JSON.parse(Buffer.from(parsed).toString())
     const apv = b64UrlSafe.decode(protectedHeader.apv)
-    const apu = protectedHeader.apu
-      ? b64UrlSafe.decode(protectedHeader.apu)
-      : undefined
+    const apu = protectedHeader.apu ? b64UrlSafe.decode(protectedHeader.apu) : undefined
 
     return new ParsedJWE({ jwe: this, apu, protected: protectedHeader, apv })
   }
