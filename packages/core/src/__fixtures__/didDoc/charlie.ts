@@ -1,4 +1,4 @@
-import { ServiceEndpoint, DIDDocument, Service, VerificationMethod } from '../../did'
+import { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../did'
 
 const CHARLIE_VERIFICATION_METHOD_KEY_AGREEM_X25519: VerificationMethod = {
   id: 'did:example:charlie#key-x25519-1',
@@ -34,7 +34,7 @@ const CHARLIE_SERVICE: Service = {
   serviceEndpoint: CHARLIE_DID_COMM_MESSAGING_SERVICE,
 }
 
-export const CHARLIE_DID_DOC: DIDDocument = {
+export const CHARLIE_DID_DOC: DidDocument = {
   id: 'did:example:charlie',
   authentication: ['did:example:charlie#key-1'],
   keyAgreement: ['did:example:charlie#key-x25519-1'],

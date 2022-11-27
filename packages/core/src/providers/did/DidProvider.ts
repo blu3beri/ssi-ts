@@ -1,5 +1,5 @@
-import { DIDDocument } from '../../did/DidDocument'
+import { DidDocument } from '../../did/DidDocument'
 
 export type DidProvider = {
-  resolve?: (did: string) => Promise<DIDDocument | undefined>
+  resolve?: (did: string) => Promise<DidDocument | undefined>
 }

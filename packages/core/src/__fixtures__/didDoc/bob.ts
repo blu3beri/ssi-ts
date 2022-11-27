@@ -1,4 +1,4 @@
-import { ServiceEndpoint, DIDDocument, Service, VerificationMethod } from '../../did'
+import { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../did'
 
 const BOB_VERIFICATION_METHOD_KEY_AGREEM_X25519_1: VerificationMethod = {
   id: 'did:example:bob#key-x25519-1',
@@ -165,7 +165,7 @@ const BOB_SERVICE: Service = {
   serviceEndpoint: BOB_DID_COMM_MESSAGING_SERVICE,
 }
 
-export const BOB_DID_DOC: DIDDocument = {
+export const BOB_DID_DOC: DidDocument = {
   id: 'did:example:bob',
   authentication: [],
   keyAgreement: [
@@ -192,7 +192,7 @@ export const BOB_DID_DOC: DIDDocument = {
     BOB_VERIFICATION_METHOD_KEY_AGREEM_P521_2,
   ],
 }
-export const BOB_DID_DOC_NO_SECRETS: DIDDocument = {
+export const BOB_DID_DOC_NO_SECRETS: DidDocument = {
   id: 'did:example:bob',
   authentication: [],
   keyAgreement: [

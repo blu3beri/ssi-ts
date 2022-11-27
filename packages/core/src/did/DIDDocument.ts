@@ -1,4 +1,4 @@
-export type DIDDocument = {
+export type DidDocument = {
   id: string
   alsoKnownAs?: Array<string>
   controller?: string | Array<string>

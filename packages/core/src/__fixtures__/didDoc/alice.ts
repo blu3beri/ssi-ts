@@ -1,4 +1,4 @@
-import type { VerificationMethod, DIDDocument } from '../../did'
+import type { VerificationMethod, DidDocument } from '../../did'
 
 const ALICE_VERIFICATION_METHOD_KEY_AGREEM_X25519_NOT_IN_SECRET: VerificationMethod = {
   id: 'did:example:alice#key-x25519-not-in-secrets-1',
@@ -92,7 +92,7 @@ const ALICE_AUTH_METHOD_SECP256K1: VerificationMethod = {
   },
 }
 
-export const ALICE_DID_DOC: DIDDocument = {
+export const ALICE_DID_DOC: DidDocument = {
   id: 'did:example:alice',
   authentication: ['did:example:alice#key-1', 'did:example:alice#key-2', 'did:example:alice#key-3'],
   keyAgreement: [
@@ -113,7 +113,7 @@ export const ALICE_DID_DOC: DIDDocument = {
   ],
 }
 
-export const ALICE_DID_DOC_WITH_NO_SECRETS: DIDDocument = {
+export const ALICE_DID_DOC_WITH_NO_SECRETS: DidDocument = {
   id: 'did:example:alice',
   authentication: [
     'did:example:alice#key-not-in-secrets-1',
