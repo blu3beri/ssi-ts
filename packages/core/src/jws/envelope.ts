@@ -28,7 +28,7 @@ export enum JwsAlgorithm {
   'Es256K' = 'ES256K',
 }
 
-export const JWSAlgorithmToSignatureType = (jwsAlgorithm: JwsAlgorithm): SignatureType => {
+export const JwsAlgorithmToSignatureType = (jwsAlgorithm: JwsAlgorithm): SignatureType => {
   switch (jwsAlgorithm) {
     case JwsAlgorithm.EdDSA:
       return SignatureType.EdDSA

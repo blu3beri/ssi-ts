@@ -6,7 +6,7 @@ import { Buffer } from 'buffer'
 import { b64UrlSafe } from '../utils'
 
 import { Jws } from './Jws'
-import { JWSAlgorithmToSignatureType } from './envelope'
+import { JwsAlgorithmToSignatureType } from './envelope'
 
 export type Signer = {
   sign(input: Uint8Array, signatureType?: SignatureType): Promise<Uint8Array>
@@ -22,7 +22,7 @@ export const sign = async ({
   alg: JwsAlgorithm
 }): Promise<string> => {
   const { signer: key, kid } = signer
-  const sigType = JWSAlgorithmToSignatureType(alg)
+  const sigType = JwsAlgorithmToSignatureType(alg)
 
   const protectedHeader: ProtectedHeader = {
     alg,
@@ -65,7 +65,7 @@ export const signCompact = async ({
   alg: JwsAlgorithm
 }): Promise<string> => {
   const { signer: key, kid } = signer
-  const sigType = JWSAlgorithmToSignatureType(alg)
+  const sigType = JwsAlgorithmToSignatureType(alg)
 
   const compactHeader: CompactHeader = { alg, typ, kid }
   const header = JSON.stringify(compactHeader)
