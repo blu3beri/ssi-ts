@@ -5,11 +5,11 @@ import { Buffer } from 'buffer'
 
 import { AuthCryptAlgorithm } from '../../algorithms'
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { verificationMethodAsKeypair } from '../../did'
 import { DIDCommError } from '../../error'
 import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
 import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
-import { verificationMethodAsKeypair } from '../../did'
 
 export const tryUnpackAuthcrypt = async ({
   message,
