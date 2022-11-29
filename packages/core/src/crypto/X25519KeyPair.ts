@@ -9,7 +9,7 @@ export class X25519KeyPair extends KeyPair {
     return await cryptoProvider.x25519!.sign(message)
   }
 
-  public static async fromJwkJson(jwk: Record<string, unknown>): Promise<X25519KeyPair> {
+  public static async fromJwk(jwk: Record<string, unknown>): Promise<X25519KeyPair> {
     assertCryptoProvider(['x25519'])
     return await cryptoProvider.x25519!.fromJwkJson(jwk)
   }

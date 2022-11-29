@@ -81,7 +81,7 @@ export class ParsedJwe {
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
-    const epk = (await ke.fromJwkJson(this.protected.epk)) as KE
+    const epk = (await ke.fromJwk(this.protected.epk)) as KE
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 

@@ -9,6 +9,7 @@ import { DIDCommError } from '../../error'
 import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
 import { assertDidProvider, assertSecretsProvider, didProvider, secretsProvider } from '../../providers'
 import { didOrUrl } from '../../utils'
+import { verificationMethodAsKeypair } from '../../did'
 
 export const tryUnpackAuthcrypt = async ({
   message,
@@ -47,11 +48,12 @@ export const tryUnpackAuthcrypt = async ({
   const fromKidDidDoc = fromDidDoc.keyAgreement?.find((k) => k === fromKid)
   if (!fromKidDidDoc) throw new DIDCommError('Sender kid not found in did')
 
-  // TODO: implement asKeyPair on VerificationMethod
-  const fromKey = fromDidDoc.verificationMethod?.find((v) => v.id === fromKidDidDoc)
-  if (!fromKey) {
+  const fromKeyVerificationMethod = fromDidDoc.verificationMethod?.find((v) => v.id === fromKidDidDoc)
+  if (!fromKeyVerificationMethod) {
     throw new DIDCommError('Sender verification method not found in did')
   }
+
+  const fromKey = await verificationMethodAsKeypair(fromKeyVerificationMethod)
 
   const toKids = parsedJwe.jwe.recipients.map((r) => r.header.kid)
   const toKid = toKids[0]

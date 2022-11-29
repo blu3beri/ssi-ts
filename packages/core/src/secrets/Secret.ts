@@ -2,7 +2,7 @@ import base58 from 'bs58'
 
 import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair } from '../crypto'
 import { DIDCommError } from '../error'
-import { b58, b64UrlSafe, Codec } from '../utils/'
+import { b58, b64UrlSafe, Codec, fromMulticodec } from '../utils/'
 
 export enum SecretType {
   JsonWebKey2020,
@@ -97,13 +97,13 @@ export class Secret {
       const crv = value.crv
 
       if (kty === 'EC') {
-        if (crv === 'P-256') return P256KeyPair.fromJwkJson(value)
-        if (crv === 'secp256k1') return K256KeyPair.fromJwkJson(value)
+        if (crv === 'P-256') return P256KeyPair.fromJwk(value)
+        if (crv === 'secp256k1') return K256KeyPair.fromJwk(value)
       }
 
       if (kty === 'OKP') {
-        if (crv === 'Ed25519') return Ed25519KeyPair.fromJwkJson(value)
-        if (crv === 'X25519') return X25519KeyPair.fromJwkJson(value)
+        if (crv === 'Ed25519') return Ed25519KeyPair.fromJwk(value)
+        if (crv === 'X25519') return X25519KeyPair.fromJwk(value)
       }
 
       throw new DIDCommError('Unsupported key type or curve.')
@@ -121,7 +121,7 @@ export class Secret {
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
 
-      return X25519KeyPair.fromJwkJson(jwk)
+      return X25519KeyPair.fromJwk(jwk)
     }
 
     if (this.type === SecretType.Ed25519VerificationKey2018 && this.secretMaterial.type === SecretMaterialType.Base58) {
@@ -136,7 +136,7 @@ export class Secret {
         d: b64UrlSafe.encode(dValue),
       }
 
-      return Ed25519KeyPair.fromJwkJson(jwk)
+      return Ed25519KeyPair.fromJwk(jwk)
     }
 
     if (
@@ -148,14 +148,8 @@ export class Secret {
         throw new DIDCommError("Multibase must start with 'z'")
       }
 
-      const decodedMultibaseValue = b58.decode(value.slice(1))
-
-      // TODO: implement from multicodec properly
-      const fromMulticodec = () => ({
-        codec: Codec.X25519Priv,
-        decodedValue: new Uint8Array([1, 2, 4]),
-      })
-      const { codec, decodedValue } = fromMulticodec()
+      const b58DecodedValue = b58.decode(value.slice(1))
+      const { codec, decodedValue } = fromMulticodec({ codec: Codec.X25519Priv, decodedValue: b58DecodedValue })
 
       if (codec !== Codec.X25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.X25519Priv}, got ${codec}`)
@@ -170,7 +164,7 @@ export class Secret {
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
 
-      return X25519KeyPair.fromJwkJson(jwk)
+      return X25519KeyPair.fromJwk(jwk)
     }
 
     if (
@@ -183,14 +177,8 @@ export class Secret {
         throw new DIDCommError("Multibase must start with 'z'")
       }
 
-      const decodedMultibaseValue = base58.decode(value.slice(1))
-
-      // TODO: implement from multicodec properly
-      const fromMulticodec = () => ({
-        codec: Codec.Ed25519Priv,
-        decodedValue: new Uint8Array([1, 2, 4]),
-      })
-      const { codec, decodedValue } = fromMulticodec()
+      const b58Decodedvalue = base58.decode(value.slice(1))
+      const { codec, decodedValue } = fromMulticodec({ codec: Codec.Ed25519Priv, decodedValue: b58Decodedvalue })
 
       if (codec !== Codec.Ed25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
@@ -205,7 +193,7 @@ export class Secret {
         d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
       }
 
-      return Ed25519KeyPair.fromJwkJson(jwk)
+      return Ed25519KeyPair.fromJwk(jwk)
     }
 
     throw new DIDCommError('Unsupported secret method and material combination')

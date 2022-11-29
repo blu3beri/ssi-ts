@@ -20,3 +20,6 @@ export enum Codec {
   X25519Priv = 0x1302,
   Ed25519Priv = 0x1200,
 }
+
+// TODO: implement fromMulticodec properly
+export const fromMulticodec = (options: { codec: Codec; decodedValue: Uint8Array }) => options

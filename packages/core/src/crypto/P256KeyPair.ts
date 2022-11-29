@@ -9,7 +9,7 @@ export class P256KeyPair extends KeyPair {
     return await cryptoProvider.p256!.sign(message)
   }
 
-  public static async fromJwkJson(jwk: Record<string, unknown>): Promise<P256KeyPair> {
+  public static async fromJwk(jwk: Record<string, unknown>): Promise<P256KeyPair> {
     assertCryptoProvider(['p256'])
     return await cryptoProvider.p256!.fromJwkJson(jwk)
   }

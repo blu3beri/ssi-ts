@@ -11,6 +11,15 @@ export type DidDocument = {
   service?: Array<Service>
 }
 
+export enum VerificationMethodType {
+  JsonWebKey2020 = 'JsonWebKey2020',
+  X25519KeyAgreement2019 = 'X25519KeyAgreement2019',
+  Ed25519VerificationKey2018 = 'Ed25519VerificationKey2018',
+  EcdsaSecp256k1VerificationKey2019 = 'EcdsaSecp256k1VerificationKey2019',
+  X25519KeyAgreementKey2020 = 'X25519KeyAgreementKey2020',
+  Ed25519VerificationKey2020 = 'Ed25519VerificationKey2020',
+}
+
 export type VerificationMethod = {
   id: string
   controller: string
@@ -23,6 +32,10 @@ export type VerificationMethod = {
     | 'Ed25519VerificationKey2020'
   publicKeyJwk?: PublicKeyJwk
   publicKeyMultibase?: string
+  // Not officially defined by W3C
+  publicKeyBase58?: string
+  // Not officially defined by W3C
+  publicKeyHex?: string
 }
 
 export type PublicKeyJwk = {
