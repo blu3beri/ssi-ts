@@ -38,6 +38,10 @@ export const authcrypt = async ({
     throw new DIDCommError('No verification methods found on the recipient did doc')
   }
 
+  if (!toDidDoc.keyAgreement) {
+    throw new DIDCommError('No key agreements found on the recipient did doc')
+  }
+
   const fromDidDoc = await DidResolver.resolve(fromDid)
   if (!fromDidDoc) throw new DIDCommError('Sender document not found for did')
   // TODO: this can be omitted as they can be embedded
@@ -45,9 +49,11 @@ export const authcrypt = async ({
     throw new DIDCommError('No verification methods found on the sender did doc')
   }
 
-  const fromKids = fromDidDoc.keyAgreement
-    ? fromDidDoc.keyAgreement?.filter((kid) => (fromKid ? fromKid === kid : true))
-    : []
+  if (!fromDidDoc.keyAgreement) {
+    throw new DIDCommError('No key agreements found on the sender did doc')
+  }
+
+  const fromKids = fromDidDoc.keyAgreement.filter((kid) => (fromKid ? fromKid === kid : true))
 
   if (fromKids.length === 0) {
     throw new DIDCommError('No sender key agreements found')
@@ -65,10 +71,8 @@ export const authcrypt = async ({
   })
 
   const toKids = toDidDoc.keyAgreement
-    ? toDidDoc.keyAgreement
-        ?.filter((kid) => (toKid ? toKid === kid : true))
-        .map((kid) => (typeof kid === 'string' ? kid : kid.id))
-    : []
+    .filter((kid) => (toKid ? toKid === kid : true))
+    .map((kid) => (typeof kid === 'string' ? kid : kid.id))
 
   if (toKids.length === 0) {
     throw new DIDCommError('No recipient key agreements found')
