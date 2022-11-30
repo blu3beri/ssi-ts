@@ -1,8 +1,8 @@
 import base58 from 'bs58'
 
-import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair } from '../crypto'
+import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair, Codec, Multibase } from '../crypto'
 import { DIDCommError } from '../error'
-import { b58, b64UrlSafe, Codec, fromMulticodec } from '../utils/'
+import { b58, b64UrlSafe } from '../utils/'
 
 export enum SecretType {
   JsonWebKey2020,
@@ -149,7 +149,7 @@ export class Secret {
       }
 
       const b58DecodedValue = b58.decode(value.slice(1))
-      const { codec, decodedValue } = fromMulticodec({ codec: Codec.X25519Priv, decodedValue: b58DecodedValue })
+      const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
 
       if (codec !== Codec.X25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.X25519Priv}, got ${codec}`)
@@ -178,7 +178,7 @@ export class Secret {
       }
 
       const b58Decodedvalue = base58.decode(value.slice(1))
-      const { codec, decodedValue } = fromMulticodec({ codec: Codec.Ed25519Priv, decodedValue: b58Decodedvalue })
+      const { codec, value: decodedValue } = await Multibase.from(b58Decodedvalue)
 
       if (codec !== Codec.Ed25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)

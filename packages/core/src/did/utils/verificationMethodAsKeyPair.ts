@@ -1,8 +1,8 @@
 import type { PublicKeyJwk, VerificationMethod } from '../DidDocument'
 
-import { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair, Codec, Multibase } from '../../crypto'
 import { DIDCommError } from '../../error'
-import { b58, b64UrlSafe, Codec, fromMulticodec } from '../../utils'
+import { b58, b64UrlSafe } from '../../utils'
 import { VerificationMethodType } from '../DidDocument'
 
 export const verificationMethodAsKeypair = async ({
@@ -67,7 +67,7 @@ export const verificationMethodAsKeypair = async ({
     }
 
     const b58DecodedValue = b58.decode(publicKeyMultibase.slice(1))
-    const { codec, decodedValue } = fromMulticodec({ codec: Codec.Ed25519Priv, decodedValue: b58DecodedValue })
+    const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
 
     if (codec !== Codec.Ed25519Priv) {
       throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
@@ -90,7 +90,7 @@ export const verificationMethodAsKeypair = async ({
     }
 
     const b58DecodedValue = b58.decode(publicKeyMultibase.slice(1))
-    const { decodedValue, codec } = fromMulticodec({ codec: Codec.Ed25519pub, decodedValue: b58DecodedValue })
+    const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
     if (codec !== Codec.Ed25519pub) {
       throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519pub}, got ${codec}`)
     }

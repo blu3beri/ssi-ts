@@ -1,13 +1,16 @@
-import type { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair } from '../../crypto'
-import type { KeyPair } from '../../crypto/KeyPair'
+import type { Codec, Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair, KeyPair } from '../../crypto'
 import type { Args, OrPromise } from '../utils'
 
+type MultibaseFrom = (value: Uint8Array, ...args: Args) => OrPromise<{ codec: Codec; value: Uint8Array }>
 type Sign = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
 type Hash = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
 type FromJwkJson<T extends KeyPair> = (jwk: Record<string, unknown>, ...args: Args) => OrPromise<T>
 type FromSecretBytes<T extends KeyPair> = (secretBytes: Uint8Array, ...args: Args) => OrPromise<T>
 
 export type CryptoProvider = {
+  multibase?: {
+    from: MultibaseFrom
+  }
   sha256?: {
     hash: Hash
   }
