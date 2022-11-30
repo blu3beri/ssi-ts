@@ -48,7 +48,8 @@ export const tryUnpackAnoncrypt = async ({
     throw new DIDCommError('Unable to convert toKid to did')
   }
 
-  const hasKid = !toKids.find((k) => {
+  // TODO: why is this false from e2e test? should this be false?
+  const hasKid = toKids.find((k) => {
     const { did, didUrl } = didOrUrl(k)
     return did !== toDid || !didUrl
   })
