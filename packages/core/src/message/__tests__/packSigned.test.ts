@@ -1,14 +1,13 @@
-import { createDidProvider } from '../../../samples/exampleDidProvider'
-import { createExampleSecretsProvider } from '../../../samples/exampleSecretsProvider'
-import { ALICE_DID_DOC, ALICE_SECRETS } from '../../__fixtures__'
-import { setDidProvider, setSecretsProvider } from '../../providers'
+import { ALICE_DID_DOC, ALICE_SECRETS } from '../../../fixtures'
+import { createExampleDidsProvider, createExampleSecretsProvider } from '../../../samples'
+import { setDidsProvider, setSecretsProvider } from '../../providers'
 
 describe('Message: packSigned', () => {
   beforeEach(() => {
     const secretsProvider = createExampleSecretsProvider(ALICE_SECRETS)
-    const didProvider = createDidProvider([ALICE_DID_DOC])
+    const didProvider = createExampleDidsProvider([ALICE_DID_DOC])
     setSecretsProvider(secretsProvider)
-    setDidProvider(didProvider)
+    setDidsProvider(didProvider)
   })
 
   test('pack signed works', () => {

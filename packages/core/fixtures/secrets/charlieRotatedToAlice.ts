@@ -1,4 +1,4 @@
-import type { Secret } from '../../secrets'
+import type { Secret } from '../../src/secrets'
 
 import {
   ALICE_SECRET_AUTH_KEY_ED25519,

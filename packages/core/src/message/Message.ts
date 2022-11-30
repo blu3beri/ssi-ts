@@ -1,19 +1,24 @@
+import type { PackEncryptedMetadata } from './PackEncryptedMetadata'
+import type { MessagingServiceMetadata, PackEncryptedOptions } from './PackEncryptedOptions'
 import type { PackSignedMetadata } from './PackSignedMetadata'
 import type { Attachment } from './attachment'
 import type { UnpackMetadata, UnpackOptions } from './unpack'
 
 import { Buffer } from 'buffer'
 
+import { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../algorithms'
 import { Ed25519KeyPair, K256KeyPair, P256KeyPair } from '../crypto'
 import { DidResolver } from '../did'
 import { DIDCommError } from '../error'
 import { JwsAlgorithm, sign } from '../jws'
 import { tryParseForward } from '../protocols/routing/tryParseForward'
+import { wrapInForwardIfNeeded } from '../protocols/routing/wrapForwardIfNeeded'
 import { assertDidProvider, assertSecretsProvider } from '../providers'
 import { Secrets } from '../secrets'
 import { didOrUrl, isDid } from '../utils'
 
 import { FromPrior } from './FromPrior'
+import { anoncrypt, authcrypt } from './pack'
 import {
   hasKeyAgreementSecret,
   tryUnpackAnoncrypt,
@@ -69,7 +74,7 @@ export class Message {
     this.attachments = options.attachments
   }
 
-  public fromString(s: string) {
+  public static fromString(s: string) {
     const obj = JSON.parse(s) as { id?: string; type?: string; body?: Record<string, unknown> }
     if (!obj.id || !obj.type || !obj.body) {
       throw new DIDCommError(`string: ${s} does not contain either: 'id', 'type' or 'body'`)
@@ -100,6 +105,75 @@ export class Message {
         throw new DIDCommError('fromPrior `sub` value is not equal to message `from` value')
       }
     }
+  }
+
+  public async packEncrypted({
+    to,
+    options,
+    from,
+    signBy,
+  }: {
+    to: string
+    from?: string
+    signBy?: string
+    options?: PackEncryptedOptions
+  }) {
+    options ??= {
+      protectedSender: false,
+      forward: true,
+      encAlgAnon: AnonCryptAlgorithm.Xc20pEcdhEsA256kw,
+      encAlgAuth: AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw,
+    }
+
+    let message: string | undefined
+    let signByKid: string | undefined
+    let fromKid: string | undefined
+    let toKids: Array<string> | undefined
+    let messagingService: MessagingServiceMetadata | undefined
+    if (signBy) {
+      const {
+        message: msg,
+        packSignedMetadata: { signByKid: sbk },
+      } = await this.packSigned(signBy)
+      message = msg
+      signByKid = sbk
+    } else {
+      message = await this.packPlaintext()
+    }
+
+    if (from) {
+      const {
+        toKids: tk,
+        fromKid: fk,
+        message: m,
+      } = await authcrypt({ to, from, message: Uint8Array.from(Buffer.from(message)), ...options })
+      message = m
+      toKids = tk
+      fromKid = fk
+    } else {
+      const { message: m, toKids: tk } = await anoncrypt({
+        to,
+        message: Uint8Array.from(Buffer.from(message)),
+        ...options,
+      })
+      message = m
+      toKids = tk
+    }
+
+    const maybeWrapped = await wrapInForwardIfNeeded({ message, to, options })
+    if (maybeWrapped) {
+      message = maybeWrapped.forwardMessage
+      messagingService = maybeWrapped.metadata
+    }
+
+    const metadata: PackEncryptedMetadata = {
+      messagingService,
+      toKids,
+      fromKid,
+      signByKid,
+    }
+
+    return { message, metadata }
   }
 
   public async packSigned(signBy: string): Promise<{ message: string; packSignedMetadata: PackSignedMetadata }> {
@@ -176,7 +250,7 @@ export class Message {
     }
   }
 
-  private async tryUnwrapForwardedMessage({ message }: { message: string }): Promise<undefined | string> {
+  private static async tryUnwrapForwardedMessage({ message }: { message: string }): Promise<undefined | string> {
     let plaintext: Message | undefined
     try {
       plaintext = this.fromString(message)
@@ -196,13 +270,17 @@ export class Message {
     }
   }
 
-  public async unpack({
+  public static async unpack({
     message,
     options,
   }: {
     message: string
-    options: UnpackOptions
+    options?: UnpackOptions
   }): Promise<{ message: Message; metadata: UnpackMetadata }> {
+    options ??= {
+      expectDecryptByAllKeys: false,
+      unwrapReWrappingForward: true,
+    }
     const metadata: UnpackMetadata = {
       encrypted: false,
       authenticated: false,

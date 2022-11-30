@@ -1,7 +1,7 @@
 import type { AnonCryptAlgorithm, AuthCryptAlgorithm } from '../algorithms'
 
 export type PackEncryptedOptions = {
-  protectSender: boolean
+  protectedSender: boolean
   forward: boolean
   forwardHeaders?: Record<string, unknown>
   messagingService?: string

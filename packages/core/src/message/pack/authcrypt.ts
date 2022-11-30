@@ -7,7 +7,6 @@ import { assertDidProvider, assertSecretsProvider } from '../../providers'
 import { Secrets } from '../../secrets'
 import { didOrUrl } from '../../utils'
 
-// TODO: implementation
 export const authcrypt = async ({
   to,
   from,

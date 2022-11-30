@@ -48,13 +48,13 @@ export const tryUnpackAnoncrypt = async ({
     throw new DIDCommError('Unable to convert toKid to did')
   }
 
-  if (
-    !toKids.find((k) => {
-      const { did, didUrl } = didOrUrl(k)
-      return did !== toDid || !didUrl
-    })
-  ) {
-    throw new DIDCommError('Recipient keys are outside of one did or can not be resolver to key agreement')
+  const hasKid = !toKids.find((k) => {
+    const { did, didUrl } = didOrUrl(k)
+    return did !== toDid || !didUrl
+  })
+
+  if (!hasKid) {
+    throw new DIDCommError('Recipient keys are outside of one did or can not be resolved to key agreement')
   }
 
   metadata.encryptedToKids = toKids

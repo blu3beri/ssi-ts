@@ -13,7 +13,7 @@ export const anoncrypt = async ({
   to: string
   message: Uint8Array
   encAlgAnon: AnonCryptAlgorithm
-}): Promise<{ message: string; toKids: Array<string> } | undefined> => {
+}): Promise<{ message: string; toKids: Array<string> }> => {
   assertDidProvider(['resolve'])
   const { did: toDid, didUrl: toKid } = didOrUrl(to)
   if (!toDid) throw new DIDCommError('no did in `to` found')

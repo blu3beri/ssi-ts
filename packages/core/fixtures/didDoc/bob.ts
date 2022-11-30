@@ -1,4 +1,4 @@
-import type { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../did'
+import type { ServiceEndpoint, DidDocument, Service, VerificationMethod } from '../../src/did'
 
 const BOB_VERIFICATION_METHOD_KEY_AGREEM_X25519_1: VerificationMethod = {
   id: 'did:example:bob#key-x25519-1',

@@ -169,7 +169,6 @@ export class Secret {
 
     if (
       this.type === SecretType.Ed25519VerificationKey2020 &&
-      // TODO: why this this incorrect?
       this.secretMaterial.type === SecretMaterialType.Multibase
     ) {
       const value = this.secretMaterial.value as string

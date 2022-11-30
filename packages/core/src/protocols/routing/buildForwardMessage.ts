@@ -1,6 +1,6 @@
 import type { Attachment, JsonAttachmentData } from '../../message'
 
-import { Message } from '../../message'
+import { Message } from '../../message/Message'
 import { generateMessageId } from '../../utils'
 
 import { FORWARD_MESSAGE_TYPE } from './constants'

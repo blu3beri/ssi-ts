@@ -1,4 +1,4 @@
-import { Secret, SecretMaterialType, SecretType } from '../../secrets'
+import { Secret, SecretMaterialType, SecretType } from '../../src/secrets'
 
 export const MEDIATOR2_SECRET_KEY_AGREEMENT_KEY_X25519_1 = new Secret({
   id: 'did:example:mediator2#key-x25519-1',

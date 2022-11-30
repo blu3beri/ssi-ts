@@ -1,4 +1,4 @@
-import type { VerificationMethod, DidDocument } from '../../did'
+import type { VerificationMethod, DidDocument } from '../../src/did'
 
 const ALICE_VERIFICATION_METHOD_KEY_AGREEM_X25519_NOT_IN_SECRET: VerificationMethod = {
   id: 'did:example:alice#key-x25519-not-in-secrets-1',

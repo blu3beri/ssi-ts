@@ -1,9 +1,9 @@
 import { DIDCommError } from '../../../error'
-import { didProvider, setDidProvider, assertDidProvider } from '../provider'
+import { didProvider, setDidsProvider, assertDidProvider } from '../provider'
 
 describe('didProvider tests', () => {
   beforeEach(() => {
-    setDidProvider({})
+    setDidsProvider({})
   })
 
   test('Assert when no provider is set', () => {
@@ -13,7 +13,7 @@ describe('didProvider tests', () => {
   test("Don't Assert when a provider is set", () => {
     const mockDidProvider = { resolve: jest.fn() }
 
-    setDidProvider(mockDidProvider)
+    setDidsProvider(mockDidProvider)
 
     expect(assertDidProvider(['resolve'])).toBeUndefined()
   })
@@ -23,7 +23,7 @@ describe('didProvider tests', () => {
       resolve: jest.fn().mockResolvedValue({ id: 'did:example:1' }),
     }
 
-    setDidProvider(mockDidProvider)
+    setDidsProvider(mockDidProvider)
 
     expect(didProvider.resolve!('did:example:1')).resolves.toMatchObject({
       id: 'did:example:1',
