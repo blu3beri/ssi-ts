@@ -90,7 +90,6 @@ export class Message {
 
     this.validatePackPlaintext(fromPrior, kid)
 
-    // TODO: does this serialization work like this?
     return JSON.stringify(this)
   }
 
