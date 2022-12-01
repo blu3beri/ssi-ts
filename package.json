@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "check-types": "tsc -p ./tsconfig.json --noEmit && tsc -p ./tsconfig.test.json --noEmit",
     "check-format": "yarn prettier --list-different",
@@ -27,6 +29,7 @@
     "prettier": "2.7.1",
     "ts-jest": "29.0.3",
     "ts-node": "10.9.1",
+    "tsconfig-paths": "4.1.1",
     "typescript": "4.8.4"
   }
 }

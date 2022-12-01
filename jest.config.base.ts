@@ -5,6 +5,9 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
   },
+  moduleNameMapper: {
+    '@ssi-ts/(.+)': ['<rootDir>/../../packages/$1/src', '<rootDir>/../packages/$1/src', '<rootDir>/packages/$1/src'],
+  },
   testEnvironment: 'node',
 }
 

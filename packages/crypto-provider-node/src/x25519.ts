@@ -1,4 +1,4 @@
-import { KeyPairProvider, X25519KeyPair } from '../../core/src/'
+import { KeyPairProvider, X25519KeyPair } from '@ssi-ts/didcomm-core'
 import Crypto from 'crypto'
 
 export const x25519: KeyPairProvider<X25519KeyPair> = {

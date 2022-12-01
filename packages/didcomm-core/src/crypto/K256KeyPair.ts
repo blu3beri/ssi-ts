@@ -1,11 +1,13 @@
+import { DIDCommError } from '../error'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
 
 import { KeyPair } from './KeyPair'
 
 export class K256KeyPair extends KeyPair {
   public async sign(message: Uint8Array): Promise<Uint8Array> {
+    if (!this.privateKey) throw new DIDCommError('Unable to sign without a private key')
     assertCryptoProvider(['k256'])
-    return await cryptoProvider.k256!.sign(message)
+    return await cryptoProvider.k256!.sign(message, this.privateKey)
   }
 
   public static async fromJwk(jwk: Record<string, unknown>): Promise<K256KeyPair> {

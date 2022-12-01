@@ -1,8 +1,8 @@
 import { cryptoProvider } from '@ssi-ts/crypto-provider-node'
-import { ALICE_DID_DOC, ALICE_SECRETS, BOB_DID_DOC, BOB_SECRETS } from '../fixtures'
-import { createExampleDidsProvider, createExampleSecretsProvider } from '../samples'
-import { Message } from '../src/'
-import { setCryptoProvider, setDidsProvider, setSecretsProvider } from '../src/providers'
+import { ALICE_DID_DOC, ALICE_SECRETS, BOB_DID_DOC, BOB_SECRETS } from '../../fixtures'
+import { createExampleDidsProvider, createExampleSecretsProvider } from '../../samples'
+import { Message } from '../message'
+import { setCryptoProvider, setDidsProvider, setSecretsProvider } from '../providers'
 
 describe('end to end', () => {
   test('full flow', async () => {
