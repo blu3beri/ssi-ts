@@ -10,7 +10,7 @@ export type ProtectedHeader = {
 
 export type Recipient = {
   header: { kid: string }
-  encryptedKey: string
+  encrypted_key: string
 }
 
 export enum JweAlgorithm {

@@ -49,7 +49,7 @@ export const tryUnpackAnoncrypt = async ({
   }
 
   // TODO: why is this false from e2e test? should this be false?
-  const hasKid = toKids.find((k) => {
+  const hasKid = !toKids.find((k) => {
     const { did, didUrl } = didOrUrl(k)
     return did !== toDid || !didUrl
   })
@@ -71,7 +71,7 @@ export const tryUnpackAnoncrypt = async ({
   let payload: undefined | Uint8Array
 
   for (const toKid of toKidsFound) {
-    const toKey = (await Secrets.getSecret(toKid))?.asKeyPair()
+    const toKey = await (await Secrets.getSecret(toKid))?.asKeyPair()
 
     if (!toKey) {
       throw new DIDCommError('Recipient secret not found after existence checking')

@@ -69,11 +69,9 @@ export class ParsedJwe {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
 
-    if (sKid ? Buffer.from(sKid) : undefined !== this.apu) {
-      throw new DIDCommError('wrong sender key id used')
-    }
+    if (sKid ? Buffer.from(sKid) : undefined !== this.apu) throw new DIDCommError('wrong sender key id used')
 
-    const encodedEncryptedKey = this.jwe.recipients.find((r) => r.header.kid === kid)?.encryptedKey
+    const encodedEncryptedKey = this.jwe.recipients.find((r) => r.header.kid === kid)?.encrypted_key
 
     if (!encodedEncryptedKey) {
       throw new DIDCommError('Recipient not found')
@@ -96,14 +94,10 @@ export class ParsedJwe {
       receive: true,
     })
 
-    if (!kw) {
-      throw new DIDCommError('Unable to derive kw')
-    }
+    if (!kw) throw new DIDCommError('Unable to derive kw')
 
-    const cek: CE = kw.unwrapKey(encryptedKey)
-    if (!cek) {
-      throw new DIDCommError('unable to unwrap cek')
-    }
+    const cek = kw.unwrapKey(encryptedKey)
+    if (!cek) throw new DIDCommError('unable to unwrap cek')
 
     const cipherText = b64UrlSafe.decode(this.jwe.ciphertext)
 
