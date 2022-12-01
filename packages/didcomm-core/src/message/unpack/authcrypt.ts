@@ -4,7 +4,7 @@ import type { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
 
 import { AuthCryptAlgorithm } from '../../algorithms'
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { JoseKdfEcdhEs, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { verificationMethodAsKeypair } from '../../did'
 import { DIDCommError } from '../../error'
 import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
@@ -108,7 +108,7 @@ export const tryUnpackAuthcrypt = async ({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
         // TODO: likely incorrect KDF here
-        kdf: Kdf,
+        kdf: JoseKdfEcdhEs,
         ke: X25519KeyPair,
       })
     } else if (
@@ -122,7 +122,7 @@ export const tryUnpackAuthcrypt = async ({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
         // TODO: likely incorrect KDF here
-        kdf: Kdf,
+        kdf: JoseKdfEcdhEs,
         ke: P256KeyPair,
       })
     } else {

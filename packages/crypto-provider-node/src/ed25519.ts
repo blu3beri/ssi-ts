@@ -10,7 +10,7 @@ export const ed25519: KeyPairProvider<Ed25519KeyPair> = {
   verify: (message: Uint8Array, publicKey: Uint8Array, signature: Uint8Array) =>
     Crypto.verify('ed25519', message, Buffer.from(publicKey), signature),
 
-  fromJwkJson: async (jwk: Jwk) => {
+  fromJwk: async (jwk: Jwk) => {
     let publicKey = jwk.x ? Uint8Array.from(Buffer.from(jwk.x, 'base64url')) : undefined
     const privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
     publicKey = !publicKey && privateKey ? (await ed25519.fromSecretBytes(privateKey)).publicKey : undefined

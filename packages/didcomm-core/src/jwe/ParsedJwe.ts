@@ -1,4 +1,4 @@
-import type { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
+import type { FromJwk, JoseKdf, KeyExchange, KeyGen, KeyWrap, P256KeyPair, ToJwk, X25519KeyPair } from '../crypto'
 import type { Jwe } from './Jwe'
 import type { ProtectedHeader } from './envelope'
 
@@ -47,13 +47,13 @@ export class ParsedJwe {
     return true
   }
 
-  public async decrypt<
+  public decrypt<
     CE extends {
       decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => Uint8Array
     },
-    KW extends { unwrapKey: (key: Uint8Array) => CE },
-    KDF extends typeof Kdf,
-    KE extends X25519KeyPair | P256KeyPair,
+    KW extends KeyWrap,
+    KDF extends JoseKdf<KE, KW>,
+    KE extends KeyExchange & KeyGen & ToJwk & FromJwk,
     KES extends typeof X25519KeyPair | typeof P256KeyPair
   >({
     kdf,
@@ -65,7 +65,7 @@ export class ParsedJwe {
     ke: KES
     sender?: { id: string; keyExchange: KE }
     recipient: { id: string; keyExchange: KE }
-  }): Promise<Uint8Array> {
+  }): Uint8Array {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
 
@@ -79,20 +79,23 @@ export class ParsedJwe {
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
-    const epk = (await ke.fromJwk(this.protected.epk)) as KE
+    const epk = ke.fromJwk(this.protected.epk) as unknown as KE
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
-    const kw = kdf.deriveKey<KE, KW, CE>({
-      ephemeralKey: epk,
-      senderKey: sKey,
-      recipientKey: key,
-      alg: this.protected.alg,
-      apu: this.apu ?? new Uint8Array(0),
-      apv: this.apv,
-      ccTag: tag,
-      receive: true,
-    })
+    const kw = kdf.deriveKey(
+      {
+        ephemeralKey: epk,
+        senderKey: sKey,
+        recipientKey: key,
+        alg: this.protected.alg,
+        apu: this.apu ?? new Uint8Array(0),
+        apv: this.apv,
+        ccTag: tag,
+        receive: true,
+      },
+      { kw: {} }
+    )
 
     if (!kw) throw new DIDCommError('Unable to derive kw')
 

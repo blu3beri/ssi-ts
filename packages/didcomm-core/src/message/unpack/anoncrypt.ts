@@ -3,7 +3,7 @@ import type { UnpackOptions } from './UnpackOptions'
 
 import { Buffer } from 'buffer'
 
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { JoseKdfEcdhEs, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { DIDCommError } from '../../error'
 import { Jwe, JweAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
@@ -82,13 +82,13 @@ export const tryUnpackAnoncrypt = async ({
       payload = await parsedJwe.decrypt({
         recipient: { id: toKid, keyExchange: toKey },
         ke: X25519KeyPair,
-        kdf: Kdf,
+        kdf: JoseKdfEcdhEs,
       })
     } else if (toKey instanceof P256KeyPair) {
       payload = await parsedJwe.decrypt({
         recipient: { id: toKid, keyExchange: toKey },
         ke: P256KeyPair,
-        kdf: Kdf,
+        kdf: JoseKdfEcdhEs,
       })
     } else {
       throw new DIDCommError('Could not find the instance of toKey')

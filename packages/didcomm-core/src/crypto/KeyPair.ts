@@ -11,7 +11,7 @@ export abstract class KeyPair {
     this.privateKey = privateKey
   }
 
-  public abstract sign(message: Uint8Array): Promise<Uint8Array>
+  public abstract sign(message: Uint8Array): Uint8Array
 
   public static fromJwk(_: Jwk): unknown {
     throw new DIDCommError('fromJwkJson not implemented on base class')
