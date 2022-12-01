@@ -83,7 +83,7 @@ export class ParsedJwe {
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
-    const kw = kdf.deriveKey<KE, KW>({
+    const kw = kdf.deriveKey<KE, KW, CE>({
       ephemeralKey: epk,
       senderKey: sKey,
       recipientKey: key,

@@ -1,6 +1,7 @@
 import base58 from 'bs58'
 
 import { Ed25519KeyPair, K256KeyPair, KnownKeyAlgorithm, P256KeyPair, X25519KeyPair, Codec, Multibase } from '../crypto'
+import { Jwk } from '../did'
 import { DIDCommError } from '../error'
 import { b58, b64UrlSafe } from '../utils/'
 
@@ -114,7 +115,7 @@ export class Secret {
 
       const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
 
-      const jwk = {
+      const jwk: Jwk = {
         kty: 'OKP',
         crv: 'X25519',
         x: b64UrlSafe.encode(keyPair.publicKey),
@@ -127,13 +128,13 @@ export class Secret {
     if (this.type === SecretType.Ed25519VerificationKey2018 && this.secretMaterial.type === SecretMaterialType.Base58) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
       const curve25519PointSize = 32
-      const dValue = decodedValue.slice(0, curve25519PointSize)
       const xValue = decodedValue.slice(curve25519PointSize, 0)
+      const dValue = decodedValue.slice(0, curve25519PointSize)
 
-      const jwk = {
+      const jwk: Jwk = {
         crv: 'Ed25519',
         x: b64UrlSafe.encode(xValue),
-        d: b64UrlSafe.encode(dValue),
+        d: dValue && dValue.length !== 0 ? b64UrlSafe.encode(dValue) : undefined,
       }
 
       return Ed25519KeyPair.fromJwk(jwk)
@@ -155,16 +156,7 @@ export class Secret {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.X25519Priv}, got ${codec}`)
       }
 
-      const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
-
-      const jwk = {
-        kty: 'OKP',
-        crv: 'X25519',
-        x: b64UrlSafe.encode(keyPair.publicKey),
-        d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
-      }
-
-      return X25519KeyPair.fromJwk(jwk)
+      return await X25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     if (
@@ -183,16 +175,7 @@ export class Secret {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
       }
 
-      const keyPair = await Ed25519KeyPair.fromSecretBytes(decodedValue)
-
-      const jwk = {
-        kty: 'OKP',
-        crv: 'Ed25519',
-        x: b64UrlSafe.encode(keyPair.publicKey),
-        d: keyPair.privateKey ? b64UrlSafe.encode(keyPair.privateKey) : undefined,
-      }
-
-      return Ed25519KeyPair.fromJwk(jwk)
+      return await Ed25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     throw new DIDCommError('Unsupported secret method and material combination')

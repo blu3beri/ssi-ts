@@ -3,13 +3,16 @@ import type { Args, OrPromise } from '../utils'
 import type { Jwk } from '../../did'
 
 type MultibaseFrom = (value: Uint8Array, ...args: Args) => OrPromise<{ codec: Codec; value: Uint8Array }>
-type Sign = (message: Uint8Array, privateKey: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
-type Hash = (message: Uint8Array, ...args: Args) => OrPromise<Uint8Array>
-type FromJwkJson<T extends KeyPair> = (jwk: Jwk, ...args: Args) => OrPromise<T>
-type FromSecretBytes<T extends KeyPair> = (secretBytes: Uint8Array, ...args: Args) => OrPromise<T>
+type Sign = (message: Uint8Array, privateKey: Uint8Array) => OrPromise<Uint8Array>
+type Verify = (message: Uint8Array, publicKey: Uint8Array, signature: Uint8Array) => OrPromise<boolean>
+type Hash = (message: Uint8Array) => OrPromise<Uint8Array>
+type FromJwkJson<T extends KeyPair> = (jwk: Jwk) => OrPromise<T>
+type FromSecretBytes<T extends KeyPair> = (secretBytes: Uint8Array) => OrPromise<T>
 
+// TODO: these should be optional and can be additionally checked
 export type KeyPairProvider<T extends KeyPair> = {
   sign: Sign
+  verify: Verify
   fromJwkJson: FromJwkJson<T>
   fromSecretBytes: FromSecretBytes<T>
 }

@@ -1,7 +1,7 @@
 import type { JweAlgorithm } from '../jwe'
 
 export class Kdf {
-  public static deriveKey<KE, KW>(options: {
+  public static deriveKey<KE, KW, TODO>(options: {
     ephemeralKey: KE
     senderKey?: KE
     recipientKey: KE
@@ -11,6 +11,11 @@ export class Kdf {
     ccTag: Uint8Array
     receive: boolean
   }): KW {
-    return 'TODO' as KW
+    return {
+      unwrapKey: (key: Uint8Array) =>
+        ({
+          decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => new Uint8Array([0]),
+        } as unknown as TODO),
+    } as KW
   }
 }
