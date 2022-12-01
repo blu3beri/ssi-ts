@@ -1,4 +1,4 @@
-import Crypto from 'crypto'
+import { cryptoProvider } from '@didcomm-ts/crypto-provider-node'
 
 import { ALICE_DID_DOC, ALICE_SECRETS, BOB_DID_DOC, BOB_SECRETS } from '../fixtures'
 import { createExampleDidsProvider, createExampleSecretsProvider } from '../samples'
@@ -7,8 +7,7 @@ import { setCryptoProvider, setDidsProvider, setSecretsProvider } from '../src/p
 
 describe('end to end', () => {
   test('full flow', async () => {
-    const hash = (input: Uint8Array) => Crypto.createHash('sha256').update(input).digest()
-    setCryptoProvider({ sha256: { hash } })
+    setCryptoProvider(cryptoProvider)
     const sender = ALICE_DID_DOC.id
     const recipient = BOB_DID_DOC.id
 

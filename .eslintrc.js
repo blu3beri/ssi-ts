@@ -64,7 +64,7 @@ const config = {
   },
   overrides: [
     {
-      files: ['jest.config.ts', '.eslintrc.js'],
+      files: ['jest.config.ts', '.eslintrc.js', 'packages/crypto-providers-node/src/**'],
       env: {
         node: true,
       },

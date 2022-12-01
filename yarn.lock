@@ -304,17 +304,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@detox/crypto@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@detox/crypto/-/crypto-0.7.1.tgz#60a84a9461e6c535757c8669e7d030c8f14dd43d"
-  integrity sha512-0rfmVKidkTXAYkz0hx4UJmtxcOciajHespUJeX8IRVxSvIW7Tz9Zp8lndCzzmZ2o4E9tP8m8OG7xoPXVNZbI0A==
-  dependencies:
-    aez.wasm "^0.2.0"
-    blake2.wasm "^0.1.0"
-    ed25519-to-x25519.wasm "^0.2.0"
-    noise-c.wasm "^0.2.0"
-    supercop.wasm "^5.0.1"
-
 "@eslint/eslintrc@^1.3.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.3.3.tgz#2b044ab39fdfa75b4688184f9e573ce3c5b0ff95"
@@ -760,6 +749,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.7.tgz#8ccef136f240770c1379d50100796a6952f01f94"
   integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
 
+"@types/node@18.11.10":
+  version "18.11.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.10.tgz#4c64759f3c2343b7e6c4b9caf761c7a3a05cee34"
+  integrity sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==
+
 "@types/node@18.11.9":
   version "18.11.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
@@ -894,11 +888,6 @@ acorn@^8.4.1, acorn@^8.8.0:
   version "8.8.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.0.tgz#88c0187620435c7f6015803f5539dae05a9dbea8"
   integrity sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==
-
-aez.wasm@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/aez.wasm/-/aez.wasm-0.2.0.tgz#46c8ec3390bb42fb4e68c0167416e9a8fc2c5bbc"
-  integrity sha512-AjPT3jYs7yxuPbwoVv4mVLvt66MsrocYR1aZBlABmZhGmenESSjqH+kbZMPCyyaLK3u/4v8BmbpU+L4ZtoNruQ==
 
 ajv@^6.10.0, ajv@^6.12.4:
   version "6.12.6"
@@ -1066,11 +1055,6 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
-
-blake2.wasm@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/blake2.wasm/-/blake2.wasm-0.1.0.tgz#e8f743374cf3fca28e484b4ccd1a9973165421d2"
-  integrity sha512-Esgym1jF6OHy1vHOtS5/Jno82C8fDQtfIlC5bOj/VtMLXM2xki8nXMLTEUmwaCsk/sqlom9OUnoOSLo+oAvceA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -1337,11 +1321,6 @@ doctrine@^3.0.0:
   integrity sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
   dependencies:
     esutils "^2.0.2"
-
-ed25519-to-x25519.wasm@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/ed25519-to-x25519.wasm/-/ed25519-to-x25519.wasm-0.2.0.tgz#23937228734d8bf84e645c3f784b1cab5f74e074"
-  integrity sha512-xBmcvoz4n5XhLXtWXFr3f4Kb/tLfTZe4s2ec50xdxWFLVoSA9SMGFh5VAoBrKSH+JWmMsED0IkTI2lhKaSgVkA==
 
 electron-to-chromium@^1.4.251:
   version "1.4.284"
@@ -2657,11 +2636,6 @@ node-releases@^2.0.6:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.6.tgz#8a7088c63a55e493845683ebf3c828d8c51c5503"
   integrity sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==
 
-noise-c.wasm@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/noise-c.wasm/-/noise-c.wasm-0.2.0.tgz#2426cad85f5d59a06b97b263019c0ef81d33b8fb"
-  integrity sha512-x77bdby2z30kQSGb/uJEZEvvZ5l2WUBJ84d31w91PBZ2M1/v/C92a2Joinkai/1x+UrJwSbJhVrEPqGEWcAHdg==
-
 normalize-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
@@ -3080,11 +3054,6 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
-
-supercop.wasm@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/supercop.wasm/-/supercop.wasm-5.0.1.tgz#20960ca65b6704f935acdc1db1abec5ad8676e2b"
-  integrity sha512-C3qHi/Dvl9Ef2IVUiy3eT/eINVFAGQKiFTfW5TRtbzjSyjr4x5qpjzwF+AjR1oG48aQ/fYMes/nyi+aS+cMw4Q==
 
 supports-color@^5.3.0:
   version "5.5.0"

@@ -1,5 +1,5 @@
 {
-  "name": "@didcomm-ts/core",
+  "name": "@didcomm-ts/crypto-provider-node",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "source": "src/index.ts",
@@ -8,15 +8,10 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest"
   },
-  "dependencies": {
-    "bs58": "5.0.0",
-    "buffer": "6.0.3",
-    "uuid": "9.0.0"
-  },
   "devDependencies": {
-    "@didcomm-ts/crypto-provider-node": "*",
+    "@didcomm-ts/core": "*",
     "@types/jest": "29.2.3",
-    "@types/uuid": "8.3.4",
+    "@types/node": "18.11.10",
     "typescript": "4.8.4"
   }
 }
