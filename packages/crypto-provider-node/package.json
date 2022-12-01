@@ -1,5 +1,5 @@
 {
-  "name": "@didcomm-ts/crypto-provider-node",
+  "name": "@ssi-ts/crypto-provider-node",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "source": "src/index",

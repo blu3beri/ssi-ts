@@ -1,7 +1,9 @@
-import type { CryptoProvider } from '@didcomm-ts/core'
+import type { CryptoProvider } from '@ssi-ts/core'
 
 import { sha256 } from './sha256'
+import { x25519 } from './x25519'
 
 export const cryptoProvider: CryptoProvider = {
   sha256,
+  x25519,
 }

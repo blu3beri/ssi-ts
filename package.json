@@ -1,11 +1,9 @@
 {
-  "name": "didcomm-ts",
+  "name": "ssi-ts",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "check-types": "tsc -p ./tsconfig.json --noEmit && tsc -p ./tsconfig.test.json --noEmit",
     "check-format": "yarn prettier --list-different",

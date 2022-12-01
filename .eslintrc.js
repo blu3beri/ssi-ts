@@ -68,6 +68,11 @@ const config = {
       env: {
         node: true,
       },
+      rules: [
+        {
+          'no-restricted-globals': 'allow',
+        },
+      ],
     },
     {
       files: ['**/__tests__/**', '**/tests/**'],

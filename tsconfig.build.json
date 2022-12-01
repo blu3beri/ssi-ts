@@ -15,7 +15,7 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "paths": {
-      "@didcomm-ts/*": ["packages/*/src"]
+      "@ssi-ts/*": ["packages/*/src"]
     }
   },
   "exclude": [

@@ -1,5 +1,5 @@
 {
-  "name": "@didcomm-ts/core",
+  "name": "@ssi-ts/didcomm-core",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "source": "src/index",
