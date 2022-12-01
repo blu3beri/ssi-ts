@@ -1,4 +1,5 @@
 import { cryptoProvider } from '@ssi-ts/crypto-provider-node'
+
 import { ALICE_DID_DOC, ALICE_SECRETS, BOB_DID_DOC, BOB_SECRETS } from '../../fixtures'
 import { createExampleDidsProvider, createExampleSecretsProvider } from '../../samples'
 import { Message } from '../message'

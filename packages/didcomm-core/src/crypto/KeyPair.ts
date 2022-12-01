@@ -1,4 +1,5 @@
-import { Jwk } from '../did'
+import type { Jwk } from '../did'
+
 import { DIDCommError } from '../error'
 
 export abstract class KeyPair {

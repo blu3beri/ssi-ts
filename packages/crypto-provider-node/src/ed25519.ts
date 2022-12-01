@@ -1,6 +1,7 @@
+import type { Jwk, KeyPairProvider } from '@ssi-ts/didcomm-core'
+
+import { Ed25519KeyPair } from '@ssi-ts/didcomm-core'
 import Crypto from 'crypto'
-import { Ed25519KeyPair, KeyPairProvider } from '@ssi-ts/didcomm-core'
-import type { Jwk } from '@ssi-ts/didcomm-core'
 
 export const ed25519: KeyPairProvider<Ed25519KeyPair> = {
   sign: (message: Uint8Array, privateKey: Uint8Array) =>
@@ -11,7 +12,7 @@ export const ed25519: KeyPairProvider<Ed25519KeyPair> = {
 
   fromJwkJson: async (jwk: Jwk) => {
     let publicKey = jwk.x ? Uint8Array.from(Buffer.from(jwk.x, 'base64url')) : undefined
-    let privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
+    const privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
     publicKey = !publicKey && privateKey ? (await ed25519.fromSecretBytes(privateKey)).publicKey : undefined
 
     if (!publicKey) {

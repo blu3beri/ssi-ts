@@ -68,11 +68,9 @@ const config = {
       env: {
         node: true,
       },
-      rules: [
-        {
-          'no-restricted-globals': 'allow',
-        },
-      ],
+      rules: {
+        'no-restricted-globals': 0,
+      },
     },
     {
       files: ['**/__tests__/**', '**/tests/**'],
@@ -84,6 +82,8 @@ const config = {
         '@typescript-eslint/no-unsafe-call': 0,
         '@typescript-eslint/no-unsafe-member-access': 0,
         '@typescript-eslint/no-unsafe-assignment': 0,
+        // TODO: temp fix for eslint in test env
+        'import/no-unresolved': 0,
       },
     },
   ],

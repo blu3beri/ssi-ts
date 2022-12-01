@@ -10,5 +10,6 @@
       "@ssi-ts/*": ["packages/*/src"]
     }
   },
-  "include": ["**/__tests__", "**/tests"]
+  "include": ["**/__tests__", "**/tests"],
+  "exclude": ["node_modules", "build", "**/__fixtures__/", "**/__mocks__/", "**/build/"]
 }

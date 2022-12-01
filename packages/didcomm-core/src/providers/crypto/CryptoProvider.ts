@@ -1,6 +1,6 @@
 import type { Codec, Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair, KeyPair } from '../../crypto'
-import type { Args, OrPromise } from '../utils'
 import type { Jwk } from '../../did'
+import type { Args, OrPromise } from '../utils'
 
 type MultibaseFrom = (value: Uint8Array, ...args: Args) => OrPromise<{ codec: Codec; value: Uint8Array }>
 type Sign = (message: Uint8Array, privateKey: Uint8Array) => OrPromise<Uint8Array>

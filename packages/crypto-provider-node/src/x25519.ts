@@ -1,4 +1,6 @@
-import { Jwk, KeyPairProvider, X25519KeyPair } from '@ssi-ts/didcomm-core'
+import type { Jwk, KeyPairProvider } from '@ssi-ts/didcomm-core'
+
+import { X25519KeyPair } from '@ssi-ts/didcomm-core'
 import Crypto from 'crypto'
 
 export const x25519: KeyPairProvider<X25519KeyPair> = {
@@ -9,9 +11,8 @@ export const x25519: KeyPairProvider<X25519KeyPair> = {
     Crypto.verify('x25519', message, Buffer.from(publicKey), signature),
 
   fromJwkJson: async (jwk: Jwk) => {
-    console.log(Buffer.from(jwk.x!, 'base64url'))
     let publicKey = jwk.x ? Uint8Array.from(Buffer.from(jwk.x, 'base64url')) : undefined
-    let privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
+    const privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
     publicKey ??= privateKey ? (await x25519.fromSecretBytes(privateKey)).publicKey : publicKey
 
     if (!publicKey) {
