@@ -1,3 +1,4 @@
+import { Jwk } from '../did'
 import { DIDCommError } from '../error'
 
 export abstract class KeyPair {
@@ -11,7 +12,7 @@ export abstract class KeyPair {
 
   public abstract sign(message: Uint8Array): Promise<Uint8Array>
 
-  public static fromJwk(_: Record<string, unknown>): unknown {
+  public static fromJwk(_: Jwk): unknown {
     throw new DIDCommError('fromJwkJson not implemented on base class')
   }
 

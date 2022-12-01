@@ -1,4 +1,4 @@
-import type { PublicKeyJwk, VerificationMethod } from '../DidDocument'
+import type { Jwk, VerificationMethod } from '../DidDocument'
 
 import { Ed25519KeyPair, K256KeyPair, P256KeyPair, X25519KeyPair, Codec, Multibase } from '../../crypto'
 import { DIDCommError } from '../../error'
@@ -39,7 +39,7 @@ export const verificationMethodAsKeypair = async ({
     const decodedValue = b58.decode(publicKeyBase58)
     const base64UrlValue = b64UrlSafe.encode(decodedValue)
 
-    const jwk: PublicKeyJwk = {
+    const jwk: Jwk = {
       kty: 'OKP',
       crv: 'X25519',
       x: base64UrlValue,
@@ -52,7 +52,7 @@ export const verificationMethodAsKeypair = async ({
     const decodedValue = b58.decode(publicKeyBase58)
     const base64UrlValue = b64UrlSafe.encode(decodedValue)
 
-    const jwk: PublicKeyJwk = {
+    const jwk: Jwk = {
       kty: 'OKP',
       crv: 'Ed25519',
       x: base64UrlValue,
@@ -75,7 +75,7 @@ export const verificationMethodAsKeypair = async ({
 
     const base64UrlSafeValue = b64UrlSafe.encode(decodedValue)
 
-    const jwk: PublicKeyJwk = {
+    const jwk: Jwk = {
       kty: 'OKP',
       crv: 'X25519',
       x: base64UrlSafeValue,
@@ -96,7 +96,7 @@ export const verificationMethodAsKeypair = async ({
     }
     const base64UrlSafeValue = b64UrlSafe.encode(decodedValue)
 
-    const jwk: PublicKeyJwk = {
+    const jwk: Jwk = {
       kty: 'OKP',
       crv: 'Ed25519',
       x: base64UrlSafeValue,

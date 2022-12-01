@@ -1,3 +1,4 @@
+import { Jwk } from '../did'
 import { DIDCommError } from '../error'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
 
@@ -11,7 +12,7 @@ export class X25519KeyPair extends KeyPair {
     return await cryptoProvider.x25519!.sign(message, this.privateKey)
   }
 
-  public static async fromJwk(jwk: Record<string, unknown>): Promise<X25519KeyPair> {
+  public static async fromJwk(jwk: Jwk): Promise<X25519KeyPair> {
     assertCryptoProvider(['x25519'])
     return await cryptoProvider.x25519!.fromJwkJson(jwk)
   }

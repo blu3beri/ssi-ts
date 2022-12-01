@@ -30,7 +30,7 @@ export type VerificationMethod = {
     | 'EcdsaSecp256k1VerificationKey2019'
     | 'X25519KeyAgreementKey2020'
     | 'Ed25519VerificationKey2020'
-  publicKeyJwk?: PublicKeyJwk
+  publicKeyJwk?: Omit<Jwk, 'd'>
   publicKeyMultibase?: string
   // Not officially defined by W3C
   publicKeyBase58?: string
@@ -38,7 +38,7 @@ export type VerificationMethod = {
   publicKeyHex?: string
 }
 
-export type PublicKeyJwk = {
+export type Jwk = {
   kty?: 'EC' | 'RSA' | 'oct' | 'OKP'
   crv?: 'P-256' | 'P-384' | 'P-521' | 'X25519' | 'Ed25519' | 'secp256k1'
   d?: string
