@@ -2,14 +2,13 @@
   "name": "@didcomm-ts/crypto-provider-node",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "source": "src/index.ts",
+  "source": "src/index",
   "main": "build/index",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "jest"
   },
   "devDependencies": {
-    "@didcomm-ts/core": "*",
     "@types/jest": "29.2.3",
     "@types/node": "18.11.10",
     "typescript": "4.8.4"

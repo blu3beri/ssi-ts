@@ -6,7 +6,6 @@ const config: Config.InitialOptions = {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
   },
   testEnvironment: 'node',
-  verbose: true,
 }
 
 export default config

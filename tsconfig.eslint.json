@@ -6,6 +6,6 @@
       "@didcomm-ts/*": ["packages/*/src"]
     }
   },
-  "include": ["packages", "./.eslintrc.js", "./jest.config.ts", "./jest.config.base.ts"],
+  "include": ["packages", ".eslintrc.js", "jest.config.ts", "jest.config.base.ts"],
   "exclude": ["node_modules", "build"]
 }

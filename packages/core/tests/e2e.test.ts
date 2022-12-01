@@ -1,5 +1,5 @@
-import { cryptoProvider } from '@didcomm-ts/crypto-provider-node'
-
+// TODO: why is the import "@didcomm-ts/crypto-provider-node" not valid?
+import { cryptoProvider } from '../../crypto-provider-node/src'
 import { ALICE_DID_DOC, ALICE_SECRETS, BOB_DID_DOC, BOB_SECRETS } from '../fixtures'
 import { createExampleDidsProvider, createExampleSecretsProvider } from '../samples'
 import { Message } from '../src/'
