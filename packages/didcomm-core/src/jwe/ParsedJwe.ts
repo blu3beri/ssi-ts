@@ -1,15 +1,5 @@
-import type {
-  FromJwk,
-  FromKeyDerivation,
-  JoseKdf,
-  KeyAead,
-  KeyExchange,
-  KeyGen,
-  KeyWrap,
-  P256KeyPair,
-  ToJwk,
-  X25519KeyPair,
-} from '../crypto'
+import type { FromJwk, FromKeyDerivation, JoseKdf, KeyExchange, KeyGen, KeyWrap, ToJwk } from '../crypto'
+import type { Jwk } from '../did'
 import type { Jwe } from './Jwe'
 import type { ProtectedHeader } from './envelope'
 
@@ -59,11 +49,9 @@ export class ParsedJwe {
   }
 
   public decrypt<
-    // TODO: also extend keysecretbytes
-    CE extends KeyAead,
     KW extends KeyWrap & FromKeyDerivation,
     KE extends KeyExchange & KeyGen & ToJwk & FromJwk,
-    KDF extends JoseKdf<KE, KW>
+    KDF extends JoseKdf
   >({
     sender,
     recipient,
@@ -74,7 +62,7 @@ export class ParsedJwe {
     sender?: { id: string; keyExchange: KE }
     recipient: { id: string; keyExchange: KE }
     kdf: KDF
-    ke: KE
+    ke: { fromJwk(jwk: Jwk): KE }
     kw: KW
   }): Uint8Array {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
@@ -84,13 +72,11 @@ export class ParsedJwe {
 
     const encodedEncryptedKey = this.jwe.recipients.find((r) => r.header.kid === kid)?.encrypted_key
 
-    if (!encodedEncryptedKey) {
-      throw new DIDCommError('Recipient not found')
-    }
+    if (!encodedEncryptedKey) throw new DIDCommError('Recipient not found')
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
-    const epk = ke.fromJwk(this.protected.epk) as unknown as KE
+    const epk = ke.fromJwk(this.protected.epk)
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
@@ -99,13 +85,13 @@ export class ParsedJwe {
         ephemeralKey: epk,
         senderKey: sKey,
         recipientKey: key,
-        alg: this.protected.alg,
+        alg: Uint8Array.from(Buffer.from(this.protected.alg)),
         apu: this.apu ?? new Uint8Array(0),
         apv: this.apv,
         ccTag: tag,
         receive: true,
       },
-      { kw }
+      kw
     )
 
     if (!derivedKey) throw new DIDCommError('Unable to derive key')
@@ -117,12 +103,13 @@ export class ParsedJwe {
 
     const iv = b64UrlSafe.decode(this.jwe.iv)
 
-    const buf = new Uint8Array([...cipherText, ...tag])
+    const ciphertext = new Uint8Array([...cipherText, ...tag])
+    const aad = Uint8Array.from(Buffer.from(this.jwe.protected))
 
     const plaintext = cek.decrypt({
-      buf,
+      ciphertext,
       nonce: iv,
-      aad: Uint8Array.from(Buffer.from(this.jwe.protected)),
+      aad,
     })
 
     return plaintext

@@ -1,9 +1,10 @@
 import type { FromKeyDerivation, JoseKdf, KeyDerivation, KeyExchange, KeyWrap } from './JoseKdf'
 
 import { DIDCommError } from '../error'
+import { exit } from 'process'
 
 export class Ecdh1Pu<Key extends KeyExchange, KW extends KeyWrap & FromKeyDerivation = KeyWrap & FromKeyDerivation>
-  implements KeyDerivation, JoseKdf<Key, KW>
+  implements KeyDerivation, JoseKdf
 {
   private ephemeralKey: Key
   private senderKey: Key
@@ -34,7 +35,7 @@ export class Ecdh1Pu<Key extends KeyExchange, KW extends KeyWrap & FromKeyDeriva
     this.receive = options.receive
   }
 
-  public deriveKey(
+  public static deriveKey<Key extends KeyExchange, KW extends KeyWrap & FromKeyDerivation>(
     options: {
       ephemeralKey: Key
       senderKey?: Key
@@ -45,17 +46,18 @@ export class Ecdh1Pu<Key extends KeyExchange, KW extends KeyWrap & FromKeyDeriva
       ccTag: Uint8Array
       receive: boolean
     },
-    extra: { kw: KW }
+    abba: KW
   ): KW {
     const { senderKey } = options
-    if (!senderKey) throw new DIDCommError('No sender key found for ecdh-1pu')
-    const derivation = new Ecdh1Pu({ senderKey, ...options })
-
-    const kw = extra.kw.fromKeyDerivation(derivation)
+    if (!senderKey) throw new DIDCommError('Sender key is required for key derivation')
+    const derivation = new Ecdh1Pu({ ...options, senderKey })
+    const kw = abba.fromKeyDerivation(derivation)
     if (!kw) throw new DIDCommError('Unable to derive kw')
 
     return kw as KW
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public deriveKeyBytes(): Uint8Array {
     throw new Error('Method not implemented.')
   }

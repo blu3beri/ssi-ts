@@ -2,9 +2,10 @@ import type { Jwk } from '../did'
 
 import { DIDCommError } from '../error'
 
-export abstract class JoseKdf<Key, KW extends KeyWrap> {
-  public abstract deriveKey(
-    options: {
+export abstract class JoseKdf {
+  public static deriveKey<Key extends KeyExchange, KW extends KeyWrap>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _options: {
       ephemeralKey: Key
       senderKey?: Key
       recipientKey: Key
@@ -14,8 +15,11 @@ export abstract class JoseKdf<Key, KW extends KeyWrap> {
       ccTag: Uint8Array
       receive: boolean
     },
-    extra: { kw: KW }
-  ): KW
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    kw: KW
+  ): KW {
+    throw new DIDCommError('deriveKey not implemented on super class')
+  }
 }
 
 export type KeyAeadParams = {
@@ -23,28 +27,31 @@ export type KeyAeadParams = {
   tagLength: number
 }
 
+export interface ToJwk {
+  toJwk(): Record<string, unknown>
+}
+
 export abstract class KeyGen {
-  public abstract generate(): KeyGen
+  public static generate(): KeyGen {
+    throw new DIDCommError('generate not implemented on super class')
+  }
 }
 
-export abstract class ToJwk {
-  public abstract toJwk(): Record<string, unknown>
-}
-
-export class FromJwk {
-  public static fromJwk(jwk: Jwk) {
+export abstract class FromJwk {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public static fromJwk(_jwk: Jwk) {
     throw new DIDCommError('fromJwk not implemented on super class')
   }
 }
 
-export abstract class KeyExchange {
-  public abstract keyExchange(other: KeyExchange): Uint8Array
+export interface KeyExchange {
+  keyExchange(other: KeyExchange): Uint8Array
 }
 
 export abstract class KeyAead {
-  public abstract encryptInPlace(options: { nonce: Uint8Array; aad: Uint8Array }): Uint8Array
+  public abstract encrypt(options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }): Uint8Array
 
-  public abstract decryptInPlace(options: { nonce: Uint8Array; aad: Uint8Array }): Uint8Array
+  public abstract decrypt(options: { ciphertext: Uint8Array; nonce: Uint8Array; aad: Uint8Array }): Uint8Array
 
   public abstract aeadParams(): KeyAeadParams
 
@@ -71,6 +78,13 @@ export abstract class KeyDerivation {
   public abstract deriveKeyBytes(): Uint8Array
 }
 
-export interface FromKeyDerivation {
-  fromKeyDerivation<D extends KeyDerivation>(derive: D): FromKeyDerivation
+export interface KeySecretBytes {
+  fromSecretBytes(key: Uint8Array): KeySecretBytes
+}
+
+export abstract class FromKeyDerivation {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public static fromKeyDerivation<D extends KeyDerivation>(_derive: D): FromKeyDerivation {
+    throw new DIDCommError('fromkeyDerivation is not implemented on super class')
+  }
 }

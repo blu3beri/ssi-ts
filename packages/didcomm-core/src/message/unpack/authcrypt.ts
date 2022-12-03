@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UnpackMetadata } from './UnpackMetadata'
 import type { UnpackOptions } from './UnpackOptions'
 
@@ -109,6 +111,7 @@ export const tryUnpackAuthcrypt = async ({
         recipient: { id: toKid, keyExchange: toKey },
         kdf: Ecdh1Pu<X25519KeyPair>,
         ke: X25519KeyPair,
+        kw: {} as any,
       })
     } else if (
       fromKey instanceof P256KeyPair &&
@@ -120,9 +123,9 @@ export const tryUnpackAuthcrypt = async ({
       _payload = parsedJwe.decrypt({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
-        // TODO: likely incorrect KDF here
-        kdf: JoseKdf,
+        kdf: Ecdh1Pu<P256KeyPair>,
         ke: P256KeyPair,
+        kw: {} as any,
       })
     } else {
       throw new DIDCommError(

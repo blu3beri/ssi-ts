@@ -12,6 +12,12 @@ export class P256KeyPair implements KeyGen, FromJwk, ToJwk, KeyExchange {
     this.publicKey = publicKey
     this.privateKey = privateKey
   }
+
+  public static generate() {
+    // TODO
+    return new P256KeyPair({ publicKey: new Uint8Array([0]) })
+  }
+
   public keyExchange(other: KeyExchange): Uint8Array {
     throw new Error('Method not implemented.')
   }
@@ -23,10 +29,6 @@ export class P256KeyPair implements KeyGen, FromJwk, ToJwk, KeyExchange {
 
   // TODO: we can implement this ourselves
   public fromJwk(jwk: Jwk): FromJwk {
-    throw new Error('Method not implemented.')
-  }
-
-  public generate(): KeyGen {
     throw new Error('Method not implemented.')
   }
 
