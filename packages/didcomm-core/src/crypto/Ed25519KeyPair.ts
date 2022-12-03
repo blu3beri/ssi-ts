@@ -22,7 +22,7 @@ export class Ed25519KeyPair implements KeyGen, FromJwk, ToJwk, KeyExchange {
   }
 
   // TODO: we can implement this ourselves
-  public fromJwk(jwk: Jwk): FromJwk {
+  public static fromJwk(jwk: Jwk) {
     assertCryptoProvider(['ed25519'])
     return cryptoProvider.ed25519!.fromJwk(jwk)
   }

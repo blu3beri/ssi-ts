@@ -1,15 +1,14 @@
 import type { Jwk } from '../did'
-import type { JweAlgorithm } from '../jwe'
 
 import { DIDCommError } from '../error'
 
-export abstract class JoseKdf<Key, KW extends KeyWrap & FromKeyDerivation> {
+export abstract class JoseKdf<Key, KW extends KeyWrap> {
   public abstract deriveKey(
     options: {
       ephemeralKey: Key
       senderKey?: Key
       recipientKey: Key
-      alg: JweAlgorithm
+      alg: Uint8Array
       apu: Uint8Array
       apv: Uint8Array
       ccTag: Uint8Array
@@ -32,8 +31,10 @@ export abstract class ToJwk {
   public abstract toJwk(): Record<string, unknown>
 }
 
-export abstract class FromJwk {
-  public abstract fromJwk(jwk: Jwk): FromJwk
+export class FromJwk {
+  public static fromJwk(jwk: Jwk) {
+    throw new DIDCommError('fromJwk not implemented on super class')
+  }
 }
 
 export abstract class KeyExchange {
@@ -66,14 +67,10 @@ export abstract class KeyWrap {
   public abstract unwrapKey: <K extends KeyAead & FromSecretBytes>(cipherText: Uint8Array) => K
 }
 
-// TODO: better place
-export type KeyDerivation = {
-  deriveKeyBytes: () => Uint8Array
+export abstract class KeyDerivation {
+  public abstract deriveKeyBytes(): Uint8Array
 }
 
-// TODO: better place
-export abstract class FromKeyDerivation {
-  public static fromKeyDerivation<D extends KeyDerivation>(derive: D): FromKeyDerivation {
-    throw new DIDCommError('unimplemented')
-  }
+export interface FromKeyDerivation {
+  fromKeyDerivation<D extends KeyDerivation>(derive: D): FromKeyDerivation
 }

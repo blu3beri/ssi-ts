@@ -4,7 +4,7 @@ import type { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
 
 import { AuthCryptAlgorithm } from '../../algorithms'
-import { JoseKdfEcdhEs, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { Ecdh1Pu, JoseKdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { verificationMethodAsKeypair } from '../../did'
 import { DIDCommError } from '../../error'
 import { JweEncAlgorithm, Jwe, JweAlgorithm } from '../../jwe'
@@ -104,11 +104,10 @@ export const tryUnpackAuthcrypt = async ({
       parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
-      _payload = await parsedJwe.decrypt({
+      _payload = parsedJwe.decrypt({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
-        // TODO: likely incorrect KDF here
-        kdf: JoseKdfEcdhEs,
+        kdf: Ecdh1Pu<X25519KeyPair>,
         ke: X25519KeyPair,
       })
     } else if (
@@ -118,11 +117,11 @@ export const tryUnpackAuthcrypt = async ({
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
 
-      _payload = await parsedJwe.decrypt({
+      _payload = parsedJwe.decrypt({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
         // TODO: likely incorrect KDF here
-        kdf: JoseKdfEcdhEs,
+        kdf: JoseKdf,
         ke: P256KeyPair,
       })
     } else {

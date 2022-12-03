@@ -114,7 +114,7 @@ export class Secret {
     if (this.type === SecretType.X25519KeyAgreementKey2019 && this.secretMaterial.type === SecretMaterialType.Base58) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
 
-      const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
+      const keyPair = X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk: Jwk = {
         kty: 'OKP',
@@ -157,7 +157,7 @@ export class Secret {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.X25519Priv}, got ${codec}`)
       }
 
-      return await X25519KeyPair.fromSecretBytes(decodedValue)
+      return X25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     if (
@@ -176,7 +176,7 @@ export class Secret {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
       }
 
-      return await Ed25519KeyPair.fromSecretBytes(decodedValue)
+      return Ed25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     throw new DIDCommError('Unsupported secret method and material combination')

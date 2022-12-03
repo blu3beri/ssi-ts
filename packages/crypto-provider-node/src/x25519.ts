@@ -10,10 +10,10 @@ export const x25519: KeyPairProvider<X25519KeyPair> = {
   verify: (message: Uint8Array, publicKey: Uint8Array, signature: Uint8Array) =>
     Crypto.verify('x25519', message, Buffer.from(publicKey), signature),
 
-  fromJwk: async (jwk: Jwk) => {
+  fromJwk: (jwk: Jwk) => {
     let publicKey = jwk.x ? Uint8Array.from(Buffer.from(jwk.x, 'base64url')) : undefined
     const privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
-    publicKey ??= privateKey ? (await x25519.fromSecretBytes(privateKey)).publicKey : publicKey
+    publicKey ??= privateKey ? x25519.fromSecretBytes(privateKey).publicKey : publicKey
 
     if (!publicKey) {
       // TODO: custom error
