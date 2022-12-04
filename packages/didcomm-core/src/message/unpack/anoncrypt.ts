@@ -4,14 +4,14 @@ import type { UnpackOptions } from './UnpackOptions'
 
 import { Buffer } from 'buffer'
 
-import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { AnonCryptAlgorithm } from '../../algorithms'
+import { P256KeyPair, X25519KeyPair } from '../../crypto'
 import { EcdhEs } from '../../crypto/EcdhEs'
 import { DIDCommError } from '../../error'
 import { Jwe, JweAlgorithm, JweEncAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
 import { Secrets } from '../../secrets'
 import { didOrUrl } from '../../utils'
-import { AnonCryptAlgorithm } from '../../algorithms'
 
 export const tryUnpackAnoncrypt = async ({
   message,
