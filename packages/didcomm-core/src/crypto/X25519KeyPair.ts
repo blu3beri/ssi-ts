@@ -1,6 +1,7 @@
 import type { Jwk } from '../did'
 import type { SignatureType } from '../utils'
-import type { FromPublicBytes, FromJwk, FromSecretBytes, KeySign, ToJwk } from './types'
+import type { FromPublicBytes, FromJwk, FromSecretBytes, KeySign, ToJwk, KeyExchange } from './types'
+import type { KeyGen } from './types/KeyGen'
 
 import { DIDCommError } from '../error'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
@@ -11,7 +12,15 @@ import { KeyPair } from './KeyPair'
 const PUBLIC_KEY_LENGTH = 32
 const PRIVATE_KEY_LENGTH = 32
 
-export class X25519KeyPair extends KeyPair implements ToJwk, FromJwk, FromSecretBytes, FromPublicBytes, KeySign {
+export class X25519KeyPair
+  extends KeyPair
+  implements ToJwk, FromJwk, FromSecretBytes, FromPublicBytes, KeySign, KeyExchange, KeyGen
+{
+  public static generate(): X25519KeyPair {
+    assertCryptoProvider(['x25519'])
+    return cryptoProvider.x25519!.generate()
+  }
+
   public static fromSecretBytes(secretBytes: Uint8Array): X25519KeyPair {
     if (secretBytes.length !== PRIVATE_KEY_LENGTH) throw new DIDCommError('Invalid key data')
     assertCryptoProvider(['x25519'])
@@ -42,5 +51,14 @@ export class X25519KeyPair extends KeyPair implements ToJwk, FromJwk, FromSecret
     if (!this.privateKey) throw new DIDCommError('Unable to sign without a private key')
     assertCryptoProvider(['x25519'])
     return cryptoProvider.x25519!.sign(message, this.privateKey, signatureType)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public writeKeyExchange(_other: KeyExchange): Uint8Array {
+    throw new Error('Method not implemented.')
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public keyExchangeBytes(_other: KeyExchange): Uint8Array {
+    throw new Error('Method not implemented.')
   }
 }

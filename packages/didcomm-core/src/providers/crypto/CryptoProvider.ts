@@ -9,6 +9,7 @@ type FromSecretBytes<T extends KeyPair> = (secretBytes: Uint8Array) => T
 
 // TODO: these should be optional and can be additionally checked
 export type KeyPairProvider<T extends KeyPair> = {
+  generate: () => T
   sign: Sign
   verify: Verify
   fromSecretBytes: FromSecretBytes<T>

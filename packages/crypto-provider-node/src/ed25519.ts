@@ -13,4 +13,8 @@ export const ed25519: KeyPairProvider<Ed25519KeyPair> = {
   // TODO: derive publicKey from privateKey
   fromSecretBytes: (secretBytes: Uint8Array) =>
     new Ed25519KeyPair({ publicKey: new Uint8Array([0]), privateKey: secretBytes }),
+
+  generate: (): Ed25519KeyPair => {
+    throw new Error('Function not implemented.')
+  },
 }

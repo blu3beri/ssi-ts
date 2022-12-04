@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "ts-mixer": "6.0.2",
     "bs58": "5.0.0",
     "buffer": "6.0.3",
     "uuid": "9.0.0"

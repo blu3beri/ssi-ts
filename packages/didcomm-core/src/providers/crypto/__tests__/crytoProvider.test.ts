@@ -17,6 +17,7 @@ describe('cryptoProvider tests', () => {
       verify: jest.fn(),
       fromJwkJson: jest.fn(),
       fromSecretBytes: jest.fn(),
+      generate: jest.fn(),
     }
 
     const mockCryptoHasher = { hash: jest.fn() }
@@ -34,10 +35,11 @@ describe('cryptoProvider tests', () => {
 
   test('cryptoProvider is registered and usable', () => {
     const mockCryptoKeyPair = {
-      sign: jest.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
-      verify: jest.fn().mockResolvedValue(true),
-      fromJwkJson: jest.fn().mockResolvedValue(new Ed25519KeyPair({ publicKey: new Uint8Array([0]) })),
-      fromSecretBytes: jest.fn().mockResolvedValue(
+      generate: jest.fn().mockReturnValue(new Uint8Array([0])),
+      sign: jest.fn().mockReturnValue(new Uint8Array([0])),
+      verify: jest.fn().mockReturnValue(true),
+      fromJwkJson: jest.fn().mockReturnValue(new Ed25519KeyPair({ publicKey: new Uint8Array([0]) })),
+      fromSecretBytes: jest.fn().mockReturnValue(
         new Ed25519KeyPair({
           publicKey: new Uint8Array([0]),
           privateKey: new Uint8Array([1]),
@@ -47,10 +49,12 @@ describe('cryptoProvider tests', () => {
 
     setCryptoProvider({ ed25519: mockCryptoKeyPair })
 
-    expect(cryptoProvider.ed25519!.sign(new Uint8Array([0, 0, 0]), new Uint8Array([0]))).resolves.toStrictEqual(
-      new Uint8Array([1, 2, 3])
+    expect(cryptoProvider.ed25519!.sign(new Uint8Array([0, 0, 0]), new Uint8Array([0]))).toStrictEqual(
+      new Uint8Array([0])
     )
 
-    expect(cryptoProvider.ed25519!.fromSecretBytes(new Uint8Array([0]))).resolves.toBeInstanceOf(Ed25519KeyPair)
+    expect(cryptoProvider.ed25519!.generate()).toStrictEqual(new Uint8Array([0]))
+
+    expect(cryptoProvider.ed25519!.fromSecretBytes(new Uint8Array([0]))).toBeInstanceOf(Ed25519KeyPair)
   })
 })

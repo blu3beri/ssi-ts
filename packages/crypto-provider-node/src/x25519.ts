@@ -13,4 +13,8 @@ export const x25519: KeyPairProvider<X25519KeyPair> = {
   // TODO: derive publicKey from privateKey
   fromSecretBytes: (secretBytes: Uint8Array) =>
     new X25519KeyPair({ publicKey: new Uint8Array([0]), privateKey: secretBytes }),
+
+  generate: () => {
+    throw new Error('Function not implemented.')
+  },
 }

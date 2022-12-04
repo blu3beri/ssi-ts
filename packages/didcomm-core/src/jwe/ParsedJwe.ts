@@ -1,4 +1,10 @@
-import type { Kdf, P256KeyPair, X25519KeyPair } from '../crypto'
+import type { JoseKdf } from '../crypto/JoseKdf'
+import type { FromJwk, FromSecretBytes, KeyExchange, ToJwk } from '../crypto/types'
+import type { FromKeyDerivation } from '../crypto/types/FromKeyDerivation'
+import type { KeyAead } from '../crypto/types/KeyAead'
+import type { KeyGen } from '../crypto/types/KeyGen'
+import type { KeyWrap } from '../crypto/types/KeyWrap'
+import type { Jwk } from '../did'
 import type { Jwe } from './Jwe'
 import type { ProtectedHeader } from './envelope'
 
@@ -48,24 +54,21 @@ export class ParsedJwe {
   }
 
   public decrypt<
-    CE extends {
-      decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => Uint8Array
+    CE extends KeyAead & FromSecretBytes,
+    KW extends KeyWrap & FromKeyDerivation,
+    KE extends KeyGen & KeyExchange & ToJwk & FromJwk
+  >(
+    {
+      sender,
+      recipient,
+    }: {
+      sender?: { id: string; keyExchange: KE }
+      recipient: { id: string; keyExchange: KE }
     },
-    KW extends { unwrapKey: (key: Uint8Array) => CE },
-    KDF extends typeof Kdf,
-    KE extends X25519KeyPair | P256KeyPair,
-    KES extends typeof X25519KeyPair | typeof P256KeyPair
-  >({
-    kdf,
-    ke,
-    sender,
-    recipient,
-  }: {
-    kdf: KDF
-    ke: KES
-    sender?: { id: string; keyExchange: KE }
-    recipient: { id: string; keyExchange: KE }
-  }): Uint8Array {
+    ce: typeof KeyAead & typeof FromSecretBytes,
+    ke: typeof FromJwk,
+    kdf: typeof JoseKdf
+  ): Uint8Array {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
 
@@ -79,11 +82,11 @@ export class ParsedJwe {
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
-    const epk = ke.fromJwk(this.protected.epk) as KE
+    const epk = ke.fromJwk<KE>(this.protected.epk as Jwk)
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
-    const kw = kdf.deriveKey<KE, KW, CE>({
+    const kw = kdf.deriveKey<KE, KW>({
       ephemeralKey: epk,
       senderKey: sKey,
       recipientKey: key,
@@ -96,7 +99,7 @@ export class ParsedJwe {
 
     if (!kw) throw new DIDCommError('Unable to derive kw')
 
-    const cek = kw.unwrapKey(encryptedKey)
+    const cek = kw.unwrapKey(encryptedKey, ce)
     if (!cek) throw new DIDCommError('unable to unwrap cek')
 
     const cipherText = b64UrlSafe.decode(this.jwe.ciphertext)
@@ -105,12 +108,8 @@ export class ParsedJwe {
 
     const buf = new Uint8Array([...cipherText, ...tag])
 
-    const plaintext = cek.decrypt({
-      buf,
-      nonce: iv,
-      aad: Uint8Array.from(Buffer.from(this.jwe.protected)),
-    })
+    cek.decrypt(buf, iv, Uint8Array.from(Buffer.from(this.jwe.protected)))
 
-    return plaintext
+    return buf
   }
 }

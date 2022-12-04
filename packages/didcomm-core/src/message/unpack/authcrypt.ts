@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { UnpackMetadata } from './UnpackMetadata'
 import type { UnpackOptions } from './UnpackOptions'
 
@@ -104,13 +105,18 @@ export const tryUnpackAuthcrypt = async ({
       parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
-      _payload = parsedJwe.decrypt({
-        sender: { id: fromKid, keyExchange: fromKey },
-        recipient: { id: toKid, keyExchange: toKey },
-        // TODO: likely incorrect KDF here
-        kdf: Kdf,
-        ke: X25519KeyPair,
-      })
+      _payload = parsedJwe.decrypt(
+        {
+          sender: { id: fromKid, keyExchange: fromKey },
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        // @ts-ignore
+        {},
+        // @ts-ignore
+        {}
+      )
     } else if (
       fromKey instanceof P256KeyPair &&
       toKey instanceof P256KeyPair &&
@@ -118,13 +124,18 @@ export const tryUnpackAuthcrypt = async ({
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
 
-      _payload = parsedJwe.decrypt({
-        sender: { id: fromKid, keyExchange: fromKey },
-        recipient: { id: toKid, keyExchange: toKey },
-        // TODO: likely incorrect KDF here
-        kdf: Kdf,
-        ke: P256KeyPair,
-      })
+      _payload = parsedJwe.decrypt(
+        {
+          sender: { id: fromKid, keyExchange: fromKey },
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        // @ts-ignore
+        {},
+        // @ts-ignore
+        {}
+      )
     } else {
       throw new DIDCommError(
         `Incompatible sender and recipient key agreement curves, or unsupported key agreement method. Curves: ${JSON.stringify(

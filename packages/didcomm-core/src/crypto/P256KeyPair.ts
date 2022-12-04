@@ -1,6 +1,6 @@
 import type { Jwk } from '../did'
-import type { SignatureType } from '../utils';
-import type { FromPublicBytes, FromJwk, FromSecretBytes, KeySign, ToJwk } from './types'
+import type { SignatureType } from '../utils'
+import type { FromPublicBytes, FromJwk, FromSecretBytes, KeySign, ToJwk, KeyExchange } from './types'
 
 import { DIDCommError } from '../error'
 import { assertCryptoProvider, cryptoProvider } from '../providers'
@@ -11,7 +11,18 @@ import { KeyPair } from './KeyPair'
 const PUBLIC_KEY_LENGTH = 33
 const PRIVATE_KEY_LENGTH = 32
 
-export class P256KeyPair extends KeyPair implements ToJwk, FromJwk, FromSecretBytes, FromPublicBytes, KeySign {
+export class P256KeyPair
+  extends KeyPair
+  implements ToJwk, FromJwk, FromSecretBytes, FromPublicBytes, KeySign, KeyExchange
+{
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public writeKeyExchange(_other: KeyExchange): Uint8Array {
+      throw new Error('Method not implemented.')
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public keyExchangeBytes(_other: KeyExchange): Uint8Array {
+      throw new Error('Method not implemented.')
+  }
   public static fromSecretBytes(secretBytes: Uint8Array): P256KeyPair {
     if (secretBytes.length !== PRIVATE_KEY_LENGTH) throw new DIDCommError('Invalid key data')
     assertCryptoProvider(['p256'])

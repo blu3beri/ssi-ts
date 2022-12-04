@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { UnpackMetadata } from './UnpackMetadata'
 import type { UnpackOptions } from './UnpackOptions'
 
 import { Buffer } from 'buffer'
-import { serialize } from 'v8'
 
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
+import { EcdhEs } from '../../crypto/EcdhEs'
 import { DIDCommError } from '../../error'
-import { Jwe, JweAlgorithm } from '../../jwe'
+import { Jwe, JweAlgorithm, JweEncAlgorithm } from '../../jwe'
 import { assertSecretsProvider } from '../../providers'
 import { Secrets } from '../../secrets'
 import { didOrUrl } from '../../utils'
+import { AnonCryptAlgorithm } from '../../algorithms'
 
 export const tryUnpackAnoncrypt = async ({
   message,
@@ -79,18 +81,27 @@ export const tryUnpackAnoncrypt = async ({
     }
 
     // TODO: finish this implementation for all the algorithms and keypair types
-    if (toKey instanceof X25519KeyPair) {
-      payload = parsedJwe.decrypt({
-        recipient: { id: toKid, keyExchange: toKey },
-        ke: X25519KeyPair,
-        kdf: Kdf,
-      })
-    } else if (toKey instanceof P256KeyPair) {
-      payload = parsedJwe.decrypt({
-        recipient: { id: toKid, keyExchange: toKey },
-        ke: P256KeyPair,
-        kdf: Kdf,
-      })
+    if (toKey instanceof X25519KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512) {
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        X25519KeyPair,
+        EcdhEs<X25519KeyPair>
+      )
+    } else if (toKey instanceof P256KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.A256cbcHs512EcdhEsA256kw
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        P256KeyPair,
+        EcdhEs<P256KeyPair>
+      )
     } else {
       throw new DIDCommError('Could not find the instance of toKey')
     }
