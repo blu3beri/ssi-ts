@@ -5,7 +5,7 @@ import type { UnpackOptions } from './UnpackOptions'
 import { Buffer } from 'buffer'
 
 import { AnonCryptAlgorithm } from '../../algorithms'
-import { P256KeyPair, X25519KeyPair } from '../../crypto'
+import { AesKey, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { EcdhEs } from '../../crypto/EcdhEs'
 import { DIDCommError } from '../../error'
 import { Jwe, JweAlgorithm, JweEncAlgorithm } from '../../jwe'
