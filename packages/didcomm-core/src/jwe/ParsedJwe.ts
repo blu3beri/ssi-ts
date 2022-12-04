@@ -66,8 +66,9 @@ export class ParsedJwe {
       recipient: { id: string; keyExchange: KE }
     },
     ce: typeof KeyAead & typeof FromSecretBytes,
+    kdf: typeof JoseKdf,
     ke: typeof FromJwk,
-    kdf: typeof JoseKdf
+    kw: typeof KeyWrap & typeof FromKeyDerivation,
   ): Uint8Array {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
@@ -86,20 +87,23 @@ export class ParsedJwe {
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
-    const kw = kdf.deriveKey<KE, KW>({
-      ephemeralKey: epk,
-      senderKey: sKey,
-      recipientKey: key,
-      alg: Uint8Array.from(Buffer.from(this.protected.alg)),
-      apu: this.apu ?? new Uint8Array(0),
-      apv: this.apv,
-      ccTag: tag,
-      receive: true,
-    })
+    const k = kdf.deriveKey<KE, KW>(
+      {
+        ephemeralKey: epk,
+        senderKey: sKey,
+        recipientKey: key,
+        alg: Uint8Array.from(Buffer.from(this.protected.alg)),
+        apu: this.apu ?? new Uint8Array(0),
+        apv: this.apv,
+        ccTag: tag,
+        receive: true,
+      },
+      kw
+    )
 
-    if (!kw) throw new DIDCommError('Unable to derive kw')
+    if (!k) throw new DIDCommError('Unable to derive kw')
 
-    const cek = kw.unwrapKey(encryptedKey, ce)
+    const cek = k.unwrapKey(encryptedKey, ce)
     if (!cek) throw new DIDCommError('unable to unwrap cek')
 
     const cipherText = b64UrlSafe.decode(this.jwe.ciphertext)

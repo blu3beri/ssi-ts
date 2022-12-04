@@ -115,6 +115,8 @@ export const tryUnpackAuthcrypt = async ({
         // @ts-ignore
         {},
         // @ts-ignore
+        {},
+        // @ts-ignore
         {}
       )
     } else if (
@@ -129,6 +131,8 @@ export const tryUnpackAuthcrypt = async ({
           sender: { id: fromKid, keyExchange: fromKey },
           recipient: { id: toKid, keyExchange: toKey },
         },
+        // @ts-ignore
+        {},
         // @ts-ignore
         {},
         // @ts-ignore

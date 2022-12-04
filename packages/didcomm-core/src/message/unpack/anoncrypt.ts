@@ -80,16 +80,44 @@ export const tryUnpackAnoncrypt = async ({
       throw new DIDCommError('Recipient secret not found after existence checking')
     }
 
-    // TODO: finish this implementation for all the algorithms and keypair types
     if (toKey instanceof X25519KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.A256cbcHs512EcdhEsA256kw
       payload = parsedJwe.decrypt(
         {
           recipient: { id: toKid, keyExchange: toKey },
         },
         // @ts-ignore
         {},
+        EcdhEs<X25519KeyPair>,
         X25519KeyPair,
-        EcdhEs<X25519KeyPair>
+        // @ts-ignore
+        {}
+      )
+    } else if (toKey instanceof X25519KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.Xc20P) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.Xc20pEcdhEsA256kw
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        EcdhEs<X25519KeyPair>,
+        X25519KeyPair,
+        // @ts-ignore
+        {}
+      )
+    } else if (toKey instanceof X25519KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256Gcm) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.A256gcmEcdhEsA256kw
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        EcdhEs<X25519KeyPair>,
+        X25519KeyPair,
+        // @ts-ignore
+        {}
       )
     } else if (toKey instanceof P256KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512) {
       metadata.encAlgAnon = AnonCryptAlgorithm.A256cbcHs512EcdhEsA256kw
@@ -99,8 +127,36 @@ export const tryUnpackAnoncrypt = async ({
         },
         // @ts-ignore
         {},
+        EcdhEs<P256KeyPair>,
         P256KeyPair,
-        EcdhEs<P256KeyPair>
+        // @ts-ignore
+        {}
+      )
+    } else if (toKey instanceof P256KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.Xc20P) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.Xc20pEcdhEsA256kw
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        EcdhEs<P256KeyPair>,
+        P256KeyPair,
+        // @ts-ignore
+        {}
+      )
+    } else if (toKey instanceof P256KeyPair && parsedJwe.protected.enc === JweEncAlgorithm.A256Gcm) {
+      metadata.encAlgAnon = AnonCryptAlgorithm.A256gcmEcdhEsA256kw
+      payload = parsedJwe.decrypt(
+        {
+          recipient: { id: toKid, keyExchange: toKey },
+        },
+        // @ts-ignore
+        {},
+        EcdhEs<P256KeyPair>,
+        P256KeyPair,
+        // @ts-ignore
+        {}
       )
     } else {
       throw new DIDCommError('Could not find the instance of toKey')

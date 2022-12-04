@@ -1,9 +1,10 @@
+import type { JoseKdf } from './JoseKdf'
 import type { KeyExchange } from './types'
+import type { FromKeyDerivation } from './types/FromKeyDerivation'
 import type { KeyDerivation } from './types/KeyDerivation'
+import type { KeyWrap } from './types/KeyWrap'
 
-import { DIDCommError } from '../error'
-
-export class EcdhEs<Key extends KeyExchange> implements KeyDerivation {
+export class EcdhEs<Key extends KeyExchange> implements JoseKdf, KeyDerivation {
   private ephemeralKey: Key
   private recipientKey: Key
   private alg: Uint8Array
@@ -27,8 +28,25 @@ export class EcdhEs<Key extends KeyExchange> implements KeyDerivation {
     this.recipientKey = options.recipientKey
   }
 
+  public static deriveKey<Key extends KeyExchange, KW extends KeyWrap & FromKeyDerivation>(
+    options: {
+      ephemeralKey: Key
+      senderKey?: Key
+      recipientKey: Key
+      alg: Uint8Array
+      apu: Uint8Array
+      apv: Uint8Array
+      ccTag: Uint8Array
+      receive: boolean
+    },
+    fkw: typeof FromKeyDerivation
+  ): KW {
+    const derivation = new EcdhEs(options)
+    const kw = fkw.fromKeyDerivation(derivation)
+    return kw as KW
+  }
+
   public deriveKeyBytes(keyOutput: Uint8Array): void {
-    if (keyOutput.length > 32) throw new DIDCommError('Exceeded maximum output length')
     throw new Error('Method not implemented.')
   }
 }
