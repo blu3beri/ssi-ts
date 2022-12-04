@@ -1,4 +1,4 @@
-import type { Jwk, KeyPairProvider } from '@ssi-ts/didcomm-core'
+import type { KeyPairProvider } from '@ssi-ts/didcomm-core'
 
 import { X25519KeyPair } from '@ssi-ts/didcomm-core'
 import Crypto from 'crypto'
@@ -9,19 +9,6 @@ export const x25519: KeyPairProvider<X25519KeyPair> = {
 
   verify: (message: Uint8Array, publicKey: Uint8Array, signature: Uint8Array) =>
     Crypto.verify('x25519', message, Buffer.from(publicKey), signature),
-
-  fromJwkJson: async (jwk: Jwk) => {
-    let publicKey = jwk.x ? Uint8Array.from(Buffer.from(jwk.x, 'base64url')) : undefined
-    const privateKey = jwk.d ? Uint8Array.from(Buffer.from(jwk.d, 'base64url')) : undefined
-    publicKey ??= privateKey ? (await x25519.fromSecretBytes(privateKey)).publicKey : publicKey
-
-    if (!publicKey) {
-      // TODO: custom error
-      throw new Error("Could not derive public key from private key or 'x' was not supplied in the JWK")
-    }
-
-    return new X25519KeyPair({ publicKey, privateKey })
-  },
 
   // TODO: derive publicKey from privateKey
   fromSecretBytes: (secretBytes: Uint8Array) =>

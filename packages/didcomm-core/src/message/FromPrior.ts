@@ -84,9 +84,9 @@ export class FromPrior {
     const secret = await Secrets.getSecret(kid)
     if (!secret) throw new DIDCommError('Unable to find secret for issuer')
 
-    const signKeyPair = await secret.asKeyPair()
+    const signKeyPair = secret.asKeyPair()
 
-    const fromPriorJwt = await signCompact({
+    const fromPriorJwt = signCompact({
       payload: Buffer.from(fromPriorString),
       signer: { kid, signer: signKeyPair },
       typ: 'JWT',

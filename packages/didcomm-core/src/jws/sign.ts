@@ -1,3 +1,4 @@
+import type { KeySign } from '../crypto/types/KeySign'
 import type { SignatureType } from '../utils'
 import type { CompactHeader, JwsAlgorithm, ProtectedHeader, Signature } from './envelope'
 
@@ -12,15 +13,15 @@ export type Signer = {
   sign(input: Uint8Array, signatureType?: SignatureType): Promise<Uint8Array>
 }
 
-export const sign = async ({
+export const sign = ({
   payload,
   alg,
   signer,
 }: {
   payload: Uint8Array
-  signer: { kid: string; signer: Signer }
+  signer: { kid: string; signer: KeySign }
   alg: JwsAlgorithm
-}): Promise<string> => {
+}): string => {
   const { signer: key, kid } = signer
   const sigType = JwsAlgorithmToSignatureType(alg)
 
@@ -35,7 +36,7 @@ export const sign = async ({
   const encodedPayload = b64UrlSafe.encode(payload)
 
   const signInput = `${encodedProtected}.${encodedPayload}`
-  const signatureBytes = await key.sign(Uint8Array.from(Buffer.from(signInput)), sigType)
+  const signatureBytes = key.sign(Uint8Array.from(Buffer.from(signInput)), sigType)
 
   const encodedSignature = b64UrlSafe.encode(signatureBytes)
 
@@ -53,17 +54,17 @@ export const sign = async ({
   return JSON.stringify(jws)
 }
 
-export const signCompact = async ({
+export const signCompact = ({
   typ,
   signer,
   payload,
   alg,
 }: {
   payload: Uint8Array
-  signer: { kid: string; signer: Signer }
+  signer: { kid: string; signer: KeySign }
   typ: string
   alg: JwsAlgorithm
-}): Promise<string> => {
+}): string => {
   const { signer: key, kid } = signer
   const sigType = JwsAlgorithmToSignatureType(alg)
 
@@ -74,7 +75,7 @@ export const signCompact = async ({
   const encodedPayload = b64UrlSafe.encode(payload)
 
   const signInput = `${encodedHeader}.${encodedPayload}`
-  const signature = await key.sign(Uint8Array.from(Buffer.from(signInput)), sigType)
+  const signature = key.sign(Uint8Array.from(Buffer.from(signInput)), sigType)
 
   const encodedSignature = b64UrlSafe.encode(signature)
 

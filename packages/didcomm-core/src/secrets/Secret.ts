@@ -92,7 +92,7 @@ export class Secret {
     return KnownKeyAlgorithm.Unsupported
   }
 
-  public async asKeyPair() {
+  public asKeyPair() {
     const value = this.secretMaterial.value as Record<string, unknown>
     if (this.type === SecretType.JsonWebKey2020 && this.secretMaterial.type === SecretMaterialType.Jwk) {
       const kty = value.kty
@@ -114,7 +114,7 @@ export class Secret {
     if (this.type === SecretType.X25519KeyAgreementKey2019 && this.secretMaterial.type === SecretMaterialType.Base58) {
       const decodedValue = b58.decode(this.secretMaterial.value as string)
 
-      const keyPair = await X25519KeyPair.fromSecretBytes(decodedValue)
+      const keyPair = X25519KeyPair.fromSecretBytes(decodedValue)
 
       const jwk: Jwk = {
         kty: 'OKP',
@@ -151,13 +151,13 @@ export class Secret {
       }
 
       const b58DecodedValue = b58.decode(value.slice(1))
-      const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
+      const { codec, value: decodedValue } = Multibase.from(b58DecodedValue)
 
       if (codec !== Codec.X25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.X25519Priv}, got ${codec}`)
       }
 
-      return await X25519KeyPair.fromSecretBytes(decodedValue)
+      return X25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     if (
@@ -170,13 +170,13 @@ export class Secret {
       }
 
       const b58Decodedvalue = base58.decode(value.slice(1))
-      const { codec, value: decodedValue } = await Multibase.from(b58Decodedvalue)
+      const { codec, value: decodedValue } = Multibase.from(b58Decodedvalue)
 
       if (codec !== Codec.Ed25519Priv) {
         throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
       }
 
-      return await Ed25519KeyPair.fromSecretBytes(decodedValue)
+      return Ed25519KeyPair.fromSecretBytes(decodedValue)
     }
 
     throw new DIDCommError('Unsupported secret method and material combination')

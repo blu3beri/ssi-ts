@@ -1,11 +1,9 @@
-import type { JweAlgorithm } from '../jwe'
-
 export class Kdf {
   public static deriveKey<KE, KW, TODO>(options: {
     ephemeralKey: KE
     senderKey?: KE
     recipientKey: KE
-    alg: JweAlgorithm
+    alg: Uint8Array
     apu: Uint8Array
     apv: Uint8Array
     ccTag: Uint8Array

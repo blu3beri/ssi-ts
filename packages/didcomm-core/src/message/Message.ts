@@ -216,7 +216,7 @@ export class Message {
       throw new DIDCommError(`Could not find signer secret for ${keyId}`)
     }
 
-    const signKey = await secret.asKeyPair()
+    const signKey = secret.asKeyPair()
 
     const payload = await this.packPlaintext()
 
@@ -231,7 +231,7 @@ export class Message {
 
     if (!algorithm) throw new DIDCommError(`Unsupported signature algorithm ${signKey.toString()}`)
 
-    const message = await sign({
+    const message = sign({
       payload: Buffer.from(payload),
       alg: algorithm,
       // TODO: all the keypairs should implement keySign

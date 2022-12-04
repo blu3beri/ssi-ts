@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Testing
-        run: yarn test
+        run: yarn test --testIgnorePatterns=e2e
   Validate:
     runs-on: ubuntu-latest
     strategy:

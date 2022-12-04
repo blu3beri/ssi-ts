@@ -5,7 +5,7 @@ import { DIDCommError } from '../../error'
 import { b58, b64UrlSafe } from '../../utils'
 import { VerificationMethodType } from '../DidDocument'
 
-export const verificationMethodAsKeypair = async ({
+export const verificationMethodAsKeypair = ({
   type,
   publicKeyJwk,
   publicKeyMultibase,
@@ -67,7 +67,7 @@ export const verificationMethodAsKeypair = async ({
     }
 
     const b58DecodedValue = b58.decode(publicKeyMultibase.slice(1))
-    const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
+    const { codec, value: decodedValue } = Multibase.from(b58DecodedValue)
 
     if (codec !== Codec.Ed25519Priv) {
       throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519Priv}, got ${codec}`)
@@ -90,7 +90,7 @@ export const verificationMethodAsKeypair = async ({
     }
 
     const b58DecodedValue = b58.decode(publicKeyMultibase.slice(1))
-    const { codec, value: decodedValue } = await Multibase.from(b58DecodedValue)
+    const { codec, value: decodedValue } = Multibase.from(b58DecodedValue)
     if (codec !== Codec.Ed25519pub) {
       throw new DIDCommError(`wrong codec in multibase secret material. Expected ${Codec.Ed25519pub}, got ${codec}`)
     }

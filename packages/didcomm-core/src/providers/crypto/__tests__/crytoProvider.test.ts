@@ -51,8 +51,6 @@ describe('cryptoProvider tests', () => {
       new Uint8Array([1, 2, 3])
     )
 
-    expect(cryptoProvider.ed25519!.fromJwkJson({ x: 'abc' })).resolves.toBeInstanceOf(Ed25519KeyPair)
-
     expect(cryptoProvider.ed25519!.fromSecretBytes(new Uint8Array([0]))).resolves.toBeInstanceOf(Ed25519KeyPair)
   })
 })

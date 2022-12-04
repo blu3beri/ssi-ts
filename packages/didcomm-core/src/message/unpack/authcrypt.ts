@@ -28,7 +28,7 @@ export const tryUnpackAuthcrypt = async ({
   const parsedJwe = jwe.parse()
 
   if (parsedJwe.protected.alg !== JweAlgorithm.Ecdh1puA256Kw) return undefined
-  if (!(await parsedJwe.verifyDidComm())) return undefined
+  if (!parsedJwe.verifyDidComm()) return undefined
   if (!parsedJwe.apu) throw new DIDCommError('No apu present for authcrypt')
 
   const fromKid = Buffer.from(parsedJwe.apu).toString('utf8')
@@ -53,7 +53,7 @@ export const tryUnpackAuthcrypt = async ({
     throw new DIDCommError('Sender verification method not found in did')
   }
 
-  const fromKey = await verificationMethodAsKeypair(fromKeyVerificationMethod)
+  const fromKey = verificationMethodAsKeypair(fromKeyVerificationMethod)
 
   const toKids = parsedJwe.jwe.recipients.map((r) => r.header.kid)
   const toKid = toKids[0]
@@ -92,7 +92,7 @@ export const tryUnpackAuthcrypt = async ({
   let payload: Uint8Array | undefined
 
   for (const toKid of toKidsFound) {
-    const toKey = await (await secretsProvider.getSecret!(toKid))?.asKeyPair()
+    const toKey = (await secretsProvider.getSecret!(toKid))?.asKeyPair()
     if (!toKey) {
       throw new DIDCommError('Recipient secret not found after existence checking')
     }
@@ -104,7 +104,7 @@ export const tryUnpackAuthcrypt = async ({
       parsedJwe.protected.enc === JweEncAlgorithm.A256cbcHs512
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
-      _payload = await parsedJwe.decrypt({
+      _payload = parsedJwe.decrypt({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
         // TODO: likely incorrect KDF here
@@ -118,7 +118,7 @@ export const tryUnpackAuthcrypt = async ({
     ) {
       metadata.encAlgAuth = AuthCryptAlgorithm.A256cbcHs512Ecdh1puA256kw
 
-      _payload = await parsedJwe.decrypt({
+      _payload = parsedJwe.decrypt({
         sender: { id: fromKid, keyExchange: fromKey },
         recipient: { id: toKid, keyExchange: toKey },
         // TODO: likely incorrect KDF here

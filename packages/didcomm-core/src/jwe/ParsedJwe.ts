@@ -22,12 +22,12 @@ export class ParsedJwe {
     this.apu = options.apu
   }
 
-  public async verifyDidComm(): Promise<boolean> {
+  public verifyDidComm(): boolean {
     assertCryptoProvider(['sha256'])
 
     const kids = this.jwe.recipients.map((r) => r.header.kid).sort()
 
-    const didCommApv = await Sha256.hash(Uint8Array.from(Buffer.from(kids.join('.'))))
+    const didCommApv = Sha256.hash(Uint8Array.from(Buffer.from(kids.join('.'))))
 
     if (this.apv.length === didCommApv.length && !this.apv.every((e, i) => e === didCommApv[i]))
       throw new DIDCommError('APV Mismatch')
@@ -47,7 +47,7 @@ export class ParsedJwe {
     return true
   }
 
-  public async decrypt<
+  public decrypt<
     CE extends {
       decrypt: (options: { buf: Uint8Array; nonce: Uint8Array; aad: Uint8Array }) => Uint8Array
     },
@@ -65,7 +65,7 @@ export class ParsedJwe {
     ke: KES
     sender?: { id: string; keyExchange: KE }
     recipient: { id: string; keyExchange: KE }
-  }): Promise<Uint8Array> {
+  }): Uint8Array {
     const { id: sKid, keyExchange: sKey } = sender ?? {}
     const { id: kid, keyExchange: key } = recipient
 
@@ -79,7 +79,7 @@ export class ParsedJwe {
 
     const encryptedKey = b64UrlSafe.decode(encodedEncryptedKey)
 
-    const epk = (await ke.fromJwk(this.protected.epk)) as KE
+    const epk = ke.fromJwk(this.protected.epk) as KE
 
     const tag = b64UrlSafe.decode(this.jwe.tag)
 
@@ -87,7 +87,7 @@ export class ParsedJwe {
       ephemeralKey: epk,
       senderKey: sKey,
       recipientKey: key,
-      alg: this.protected.alg,
+      alg: Uint8Array.from(Buffer.from(this.protected.alg)),
       apu: this.apu ?? new Uint8Array(0),
       apv: this.apv,
       ccTag: tag,

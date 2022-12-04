@@ -61,7 +61,5 @@ export const anoncrypt = async ({
   // let to_kids: Vec<_> = to_keys.into_iter().map(|vm| vm.id.clone()).collect();
   // Ok((msg, to_kids))
 
-  const tooooKids = tKeys.map((vm) => vm.id)
-
-  return { message: 'TODO: message', toKids: tooooKids }
+  return { message: 'TODO: message', toKids: tKeys.map((vm) => vm.id) }
 }

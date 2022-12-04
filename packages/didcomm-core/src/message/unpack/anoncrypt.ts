@@ -2,6 +2,7 @@ import type { UnpackMetadata } from './UnpackMetadata'
 import type { UnpackOptions } from './UnpackOptions'
 
 import { Buffer } from 'buffer'
+import { serialize } from 'v8'
 
 import { Kdf, P256KeyPair, X25519KeyPair } from '../../crypto'
 import { DIDCommError } from '../../error'
@@ -31,7 +32,7 @@ export const tryUnpackAnoncrypt = async ({
     return undefined
   }
 
-  if (!(await parsedJwe.verifyDidComm())) {
+  if (!parsedJwe.verifyDidComm()) {
     throw new DIDCommError('Unable to verify parsed JWE')
   }
 
@@ -71,7 +72,7 @@ export const tryUnpackAnoncrypt = async ({
   let payload: undefined | Uint8Array
 
   for (const toKid of toKidsFound) {
-    const toKey = await (await Secrets.getSecret(toKid))?.asKeyPair()
+    const toKey = (await Secrets.getSecret(toKid))?.asKeyPair()
 
     if (!toKey) {
       throw new DIDCommError('Recipient secret not found after existence checking')
@@ -79,13 +80,13 @@ export const tryUnpackAnoncrypt = async ({
 
     // TODO: finish this implementation for all the algorithms and keypair types
     if (toKey instanceof X25519KeyPair) {
-      payload = await parsedJwe.decrypt({
+      payload = parsedJwe.decrypt({
         recipient: { id: toKid, keyExchange: toKey },
         ke: X25519KeyPair,
         kdf: Kdf,
       })
     } else if (toKey instanceof P256KeyPair) {
-      payload = await parsedJwe.decrypt({
+      payload = parsedJwe.decrypt({
         recipient: { id: toKid, keyExchange: toKey },
         ke: P256KeyPair,
         kdf: Kdf,

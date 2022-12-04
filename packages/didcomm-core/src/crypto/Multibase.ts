@@ -8,7 +8,7 @@ export enum Codec {
 }
 
 export class Multibase {
-  public static async from(value: Uint8Array): Promise<{ codec: Codec; value: Uint8Array }> {
+  public static from(value: Uint8Array): { codec: Codec; value: Uint8Array } {
     assertCryptoProvider(['multibase'])
     return cryptoProvider.multibase!.from(value)
   }
